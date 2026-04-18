@@ -2,6 +2,17 @@ import type { AppConfig } from "./config.js";
 import type { OpenemisClient, OpenemisErrorPayload } from "./types.js";
 
 /**
+ * Join a base URL (which may itself contain a path, e.g. ".../core") with
+ * an additional path. Avoids the `new URL(path, base)` trap where an
+ * absolute `path` replaces the base's path component.
+ */
+function joinUrl(base: string, path: string): string {
+  const b = base.replace(/\/+$/, "");
+  const p = path.startsWith("/") ? path : `/${path}`;
+  return b + p;
+}
+
+/**
  * Fetch-based HTTP client for OpenEMIS API.
  * Implements lazy login with JWT caching: first request triggers login, token is cached,
  * 401 responses invalidate the cache and retry once.
@@ -16,8 +27,9 @@ export class OpenemisClientImpl implements OpenemisClient {
 
   /**
    * Authenticate with OpenEMIS and return JWT bearer token.
-   * POST /api/v4/login with username, password, api_key.
-   * Response: { message: string, data: { token: string, client_id: string } }
+   * POST /api/v5/login with username, password, api_key.
+   * Response: { message: string, data: { token: string, client_id?: string } }
+   * (v4 and v5 both answer this endpoint; we use v5 for API-version consistency.)
    */
   async login(): Promise<string> {
     if (!this.cfg.username || !this.cfg.password || !this.cfg.apiKey) {
@@ -26,7 +38,7 @@ export class OpenemisClientImpl implements OpenemisClient {
       );
     }
 
-    const url = new URL("/api/v4/login", this.cfg.baseUrl).toString();
+    const url = joinUrl(this.cfg.baseUrl, "/api/v5/login");
     const controller = new AbortController();
     const timeoutId = setTimeout(
       () => controller.abort(),
@@ -141,17 +153,23 @@ export class OpenemisClientImpl implements OpenemisClient {
 
   /**
    * Build full request URL with query params.
+   * Uses joinUrl() so a baseUrl that already has a path (e.g. ".../core")
+   * is preserved when the path is absolute — `new URL(abs, base)` silently
+   * drops the base's path component.
    */
   private buildUrl(path: string, query?: Record<string, unknown>): string {
     const normalizedPath = this.normalizePath(path);
-    const url = new URL(normalizedPath, this.cfg.baseUrl);
+    let full = joinUrl(this.cfg.baseUrl, normalizedPath);
 
     if (query) {
       const params = this.serializeParams(query);
-      url.search = params.toString();
+      const qs = params.toString();
+      if (qs) {
+        full += (full.includes("?") ? "&" : "?") + qs;
+      }
     }
 
-    return url.toString();
+    return full;
   }
 
   /**
