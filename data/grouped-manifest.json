@@ -1,8 +1,5045 @@
 {
   "version": 1,
-  "total_endpoints": 595,
-  "total_resources": 119,
+  "total_endpoints": 3206,
+  "total_resources": 645,
   "domains": [
+    {
+      "name": "Institution",
+      "summary": "The Institution domain is the foundational registry and operational hub for all educational entities (schools, training centers, administrative offices) within OpenEMIS. It manages institutional metadata, academic struct",
+      "resources": [
+        {
+          "name": "AssetConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AssetMakes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AssetModels",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AssetTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "BuildingCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CurricularPositions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CurricularTypes",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "UPDATE": 1,
+            "DELETE": 1,
+            "GET": 1
+          }
+        },
+        {
+          "name": "CustomFieldTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomForms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomFormsFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "CREATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomFormsFilters",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomModules",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "DELETE": 1,
+            "UPDATE": 1
+          }
+        },
+        {
+          "name": "CustomRecords",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomTableCells",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomTableColumns",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomTableRows",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "DELETE": 1,
+            "UPDATE": 1
+          }
+        },
+        {
+          "name": "EducationFieldOfStudies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "EducationSubjectsFieldOfStudies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "FeedersInstitutions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "FieldTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "FloorCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureCustomFieldOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureCustomFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureCustomForms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureCustomFormsFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureCustomFormsFilters",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureLevels",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureNeeds",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureOwnerships",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureProjectFundingSources",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureProjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureProjectsNeeds",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureUtilityElectricities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureUtilityInternets",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureUtilityTelephones",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashHygieneEducations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashHygieneQuantities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashHygieneSoapashAvailabilities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashHygienes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashSanitationAccessibilities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashSanitationQualities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashSanitationQuantities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashSanitationUses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashSanitations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashSewageFunctionalities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashSewages",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWasteFunctionalities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWastes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWaterAccessibilities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWaterFunctionalities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWaterProximities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWaterQualities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWaterQuantities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWaters",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionActivities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionAssets",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionAssociationStudent",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionAssociations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionAttachmentTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionAttachments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionBankAccounts",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionBuildings",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionBuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionBusesTransportFeatures",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCaseComments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCaseLinks",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCaseRecords",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCases",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionClassAttendanceRecords",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionClassGrades",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionClassStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionClassSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionClassesCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCommitteeAttachments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCommitteeMeeting",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCommittees",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCompetencyItemComments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCompetencyPeriodComments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCompetencyResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionContactPersons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCourses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCurricularStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCurriculars",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCustomFieldOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCustomFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCustomForms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCustomFormsFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCustomFormsFilters",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCustomTableCells",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCustomTableColumns",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCustomTableRows",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionDepartments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionExpenditures",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionFeeTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionFees",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionGenders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionGrades",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionIncomes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionInfrastructureAttachments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionLands",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionLocalities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionMealProgrammes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionMealStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionOutcomeResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionOutcomeSubjectComments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionOwnerships",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionPositions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionProgramGradeSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionProviders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionQualityRubricAnswers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionQualityRubrics",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionQualityVisits",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionRepeaterSurveyAnswers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionRepeaterSurveyTableCells",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionRepeaterSurveys",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionReportCardProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionReportCards",
+          "endpoints": 4,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1
+          }
+        },
+        {
+          "name": "InstitutionRisks",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionRooms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScanned",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleCurriculumLessons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleIntervals",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleLessonDetails",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleLessonRooms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleLessons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleNonCurriculumLessons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleTerms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleTimeslots",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleTimetableCustomizes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleTimetables",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSectors",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionShiftPeriods",
+          "endpoints": 3,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1
+          }
+        },
+        {
+          "name": "InstitutionShifts",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStatistics",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentAbsenceDetails",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentAdmission",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentEnrolment",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentRisks",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentSurveyAnswers",
+          "endpoints": 1,
+          "kinds": {
+            "LIST": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentSurveyTableCells",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentSurveys",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentTransfers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentVisitRequests",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentVisits",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentWithdraw",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentsGpa",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentsReportCards",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentsReportCardsComments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentsTmp",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSubjectStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSubjectsRooms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSurveyAnswers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSurveyTableCells",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSurveys",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionTextbooks",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionTransportProviders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionTripDays",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionTripPassengers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionTrips",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionUnits",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionVisitRequests",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "Institutions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "LandCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "LocaleContentTranslations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "Risks",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipApplicationInstitutionChoices",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipInstitutionChoiceStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipInstitutionChoiceTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryAreaInstitutionGradeAttendances",
+          "endpoints": 2,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1
+          }
+        },
+        {
+          "name": "SummaryInstitutionGradeNationalities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryInstitutionGrades",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryInstitutionNationalities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryInstitutionRoomTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryInstitutionStudentAbsences",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryInstitutionStudentSubjectResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryInstitutions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyFilterInstitutionProviders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyFilterInstitutionTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TransportStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TripTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowModels",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowRuleEvents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowRules",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowSteps",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowTransitions",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 960
+    },
+    {
+      "name": "Staff",
+      "summary": "The **Staff** domain manages the complete professional and institutional lifecycle of educational personnel. It handles onboarding, institutional assignment, position/grade mapping, FTE tracking, inter-institution transf",
+      "resources": [
+        {
+          "name": "AppraisalCriterias",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalDropdownAnswers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalForms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalFormsCriterias",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalFormsCriteriasScores",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalFormsCriteriasScoresLinks",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalNumberAnswers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalNumbers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "DELETE": 1,
+            "GET": 1
+          }
+        },
+        {
+          "name": "AppraisalPeriods",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalScoreAnswers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalSliderAnswers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalSliders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalTextAnswers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "BehaviourClassifications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "DepartmentStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "HistoricalStaffLeave",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "HistoricalStaffPositions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionAssociationStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionClassesSecondaryStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCurricularStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffAppraisals",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffAttendances",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffDuties",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffLeave",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffLeaveArchived",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffPositionProfiles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffReleases",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffShifts",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffSurveyAnswers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffSurveyTableCells",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffSurveys",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffTransfers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSubjectStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "QualificationTitles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RubricStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipDisbursementCategories",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipRecipientActivityStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipsFieldOfStudies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SpecialNeedsServiceClassification",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffAttachmentTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffBehaviourAttachments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffBehaviourCategories",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffBehaviours",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffChangeTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffCustomFieldOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffCustomFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffCustomForms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffCustomFormsFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffCustomTableCells",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffCustomTableColumns",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffCustomTableRows",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffDuties",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffEmploymentStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffLeaveEntitlements",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffLeavePolicies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffLeavePolicyTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffLeaveTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffLicenses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffLicensesClassifications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffMemberships",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffPayslips",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffPositionCategories",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffPositionGrades",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffPositionTitles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffPositionTitlesGrades",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffProfileTemplates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffQualifications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffQualificationsSpecialisations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffQualificationsSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffReportCardEmailProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffReportCardProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffReportCards",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffSalaries",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffSalaryTransactions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffTrainingApplications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffTrainingCategories",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffTrainingNeeds",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffTrainingSelfStudies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffTrainingSelfStudyAttachments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffTrainingSelfStudyResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffTrainings",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyForms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyFormsFilters",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyFormsQuestions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyQuestionChoices",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyQuestions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyResponses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyTableColumns",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyTableRows",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TextbookStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingCourseCategories",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingCourseTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingCourses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingCoursesResultTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingCoursesSpecialisations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingCoursesTargetPopulations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingFieldOfStudies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingLevels",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingModeDeliveries",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingNeedCategories",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingNeedCompetencies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingNeedStandards",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingNeedSubStandards",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingPriorities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingProviders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingRequirements",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingResultTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingSessionEvaluators",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingSessionTrainers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingSessions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingSessionsTrainees",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingSpecialisations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowActions",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowComments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowStatusesSteps",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowStepsParams",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "WorkflowStepsRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 610
+    },
+    {
+      "name": "Student",
+      "summary": "The Student domain manages the complete academic, administrative, and assessment lifecycle of learners within OpenEMIS, from initial registration, demographic profiling, and institutional enrollment to attendance trackin",
+      "resources": [
+        {
+          "name": "AssessmentItemStudentExemptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CompetencyCriterias",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CompetencyItems",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CompetencyItemsPeriods",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CompetencyPeriods",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "EmploymentStatusTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationStudentSubjectResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationStudentSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "HealthAllergyTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "HealthConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "HealthConsultationTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "HealthImmunizationTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "HealthRelationships",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "HealthTestTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealBenefits",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealFoodRecords",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealImplementers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealNutritionalRecords",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealNutritions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealProgrammes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealRatings",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealReceived",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealStatusTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RiskCriterias",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RubricCriterias",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RubricStatusPeriods",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RubricStatusProgrammes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RubricStatusRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SpecialNeedDifficulties",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SpecialNeedsDiagnosticsDegree",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentAbsenceReasons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentAdmissionCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentAttachmentTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentAttendanceMarkTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentBehaviourAttachments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentBehaviourCategories",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentBehaviourClassifications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentBehaviours",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentCustomFieldOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentCustomFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentCustomFilters",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentCustomForms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentCustomFormsFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentCustomTableCells",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentCustomTableColumns",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentCustomTableRows",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentExtracurriculars",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentFees",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentGuardians",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentMarkTypeStatusGrades",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentMarkTypeStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentProfileSecurityRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentProfileTemplates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentReportCardEmailProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentReportCardProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentReportCards",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentRisksCriterias",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentStatusUpdates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentTransferReasons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentVisitPurposeTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentVisitTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentWithdrawReasons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryStudentAssessments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryStudentAttendances",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserActivities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserAttachments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserAwards",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserBankAccounts",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserBodyMasses",
+          "endpoints": 2,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1
+          }
+        },
+        {
+          "name": "UserComments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserContacts",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserDemographics",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserEmployments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealths",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserIdentities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserInsurances",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserLanguages",
+          "endpoints": 2,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1
+          }
+        },
+        {
+          "name": "UserNationalities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserSpecialNeedsAssessments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserSpecialNeedsDevices",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserSpecialNeedsPlans",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserSpecialNeedsReferrals",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserSpecialNeedsServices",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 419
+    },
+    {
+      "name": "Attendance",
+      "summary": "The Attendance domain manages daily, weekly, period-level, and subject-specific presence/absence tracking for students and staff across academic periods and institutions. It handles granular roll-call marking, absence/le",
+      "resources": [
+        {
+          "name": "AbsenceTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "GET": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalPeriodsTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AppraisalTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AuthenticationTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "BudgetTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "DELETE": 1,
+            "UPDATE": 1
+          }
+        },
+        {
+          "name": "BuildingTypes",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "BusTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CalendarEventDates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CalendarEvents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "CREATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CalendarTypes",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CaseTypes",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ClassProfiles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CommentTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ContactTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "DemographicTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExpenditureTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExtracurricularTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "FeeTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "FloorTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "FoodTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "GuidanceTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "IdentityTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "IncomeTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureAttachmentTypes",
+          "endpoints": 6,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 2
+          }
+        },
+        {
+          "name": "InfrastructureNeedTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashHygieneTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashSanitationTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashSewageTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWasteTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InfrastructureWashWaterTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InsuranceTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "LandTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "LicenseTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealProgrammeTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MealTargetTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "QualityVisitTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RoomTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SalaryAdditionTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipAttachmentTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipFinancialAssistanceTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipsScholarshipAttachmentTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SpecialNeedTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SpecialNeedsDeviceTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SpecialNeedsDiagnosticsTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SpecialNeedsPlanTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SpecialNeedsReferrerTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SpecialNeedsServiceTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentAttendanceMarkedRecords",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentAttendancePerDayPeriods",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentAttendanceTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryIscedSectors",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryProgrammeSectorGenders",
+          "endpoints": 3,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1
+          }
+        },
+        {
+          "name": "SummaryProgrammeSectorQualificationGenders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryProgrammeSectorSpecializationGenders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityElectricityTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityInternetTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 279
+    },
     {
       "name": "Assessment",
       "summary": "The Assessment domain manages the end-to-end lifecycle of academic evaluations and examination processing: defining assessment templates and grading periods, mapping subjects to configurable weights and grading types, ca",
@@ -325,159 +5362,189 @@
             "UPDATE": 1,
             "DELETE": 1
           }
+        },
+        {
+          "name": "FieldOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "GpaGradingOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "GpaGradingTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InsertedRecords",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "OutcomeGradingOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "OutcomeGradingTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "OutcomePeriods",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RubricCriteriaOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RubricTemplateOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ShiftOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryAreaProviderGradeSubjectResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryAssessmentItemResults",
+          "endpoints": 2,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1
+          }
+        },
+        {
+          "name": "SummaryGradeGenderAges",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryGradeStatusGenders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingSessionResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingSessionTraineeResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
         }
       ],
-      "endpoint_count": 146
+      "endpoint_count": 223
     },
     {
-      "name": "Institution",
-      "summary": "The Institution domain is the foundational registry and operational hub for all educational entities (schools, training centers, administrative offices) within OpenEMIS. It manages institutional metadata, academic struct",
+      "name": "User",
+      "summary": "The User domain manages the complete lifecycle, authentication, authorization, and demographic data of all system actors (students, staff, guardians, administrators, and external integrators). It centralizes identity pro",
       "resources": [
         {
-          "name": "AssetConditions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AssetMakes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AssetModels",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AssetTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "BuildingCustomFieldValues",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CurricularPositions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CurricularTypes",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "UPDATE": 1,
-            "DELETE": 1,
-            "GET": 1
-          }
-        },
-        {
-          "name": "CustomFieldTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CustomFieldValues",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CustomFields",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CustomForms",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CustomFormsFields",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "CREATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CustomFormsFilters",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CustomModules",
+          "name": "AlertsRoles",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -488,18 +5555,7 @@
           }
         },
         {
-          "name": "CustomRecords",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CustomTableCells",
+          "name": "IdpOauth",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -510,7 +5566,7 @@
           }
         },
         {
-          "name": "CustomTableColumns",
+          "name": "InsuranceProviders",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -521,18 +5577,7 @@
           }
         },
         {
-          "name": "CustomTableRows",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "DELETE": 1,
-            "UPDATE": 1
-          }
-        },
-        {
-          "name": "EducationFieldOfStudies",
+          "name": "MessagingSecurityRoles",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -543,36 +5588,7 @@
           }
         },
         {
-          "name": "EducationSubjectsFieldOfStudies",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 100
-    },
-    {
-      "name": "Attendance",
-      "summary": "The Attendance domain manages daily, weekly, period-level, and subject-specific presence/absence tracking for students and staff across academic periods and institutions. It handles granular roll-call marking, absence/le",
-      "resources": [
-        {
-          "name": "AbsenceTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "GET": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AppraisalPeriodsTypes",
+          "name": "OpenemisTemps",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -583,7 +5599,7 @@
           }
         },
         {
-          "name": "AppraisalTypes",
+          "name": "SecurityFunctions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -594,40 +5610,7 @@
           }
         },
         {
-          "name": "AuthenticationTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "BudgetTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "DELETE": 1,
-            "UPDATE": 1
-          }
-        },
-        {
-          "name": "BuildingTypes",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "BusTypes",
+          "name": "SecurityGroupAreas",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -638,62 +5621,7 @@
           }
         },
         {
-          "name": "CalendarEventDates",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CalendarEvents",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "CREATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CalendarTypes",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CaseTypes",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ClassProfiles",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CommentTypes",
+          "name": "SecurityGroupInstitutions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -704,36 +5632,7 @@
           }
         },
         {
-          "name": "ContactTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "DemographicTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 75
-    },
-    {
-      "name": "Staff",
-      "summary": "The **Staff** domain manages the complete professional and institutional lifecycle of educational personnel. It handles onboarding, institutional assignment, position/grade mapping, FTE tracking, inter-institution transf",
-      "resources": [
-        {
-          "name": "AppraisalCriterias",
+          "name": "SecurityGroupUsers",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -744,18 +5643,7 @@
           }
         },
         {
-          "name": "AppraisalDropdownAnswers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AppraisalForms",
+          "name": "SecurityGroups",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -766,7 +5654,7 @@
           }
         },
         {
-          "name": "AppraisalFormsCriterias",
+          "name": "SecurityRestSessions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -777,7 +5665,7 @@
           }
         },
         {
-          "name": "AppraisalFormsCriteriasScores",
+          "name": "SecurityRoleFunctions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -788,18 +5676,7 @@
           }
         },
         {
-          "name": "AppraisalFormsCriteriasScoresLinks",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AppraisalNumberAnswers",
+          "name": "SecurityRoles",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -810,40 +5687,7 @@
           }
         },
         {
-          "name": "AppraisalNumbers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "DELETE": 1,
-            "GET": 1
-          }
-        },
-        {
-          "name": "AppraisalPeriods",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AppraisalScoreAnswers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AppraisalSliderAnswers",
+          "name": "SecurityUserCodes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -854,7 +5698,7 @@
           }
         },
         {
-          "name": "AppraisalSliders",
+          "name": "SecurityUserLogins",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -865,18 +5709,7 @@
           }
         },
         {
-          "name": "AppraisalTextAnswers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "BehaviourClassifications",
+          "name": "SecurityUserPasswordRequests",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -887,7 +5720,106 @@
           }
         },
         {
-          "name": "DepartmentStaff",
+          "name": "SecurityUserSessions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUsers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserAttachmentsRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthAllergies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthConsultations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthFamilies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthHistories",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthImmunizations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthMedications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthTests",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -898,7 +5830,7 @@
           }
         }
       ],
-      "endpoint_count": 75
+      "endpoint_count": 130
     },
     {
       "name": "Examination",
@@ -983,89 +5915,193 @@
         },
         {
           "name": "ExaminationCentreRooms",
-          "endpoints": 4,
+          "endpoints": 5,
           "kinds": {
             "CREATE": 1,
             "LIST": 1,
             "GET": 1,
-            "UPDATE": 1
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentreRoomsExaminations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentreRoomsExaminationsInvigilators",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentreRoomsExaminationsStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentreSpecialNeeds",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentres",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsInstitutions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsInvigilators",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsSubjectsStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationGradingOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationGradingTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "Examinations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExternalDataSourceAttributes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MoodleApiCreatedUsers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
           }
         }
       ],
-      "endpoint_count": 39
-    },
-    {
-      "name": "Student",
-      "summary": "The Student domain manages the complete academic, administrative, and assessment lifecycle of learners within OpenEMIS, from initial registration, demographic profiling, and institutional enrollment to attendance trackin",
-      "resources": [
-        {
-          "name": "AssessmentItemStudentExemptions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CompetencyCriterias",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CompetencyItems",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CompetencyItemsPeriods",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CompetencyPeriods",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "EmploymentStatusTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 30
+      "endpoint_count": 120
     },
     {
       "name": "Report",
@@ -1125,23 +6161,166 @@
             "DELETE": 1,
             "UPDATE": 1
           }
-        }
-      ],
-      "endpoint_count": 25
-    },
-    {
-      "name": "User",
-      "summary": "The User domain manages the complete lifecycle, authentication, authorization, and demographic data of all system actors (students, staff, guardians, administrators, and external integrators). It centralizes identity pro",
-      "resources": [
+        },
         {
-          "name": "AlertsRoles",
+          "name": "OutcomeTemplates",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
             "CREATE": 1,
             "GET": 1,
-            "DELETE": 1,
-            "UPDATE": 1
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ProfileTemplates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ReportCardCommentCodes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ReportCardEmailProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ReportCardExcludedSecurityRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ReportCardProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ReportCardSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ReportCards",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ReportProgress",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RubricTemplates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyFilterAreas",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyStatusPeriods",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SystemProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 90
+    },
+    {
+      "name": "Schedule",
+      "summary": "The Schedule domain manages institutional timetables, mapping classes, teachers, subjects, and rooms to specific days, time slots, shifts, and academic terms. It supports a strict `DRAFT` \u2192 `PUBLISHED` lifecycle, handles",
+      "resources": [
+        {
+          "name": "ScholarshipRecipientAcademicStandings",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
           }
         }
       ],
@@ -1149,6 +6328,155 @@
     }
   ],
   "families": [
+    {
+      "prefix": "Scholarship*",
+      "resources": [
+        {
+          "name": "ScholarshipApplicationAttachments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipApplications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipFinancialAssistances",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipFundingSources",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipLoans",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipPaymentFrequencies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipRecipientActivities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipRecipientCollections",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipRecipientDisbursements",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipRecipientPaymentStructureEstimates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipRecipientPaymentStructures",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipRecipients",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ScholarshipSemesters",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 65
+    },
     {
       "prefix": "Api*",
       "resources": [
@@ -1222,6 +6550,106 @@
       "endpoint_count": 30
     },
     {
+      "prefix": "System*",
+      "resources": [
+        {
+          "name": "SystemAuthentications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SystemErrors",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SystemPatches",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SystemUpdates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 20
+    },
+    {
+      "prefix": "Utility*",
+      "resources": [
+        {
+          "name": "UtilityElectricityConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityInternetBandwidths",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityInternetConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityTelephoneConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 20
+    },
+    {
       "prefix": "Area*",
       "resources": [
         {
@@ -1276,6 +6704,90 @@
         },
         {
           "name": "AlertRules",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 10
+    },
+    {
+      "prefix": "Qualification*",
+      "resources": [
+        {
+          "name": "QualificationLevels",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "QualificationSpecialisations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 10
+    },
+    {
+      "prefix": "Textbook*",
+      "resources": [
+        {
+          "name": "TextbookConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TextbookDimensions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 10
+    },
+    {
+      "prefix": "Workflows*",
+      "resources": [
+        {
+          "name": "Workflows",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "DELETE": 1,
+            "UPDATE": 1
+          }
+        },
+        {
+          "name": "WorkflowsFilters",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1388,12 +6900,309 @@
         "GET": 1,
         "DELETE": 1
       }
+    },
+    {
+      "name": "Genders",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "GuardianRelations",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "IdpGoogle",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "IncomeSources",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Industries",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Labels",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "LanguageProficiencies",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Languages",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "LicenseClassifications",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "LocaleContents",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Locales",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Manuals",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "MessageRecipients",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Messaging",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "MoodleApiLog",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Notices",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Phinxlog",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Reports",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "RubricSections",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Scholarships",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "SingleLogout",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Textbooks",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Themes",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "TransferLogs",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "TransportFeatures",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "WebhookEvents",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "Webhooks",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
     }
   ],
   "summary": {
-    "domain_endpoint_total": 495,
-    "family_endpoint_total": 55,
-    "orphan_endpoint_total": 45,
+    "domain_endpoint_total": 2836,
+    "family_endpoint_total": 190,
+    "orphan_endpoint_total": 180,
     "playbook_count": 12
   },
   "playbooks": [
@@ -1429,14 +7238,15 @@
         "Return the vacant count (and optionally under-staffed positions with their current FTE total)"
       ],
       "coverage": {
-        "present": [],
-        "missing": [
+        "present": [
           "institution-positions",
-          "institution-staff",
           "staff-position-titles",
           "institutions"
         ],
-        "pct": 0
+        "missing": [
+          "institution-staff"
+        ],
+        "pct": 75
       }
     },
     {
@@ -1463,15 +7273,15 @@
       ],
       "coverage": {
         "present": [
-          "absence-types"
+          "institution-students",
+          "absence-types",
+          "student-attendance-marked-records"
         ],
         "missing": [
           "institution-classes",
-          "institution-students",
-          "student-attendance-marked-records",
           "institution-class-attendances"
         ],
-        "pct": 20
+        "pct": 60
       }
     },
     {
@@ -1495,14 +7305,14 @@
       ],
       "coverage": {
         "present": [
+          "staff-leave-types",
           "absence-types"
         ],
         "missing": [
           "institution-staff",
-          "staff-leaves",
-          "staff-leave-types"
+          "staff-leaves"
         ],
-        "pct": 25
+        "pct": 50
       }
     },
     {
@@ -1528,16 +7338,17 @@
         "Enrich with subject/staff/room lookups as needed"
       ],
       "coverage": {
-        "present": [],
-        "missing": [
+        "present": [
           "institution-students",
-          "institution-classes",
           "institution-class-subjects",
           "institution-subject-staff",
-          "institution-timetable",
           "institution-rooms"
         ],
-        "pct": 0
+        "missing": [
+          "institution-classes",
+          "institution-timetable"
+        ],
+        "pct": 67
       }
     },
     {
@@ -1564,15 +7375,15 @@
       ],
       "coverage": {
         "present": [
-          "assessment-item-results"
-        ],
-        "missing": [
           "institution-students",
           "student-attendance-marked-records",
-          "institution-student-behaviours",
+          "assessment-item-results",
           "report-card-comment-codes"
         ],
-        "pct": 20
+        "missing": [
+          "institution-student-behaviours"
+        ],
+        "pct": 80
       }
     },
     {
@@ -1601,8 +7412,7 @@
         "Once 'completed', fetch the PDF URL: openemis_get('institution-students-report-cards', params: {student_id, report_card_id})"
       ],
       "coverage": {
-        "present": [],
-        "missing": [
+        "present": [
           "institution-students-report-cards",
           "institution-report-cards",
           "institution-report-card-processes",
@@ -1612,7 +7422,8 @@
           "report-card-comment-codes",
           "institution-students-report-cards-comments"
         ],
-        "pct": 0
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -1640,16 +7451,16 @@
       ],
       "coverage": {
         "present": [
+          "user-identities",
+          "institution-students",
           "education-grades"
         ],
         "missing": [
           "users",
-          "user-identities",
           "guardians",
-          "institution-students",
           "institution-classes"
         ],
-        "pct": 17
+        "pct": 50
       }
     },
     {
@@ -1671,13 +7482,14 @@
         "Write incident: openemis_create('institution-student-behaviours', body: {student_id, institution_id, category_id, date_of_behaviour, description, ...})"
       ],
       "coverage": {
-        "present": [],
-        "missing": [
-          "institution-student-behaviours",
-          "institution-student-behaviour-categories",
+        "present": [
           "student-behaviours"
         ],
-        "pct": 0
+        "missing": [
+          "institution-student-behaviours",
+          "institution-student-behaviour-categories"
+        ],
+        "pct": 33
       }
     },
     {
@@ -1707,12 +7519,11 @@
           "assessment-periods",
           "assessment-items",
           "assessment-item-results",
-          "education-subjects"
-        ],
-        "missing": [
+          "education-subjects",
           "institution-class-students"
         ],
-        "pct": 83
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -1737,14 +7548,15 @@
         "Count vacant positions: openemis_get('institution-positions', params: {institution_id, status: 'vacant', limit: 1}) \u2192 read last_page"
       ],
       "coverage": {
-        "present": [],
-        "missing": [
+        "present": [
           "institutions",
           "institution-students",
-          "institution-staff",
           "institution-positions"
         ],
-        "pct": 0
+        "missing": [
+          "institution-staff"
+        ],
+        "pct": 75
       }
     },
     {
@@ -1767,14 +7579,15 @@
         "Poll and download once 'completed'"
       ],
       "coverage": {
-        "present": [],
-        "missing": [
+        "present": [
           "institutions",
-          "custom-reports",
           "report-card-processes",
           "institution-report-card-processes"
         ],
-        "pct": 0
+        "missing": [
+          "custom-reports"
+        ],
+        "pct": 75
       }
     },
     {
@@ -1798,14 +7611,14 @@
       ],
       "coverage": {
         "present": [
+          "institution-class-students",
+          "student-attendance-marked-records",
           "absence-types"
         ],
         "missing": [
-          "institution-classes",
-          "institution-class-students",
-          "student-attendance-marked-records"
+          "institution-classes"
         ],
-        "pct": 25
+        "pct": 75
       }
     }
   ]
