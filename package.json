@@ -1,0 +1,37 @@
+{
+  "name": "openemis-mcp",
+  "version": "0.1.0",
+  "private": false,
+  "description": "MCP server wrapping the OpenEMIS v5 REST API",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "openemis",
+    "rest-api",
+    "typescript",
+    "nodejs"
+  ],
+  "type": "module",
+  "bin": {
+    "openemis-mcp": "dist/server.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

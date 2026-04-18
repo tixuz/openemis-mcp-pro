@@ -1,0 +1,117 @@
+#!/usr/bin/env node
+
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+
+import { loadConfig } from "./config.js";
+import { OpenemisClientImpl } from "./openemis.js";
+import {
+  OPENEMIS_GET_TOOL,
+  openemisGetInputSchema,
+  createOpenemisGetHandler,
+} from "./tools/crud.js";
+import {
+  openemisListDomainsSpec,
+  openemisListDomainsInputSchema,
+  openemisListDomainsHandler,
+  openemisDiscoverSpec,
+  openemisDiscoverInputSchema,
+  openemisDiscoverHandler,
+} from "./tools/describe.js";
+
+const config = loadConfig();
+const client = new OpenemisClientImpl(config);
+
+const server = new McpServer({
+  name: "openemis-mcp",
+  version: "0.1.0",
+});
+
+/**
+ * Health check tool: verify OpenEMIS API reachability.
+ */
+server.tool(
+  "openemis_health",
+  "Check whether the configured OpenEMIS API endpoint is reachable.",
+  {},
+  async () => {
+    try {
+      const response = await client.get("/");
+      return {
+        content: [
+          {
+            type: "text",
+            text: `OpenEMIS is reachable at ${config.baseUrl}`,
+          },
+        ],
+        structuredContent: {
+          ok: true,
+          baseUrl: config.baseUrl,
+          response,
+        },
+      };
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Unknown error";
+      return {
+        content: [
+          {
+            type: "text",
+            text: `OpenEMIS is not reachable at ${config.baseUrl}: ${message}`,
+          },
+        ],
+        structuredContent: {
+          ok: false,
+          baseUrl: config.baseUrl,
+          error: message,
+        },
+      };
+    }
+  }
+);
+
+/**
+ * Initialize server: register all tools and connect stdio transport.
+ */
+async function main(): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (server as any).tool(
+    OPENEMIS_GET_TOOL.name,
+    OPENEMIS_GET_TOOL.description,
+    openemisGetInputSchema,
+    createOpenemisGetHandler(client)
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (server as any).tool(
+    openemisListDomainsSpec.name,
+    openemisListDomainsSpec.description,
+    openemisListDomainsInputSchema,
+    async () => {
+      return {
+        content: await openemisListDomainsHandler(),
+      };
+    }
+  );
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (server as any).tool(
+    openemisDiscoverSpec.name,
+    openemisDiscoverSpec.description,
+    openemisDiscoverInputSchema,
+    async (args: { topic: string }) => {
+      return {
+        content: await openemisDiscoverHandler(args),
+      };
+    }
+  );
+
+  // Connect stdio transport for MCP communication
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+}
+
+main().catch((err) => {
+  console.error("[openemis-mcp] Fatal error:", err);
+  process.exit(1);
+});
