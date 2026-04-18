@@ -1,6 +1,10 @@
 {
   "version": 1,
   "note": "Curated task playbooks for common OpenEMIS workflows. Each playbook names the minimal resource chain an agent needs to accomplish a user-level goal. Hand-maintained; extend as new workflows are mapped.",
+  "global_policies": {
+    "workflow_writes_deferred_to_app": "The MCP MUST NOT create, update, or delete resources whose records flow through CakePHP's Workflow plugin (status_id → WorkflowSteps). These records need a human-in-the-loop approval chain that cannot be safely driven by an agent. Known workflow-controlled resources include but are not limited to: institution-staff-leave, assessment-period-excluded-security-roles, custom-reports (generation jobs), scholarship applications, some profile-change requests. For any CREATE/UPDATE/DELETE ask on a workflow resource, the MCP should reply: 'This process involves workflow and assignment for approval. Please use the official OpenEMIS application or website at https://demo.openemis.org/core (or your configured instance) to submit and approve it.' GET (read) operations on workflow resources remain safe and encouraged.",
+    "read_only_v0_2_x": "This MCP is getter-only in the 0.2.x line. openemis_create / openemis_update / openemis_delete arrive in 0.3.0. Until then, playbooks that describe writes are informative only — the agent cannot execute them and should tell the user what to do in the official app."
+  },
   "playbooks": [
     {
       "id": "count-vacant-positions",
@@ -61,7 +65,9 @@
       "notes": [
         "Frontend (Angular) uses a legacy v4-style nested path /institutions/{institution_id}/students/{student_id}/absences (see frontend/src/app/student-attendance/student-attendance.component.ts). Agents should prefer the v5 routes above — they're the stable contract.",
         "UI maps present/late/absent/excused onto absence_type_id; 'no_scheduled_class' uses sentinels 99 (no class) and 0 (scheduled). See frontend/src/app/student-attendance/student_attendance.config.ts:501-623 for the full remap.",
-        "Do NOT POST to institution-class-attendance-records directly for marking — it is a month-level aggregate that the backend updates via afterSaveCommit hook in plugins/Attendance/src/Model/Table/StudentAttendanceMarkedRecordsTable.php."
+        "Do NOT POST to institution-class-attendance-records directly for marking — it is a month-level aggregate that the backend updates via afterSaveCommit hook in plugins/Attendance/src/Model/Table/StudentAttendanceMarkedRecordsTable.php.",
+        "ABSENCE-BY-OMISSION: once a day/period/subject has been marked (institution-class-attendance-records shows MARKED or PARTIAL_MARKED), students WITHOUT a row in student-attendance-marked-records for that day/period are treated as PRESENT. You do NOT need to POST a row for every present student — only for the ones who are late/absent/excused. That is why POSTing even one absence row 'flips' the day to marked via the afterSaveCommit hook.",
+        "NO-SCHEDULED-CLASS for holidays / force-majeure / teacher-absent / class-cancelled: POST one row with no_scheduled_class set to 99 and no per-student rows — this records that no roll is taken that day. Sentinel 0 means class WAS scheduled and happened. The reading side (view-latest-attendance) must skip days where no_scheduled_class=99 when computing attendance rates, otherwise every student looks 'absent' for a holiday."
       ]
     },
     {
@@ -100,7 +106,11 @@
         "WARNING: there is no v5 alias 'staff-leaves' — use 'institution-staff-leave' (singular, institution-prefixed). Earlier playbook guess was wrong.",
         "For historical/migrated leave records, see 'historical-staff-leave' and 'institution-staff-leave-archived' — these are read-heavy and shouldn't be your write target.",
         "Frontend posts staff check-in to the v4-style path /institutions/{institution_id}/staff/{staff_id}/attendances (frontend/src/app/staff-attendance/staff-attendance.component.ts:514-526). No frontend POST to institution-staff-leave was found — it may go through a different admin-only UI. Agents should use the v5 routes.",
-        "Leave requests go through an approval chain (status_id FKs WorkflowSteps). A fresh POST lands in the configured initial workflow state; approvals are subsequent state transitions."
+        "Leave requests go through an approval chain (status_id FKs WorkflowSteps). A fresh POST lands in the configured initial workflow state; approvals are subsequent state transitions.",
+        "LEAVE ↔ ATTENDANCE ARE FULLY DECOUPLED: creating an institution-staff-leave row does NOT auto-insert an 'absent' row into institution-staff-attendances, and posting to institution-staff-attendances does NOT check for overlapping leave (the overlap validation in plugins/Staff/src/Model/Table/InstitutionStaffAttendancesTable.php:36 is commented out). Verified by reading InstitutionStaffLeave.php (no afterSave/afterCommit hooks) and InstitutionStaffAttendances.php (no leave cross-check).",
+        "IMPLICATION for marking: before POSTing a staff attendance for a given date, the caller should GET institution-staff-leave for that staff_id+date to avoid double-booking a staff member who's on approved leave. Before POSTing a leave, no corresponding attendance action is needed — but know that the leave will NOT appear in institution-staff-attendances readouts.",
+        "IMPLICATION for reading a staff member's attendance rate: union institution-staff-attendances + institution-staff-leave yourself on the client side — the backend does not join them. The official UI report (plugins/Institution/src/Model/Table/StaffAttendancesTable.php:155,247) reads both separately.",
+        "WORKFLOW WRITE WARNING: institution-staff-leave is workflow-controlled. For now, the MCP should NOT offer to CREATE/UPDATE/DELETE leave requests via the API — the approval chain needs a human-in-the-loop. When asked to mark someone absent-on-leave, respond with: 'This process involves workflow and assignment for approval. Please use the official OpenEMIS application or website to submit/approve leave.' Reading leave (GET) is safe and encouraged."
       ]
     },
     {
@@ -262,20 +272,34 @@
     },
     {
       "id": "view-latest-attendance",
-      "title": "Teacher dashboard — latest attendance stats for my class",
-      "audience": ["teacher"],
+      "title": "Read attendance stats for a class — today / week / chronic absentees",
+      "audience": ["teacher", "admin", "parent"],
       "domain": "Attendance",
-      "description": "Quick snapshot: who was absent today, week-to-date totals, chronic absentees.",
+      "description": "Quick snapshot: who was absent today, week-to-date totals, chronic absentees. CRITICAL reading invariant: OpenEMIS does NOT store a row per present student. Presence is inferred by absence-by-omission once a day is marked. So reading attendance in three layers: (1) which days were actually taken as rolls (institution-class-attendance-records states: NOT_MARKED, PARTIAL_MARKED, MARKED); (2) which days had no_scheduled_class=99 (holiday/force-majeure/cancelled) — skip them for stats; (3) for the remaining MARKED days, pull student-attendance-marked-records: each row is an absence/late/excused event; every rostered student WITHOUT a row that day is PRESENT.",
       "resources": [
         "institution-classes",
         "institution-class-students",
+        "institution-class-attendance-records",
         "student-attendance-marked-records",
         "absence-types"
       ],
+      "reading_invariant": {
+        "step_1": "Determine which days/periods were actually marked: GET institution-class-attendance-records for the date range. States: NOT_MARKED (no roll taken — can't infer present/absent), PARTIAL_MARKED (some periods marked, some not), MARKED (all scheduled periods marked).",
+        "step_2": "Separate holiday / force-majeure days: filter out rows where no_scheduled_class=99. These days should NOT count against any student's attendance rate.",
+        "step_3": "For MARKED days, GET student-attendance-marked-records for that class — these rows are absence events (absent/late/excused based on absence_type_id). Students in the roster WITHOUT a row on a marked day are PRESENT by omission.",
+        "step_4": "Compute rates: for each student, absent_days = count of their absence rows on MARKED non-holiday days; present_days = total_marked_non_holiday_days - absent_days. Do NOT subtract from total calendar days; only from days actually marked."
+      },
       "steps": [
-        "Get today's attendance: openemis_get('student-attendance-marked-records', params: {institution_class_id, date: <today>})",
-        "Week totals: openemis_get('student-attendance-marked-records', params: {institution_class_id, date_from: <monday>, date_to: <today>, limit: 500})",
-        "Chronic absentees: filter by count per student client-side"
+        "Resolve roster: openemis_get('institution-class-students', params: {institution_class_id, academic_period_id, student_status_id: 1})",
+        "Load absence-type lookup (to distinguish absent vs late vs excused): openemis_get('absence-types')",
+        "Check which days were actually marked: openemis_get('institution-class-attendance-records', params: {institution_class_id, academic_period_id, year: <Y>, month: <M>})",
+        "Pull absence events for the date range: openemis_get('student-attendance-marked-records', params: {institution_class_id, date_from: <monday>, date_to: <today>, limit: 500})",
+        "Apply the reading invariant (see reading_invariant field): skip no_scheduled_class=99 days; for MARKED days, absent_rows are absences, roster-minus-absent_rows are present"
+      ],
+      "notes": [
+        "The 'chronic absentee' calculation must use marked days only — using the full calendar count (e.g., 30 days in April) will under-report presence for any day a teacher forgot to take roll.",
+        "no_scheduled_class sentinels (on student-attendance-marked-records rows): 99 = no class that day (holiday, force-majeure, teacher sick, field trip), 0 = class was scheduled and happened. Readers must filter by this.",
+        "For a parent/guardian view of their own kid: filter student-attendance-marked-records by student_id AND institution_class_id (they can see their own kid's absence events but NOT the full class roster unless scoped permissions allow)."
       ]
     }
   ]
