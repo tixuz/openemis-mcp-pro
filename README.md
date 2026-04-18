@@ -21,10 +21,48 @@ A typical natural-language question like *"how many teachers at Avory Primary, h
 
 Requires **Node 22**.
 
+### From GitHub (private repo)
+
 ```bash
+# Clone (needs read access to the private repo)
+git clone https://github.com/tixuz/openemis-mcp.git
+cd openemis-mcp
+
+# Build
 npm install
 npm run build
+
+# Configure credentials
+cp .env.example .env
+$EDITOR .env   # fill in OPENEMIS_USERNAME / PASSWORD / API_KEY at minimum
 ```
+
+### Smoke-test after install
+
+```bash
+# Verify the login endpoint reaches your OpenEMIS instance
+set -a && source .env && set +a
+node scripts/smoke-login.mjs
+# Expected: "Login successful; cached JWT (… chars)"
+```
+
+### Register with Claude Code
+
+```bash
+claude mcp add openemis \
+  --env OPENEMIS_BASE_URL="https://your-openemis/core" \
+  --env OPENEMIS_USERNAME="admin" \
+  --env OPENEMIS_PASSWORD="…" \
+  --env OPENEMIS_API_KEY="…" \
+  --env OPENEMIS_VAULT_PATH="/absolute/path/to/vault" \
+  -- node "$(pwd)/dist/server.js"
+
+# Verify
+claude mcp list | grep openemis
+# Expected: openemis: node /…/dist/server.js - ✓ Connected
+```
+
+After that, any new Claude Code session in this project automatically sees four tools: `openemis_health`, `openemis_get`, `openemis_list_domains`, `openemis_discover`.
 
 ## Configure
 
@@ -40,7 +78,7 @@ OPENEMIS_VAULT_PATH=/absolute/path/to/your/Openemis/claude/vault
 OPENEMIS_MANIFEST_PATH=/absolute/path/to/manifest.jsonl
 ```
 
-The server logs in lazily: the first time a tool needs auth, it POSTs to `/api/v4/login` with your three credentials, parses the JWT out of `data.token`, and caches it in memory. On a 401, it re-logs in and retries once.
+The server logs in lazily: the first time a tool needs auth, it POSTs to `/api/v5/login` with your three credentials, parses the JWT out of `data.token`, and caches it in memory. On a 401, it re-logs in and retries once.
 
 `OPENEMIS_VAULT_PATH` points at the folder containing `Domain-*.md` notes — the curated per-domain overviews that power `openemis_discover`. These are optional; if missing, discovery degrades to keyword match against the manifest alone.
 

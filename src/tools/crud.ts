@@ -41,14 +41,8 @@ export function createOpenemisGetHandler(client: OpenemisClient) {
     params?: QueryParams;
   }) => {
     try {
-      // Convert kebab-case resource to path (e.g., 'absence-types' → 'AbsenceTypes')
-      const resourcePath = args.resource
-        .split("-")
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join("");
-
-      // Build API path
-      const basePath = `/api/v5/${resourcePath}`;
+      // OpenEMIS v5 routes are kebab-case; pass the resource name through as-is.
+      const basePath = `/api/v5/${args.resource}`;
       const path = args.id ? `${basePath}/${args.id}` : basePath;
 
       // Call API

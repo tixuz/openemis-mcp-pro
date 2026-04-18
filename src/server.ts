@@ -74,19 +74,19 @@ server.tool(
  * Initialize server: register all tools and connect stdio transport.
  */
 async function main(): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (server as any).tool(
+  // MCP SDK expects a ZodRawShape (plain object of zod types), not a wrapped z.object().
+  // The ZodObject `.shape` getter gives us the raw shape.
+  server.tool(
     OPENEMIS_GET_TOOL.name,
     OPENEMIS_GET_TOOL.description,
-    openemisGetInputSchema,
+    openemisGetInputSchema.shape,
     createOpenemisGetHandler(client)
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (server as any).tool(
+  server.tool(
     openemisListDomainsSpec.name,
     openemisListDomainsSpec.description,
-    openemisListDomainsInputSchema,
+    openemisListDomainsInputSchema.shape,
     async () => {
       return {
         content: await openemisListDomainsHandler(),
@@ -94,11 +94,10 @@ async function main(): Promise<void> {
     }
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (server as any).tool(
+  server.tool(
     openemisDiscoverSpec.name,
     openemisDiscoverSpec.description,
-    openemisDiscoverInputSchema,
+    openemisDiscoverInputSchema.shape,
     async (args: { topic: string }) => {
       return {
         content: await openemisDiscoverHandler(args),
