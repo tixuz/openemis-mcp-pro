@@ -27,6 +27,9 @@ export interface AppConfig {
 
   /** Path to manifest.jsonl describing available endpoints (default /Users/khindol/webstore/utils/mcp-openemis-gen/manifest.jsonl) */
   manifestPath: string;
+
+  /** Path to grouped-manifest.json with pre-computed hierarchical index (default data/grouped-manifest.json) */
+  groupedPath: string;
 }
 
 /**
@@ -66,6 +69,10 @@ export function loadConfig(): AppConfig {
     process.env.OPENEMIS_MANIFEST_PATH ??
     resolve("/Users/khindol/webstore/utils/mcp-openemis-gen/manifest.jsonl");
 
+  const groupedPath =
+    process.env.OPENEMIS_GROUPED_PATH ??
+    resolve(process.cwd(), "data/grouped-manifest.json");
+
   return {
     baseUrl,
     username,
@@ -74,6 +81,7 @@ export function loadConfig(): AppConfig {
     timeoutMs,
     vaultPath,
     manifestPath,
+    groupedPath,
   };
 }
 

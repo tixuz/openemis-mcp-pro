@@ -1,11 +1,12 @@
 /**
- * Domain-scoped discovery tools using vault Domain files.
+ * Domain-scoped discovery tools using grouped-manifest.json.
  * - openemis_list_domains: List available domains with summaries
- * - openemis_discover: Topic-scoped endpoint discovery
+ * - openemis_discover: Topic-scoped discovery across domains, families, and playbooks
+ * - openemis_list_playbooks: List all available playbooks
+ * - openemis_get_playbook: Get full playbook details by id
  */
 
-import { readdirSync, readFileSync, statSync } from "fs";
-import { join } from "path";
+import { readFileSync, statSync } from "fs";
 import { z } from "zod";
 import { loadConfig } from "../config.js";
 
@@ -13,156 +14,126 @@ import { loadConfig } from "../config.js";
 type ToolContentBlock = { type: "text"; text: string };
 
 /**
- * Manifest row structure
+ * Grouped manifest structure
  */
-export interface ManifestRow {
-  resource: string;
-  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-  path: string;
+export interface GroupedManifest {
+  version: number;
+  total_endpoints: number;
+  total_resources: number;
+  domains: Domain[];
+  families: Family[];
+  orphans: Orphan[];
+  playbooks: Playbook[];
+  summary: SummaryStats;
+}
+
+interface Domain {
+  name: string;
   summary: string;
-  kind: "LIST" | "GET" | "CREATE" | "UPDATE" | "DELETE" | "CUSTOM";
-  source_file: string;
+  resources: Resource[];
+  endpoint_count: number;
 }
 
-// Cache for domain file metadata
-interface DomainMetadata {
-  name: string; // e.g., "Attendance"
-  description: string; // First paragraph under "What This Domain Does"
-  filePath: string;
+interface Family {
+  prefix: string;
+  resources: Resource[];
+  endpoint_count: number;
 }
 
-let cachedDomains: DomainMetadata[] | null = null;
-let cachedManifestRows: ManifestRow[] | null = null;
+interface Resource {
+  name: string;
+  endpoints: number;
+  kinds: Record<string, number>;
+}
 
+interface Orphan {
+  name: string;
+  endpoints: number;
+  kinds: Record<string, number>;
+}
+
+interface Playbook {
+  id: string;
+  title: string;
+  audience: string[];
+  domain: string;
+  description: string;
+  resources: string[];
+  steps: string[];
+  coverage: {
+    present: string[];
+    missing: string[];
+    pct: number;
+  };
+}
+
+interface SummaryStats {
+  domain_endpoint_total: number;
+  family_endpoint_total: number;
+  orphan_endpoint_total: number;
+  playbook_count: number;
+}
+
+// Cache for grouped manifest with mtime tracking
+interface CacheEntry {
+  data: GroupedManifest;
+  mtime: number;
+}
+
+let cachedGrouped: CacheEntry | null = null;
 const config = loadConfig();
 
 /**
- * Extract domain name from file name (e.g., Domain-Attendance.md → Attendance)
+ * Load grouped manifest once and re-read only if file mtime changes.
  */
-function extractDomainName(fileName: string): string {
-  const match = fileName.match(/^Domain-(.+)\.md$/);
-  return match ? match[1] : "";
-}
-
-/**
- * Load all Domain files from vaultPath and extract metadata.
- */
-function loadDomainMetadata(): DomainMetadata[] {
-  if (cachedDomains) {
-    return cachedDomains;
-  }
-
-  const domains: DomainMetadata[] = [];
+function loadGroupedManifest(): GroupedManifest | null {
   try {
-    const vaultPath = config.vaultPath;
-    const files = readdirSync(vaultPath).filter((f) =>
-      f.match(/^Domain-.*\.md$/)
-    );
+    const stat = statSync(config.groupedPath);
+    const mtime = stat.mtimeMs;
 
-    for (const file of files) {
-      const filePath = join(vaultPath, file);
-      const content = readFileSync(filePath, "utf-8");
-      const name = extractDomainName(file);
-
-      // Extract first paragraph under "## What This Domain Does"
-      const match = content.match(
-        /##\s+What\s+This\s+Domain\s+Does\n(.+?)(?:\n\n|\n---|\n##)/s
-      );
-      const description = match
-        ? match[1]
-            .trim()
-            .replace(/\n/g, " ")
-            .slice(0, 200) // Cap at 200 chars
-        : "";
-
-      if (name) {
-        domains.push({ name, description, filePath });
-      }
+    // Return cached data if mtime hasn't changed
+    if (cachedGrouped && cachedGrouped.mtime === mtime) {
+      return cachedGrouped.data;
     }
 
-    cachedDomains = domains.sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-    return cachedDomains;
+    // Re-read if mtime changed or not cached
+    const content = readFileSync(config.groupedPath, "utf-8");
+    const data = JSON.parse(content) as GroupedManifest;
+
+    cachedGrouped = { data, mtime };
+    return data;
   } catch (err) {
     console.error(
-      "[openemis-mcp] Failed to load domain metadata:",
+      "[openemis-mcp] Failed to load grouped manifest:",
       err instanceof Error ? err.message : err
     );
-    return [];
+    return null;
   }
-}
-
-/**
- * Load and cache manifest.jsonl
- */
-function loadManifestRows(): ManifestRow[] {
-  if (cachedManifestRows) {
-    return cachedManifestRows;
-  }
-
-  const rows: ManifestRow[] = [];
-  try {
-    const content = readFileSync(config.manifestPath, "utf-8");
-    for (const line of content.split("\n")) {
-      const trimmed = line.trim();
-      if (trimmed) {
-        try {
-          rows.push(JSON.parse(trimmed) as ManifestRow);
-        } catch {
-          // Skip malformed lines
-        }
-      }
-    }
-    cachedManifestRows = rows;
-    return rows;
-  } catch {
-    return [];
-  }
-}
-
-/**
- * Extract table names from domain file (backtick-wrapped identifiers)
- */
-function extractTableNames(domainContent: string): string[] {
-  const matches = domainContent.match(/`([a-z_][a-z0-9_]*)`/g) || [];
-  const tables = new Set<string>();
-  for (const match of matches) {
-    tables.add(match.slice(1, -1)); // Remove backticks
-  }
-  return Array.from(tables);
-}
-
-/**
- * Convert snake_case table name to kebab-case resource hint
- * e.g., institution_students → institution-students
- */
-function tableToResourceHint(tableName: string): string {
-  return tableName.replace(/_/g, "-");
 }
 
 /**
  * Tool 1: openemis_list_domains
+ * Returns compact domain index with stats and hints.
  */
 export const openemisListDomainsSpec = {
   name: "openemis_list_domains",
   description:
-    "List all available domains with one-line descriptions. Helps identify which domain relates to your task.",
+    "List all available domains with summaries, endpoint counts, and a hint to explore via openemis_discover.",
 };
 
 export const openemisListDomainsInputSchema = z.object({});
 
 export async function openemisListDomainsHandler(): Promise<ToolContentBlock[]> {
   try {
-    const domains = loadDomainMetadata();
-    if (domains.length === 0) {
+    const grouped = loadGroupedManifest();
+    if (!grouped) {
       return [
         {
           type: "text",
           text: JSON.stringify(
             {
-              error: "No domain files found in vault",
-              vaultPath: config.vaultPath,
+              error: "Failed to load grouped manifest",
+              path: config.groupedPath,
             },
             null,
             2
@@ -172,11 +143,16 @@ export async function openemisListDomainsHandler(): Promise<ToolContentBlock[]> 
     }
 
     const result = {
-      domains: domains.map((d) => ({
+      domains: grouped.domains.map((d) => ({
         name: d.name,
-        description: d.description,
+        summary: d.summary,
+        resources_count: d.resources.length,
+        endpoint_count: d.endpoint_count,
       })),
-      total: domains.length,
+      families_count: grouped.families.length,
+      orphans_count: grouped.orphans.length,
+      playbook_count: grouped.playbooks.length,
+      hint: "Call openemis_discover('<topic>') to scope into a domain, family, or playbook.",
     };
 
     return [
@@ -206,60 +182,32 @@ export async function openemisListDomainsHandler(): Promise<ToolContentBlock[]> 
 
 /**
  * Tool 2: openemis_discover
+ * Match topic against domains, families, and playbooks.
+ * Prefer playbooks > domains > families.
  */
 export const openemisDiscoverSpec = {
   name: "openemis_discover",
   description:
-    "Discover endpoints related to a specific topic. Searches domain files for table names and filters manifest endpoints. Returns up to 30 related endpoints.",
+    "Discover endpoints and playbooks related to a topic. Searches domains, families, and playbooks by name, summary, and description.",
 };
 
 export const openemisDiscoverInputSchema = z.object({
   topic: z
     .string()
-    .describe("Topic keyword (e.g., 'attendance', 'student', 'assessment')"),
+    .describe("Topic keyword (e.g., 'attendance', 'assessment', 'playbook-id')"),
 });
 
 export async function openemisDiscoverHandler(args: {
   topic: string;
 }): Promise<ToolContentBlock[]> {
   try {
-    const topic = args.topic.toLowerCase();
-    const domains = loadDomainMetadata();
-
-    // Find best-matching domain
-    let bestDomain: DomainMetadata | null = null;
-    for (const domain of domains) {
-      const nameLower = domain.name.toLowerCase();
-      if (
-        nameLower === topic ||
-        nameLower.includes(topic) ||
-        topic.includes(nameLower)
-      ) {
-        bestDomain = domain;
-        break;
-      }
-    }
-
-    if (!bestDomain) {
-      // Substring match on description
-      for (const domain of domains) {
-        if (domain.description.toLowerCase().includes(topic)) {
-          bestDomain = domain;
-          break;
-        }
-      }
-    }
-
-    if (!bestDomain) {
+    const grouped = loadGroupedManifest();
+    if (!grouped) {
       return [
         {
           type: "text",
           text: JSON.stringify(
-            {
-              error: "No matching domain found",
-              topic,
-              available_domains: domains.map((d) => d.name),
-            },
+            { error: "Failed to load grouped manifest" },
             null,
             2
           ),
@@ -267,38 +215,60 @@ export async function openemisDiscoverHandler(args: {
       ];
     }
 
-    // Extract table names from domain file
-    const domainContent = readFileSync(bestDomain.filePath, "utf-8");
-    const tableNames = extractTableNames(domainContent);
+    const topic = args.topic.toLowerCase();
+    const domainMatches: Array<{
+      name: string;
+      summary: string;
+      resources: Resource[];
+    }> = [];
+    const familyMatches: Array<{ prefix: string; resources: Resource[] }> = [];
+    const playbookMatches: Playbook[] = [];
 
-    // Filter manifest endpoints by table name fragments
-    const manifestRows = loadManifestRows();
-    const resourceHints = new Set(
-      tableNames.map((t) => tableToResourceHint(t))
-    );
+    // Match against domains
+    for (const domain of grouped.domains) {
+      if (
+        domain.name.toLowerCase().includes(topic) ||
+        domain.summary.toLowerCase().includes(topic)
+      ) {
+        domainMatches.push({
+          name: domain.name,
+          summary: domain.summary,
+          resources: domain.resources.slice(0, 30),
+        });
+      }
+    }
 
-    const relatedEndpoints = manifestRows
-      .filter((row) => {
-        const resourceLower = row.resource.toLowerCase();
-        for (const hint of resourceHints) {
-          if (
-            resourceLower.includes(hint.replace(/-/g, "")) ||
-            resourceLower === hint.replace(/-/g, "")
-          ) {
-            return true;
-          }
-        }
-        return false;
-      })
-      .slice(0, 30); // Cap at 30
+    // Match against families
+    for (const family of grouped.families) {
+      if (family.prefix.toLowerCase().includes(topic)) {
+        familyMatches.push({
+          prefix: family.prefix,
+          resources: family.resources.slice(0, 30),
+        });
+      }
+    }
+
+    // Match against playbooks
+    for (const playbook of grouped.playbooks) {
+      if (
+        playbook.id.toLowerCase().includes(topic) ||
+        playbook.title.toLowerCase().includes(topic) ||
+        playbook.description.toLowerCase().includes(topic) ||
+        playbook.resources.some((r) => r.toLowerCase().includes(topic))
+      ) {
+        playbookMatches.push(playbook);
+      }
+    }
 
     const result = {
-      domain: bestDomain.name,
-      summary: bestDomain.description,
-      related_endpoints: relatedEndpoints,
-      tables_extracted: tableNames,
+      topic,
+      domain_matches: domainMatches,
+      family_matches: familyMatches,
+      playbook_matches: playbookMatches,
       advice:
-        "To act on this topic, call openemis_get with one of the resource names above (in kebab-case).",
+        playbookMatches.length > 0
+          ? "Use openemis_get_playbook to get the full recipe, or call openemis_get with any listed resource."
+          : "Call openemis_get with a listed resource name, or try openemis_list_domains to explore all domains.",
     };
 
     return [
@@ -327,3 +297,145 @@ export async function openemisDiscoverHandler(args: {
   }
 }
 
+/**
+ * Tool 3: openemis_list_playbooks
+ * Returns compact list of all playbooks.
+ */
+export const openemisListPlaybooksSpec = {
+  name: "openemis_list_playbooks",
+  description:
+    "List all available playbooks with their id, title, audience, and domain.",
+};
+
+export const openemisListPlaybooksInputSchema = z.object({});
+
+export async function openemisListPlaybooksHandler(): Promise<
+  ToolContentBlock[]
+> {
+  try {
+    const grouped = loadGroupedManifest();
+    if (!grouped) {
+      return [
+        {
+          type: "text",
+          text: JSON.stringify(
+            { error: "Failed to load grouped manifest" },
+            null,
+            2
+          ),
+        },
+      ];
+    }
+
+    const result = {
+      playbooks: grouped.playbooks.map((p) => ({
+        id: p.id,
+        title: p.title,
+        audience: p.audience,
+        domain: p.domain,
+        coverage_pct: p.coverage.pct,
+      })),
+      total: grouped.playbooks.length,
+      hint: "Call openemis_discover('<playbook id or topic>') to get the full steps.",
+    };
+
+    return [
+      {
+        type: "text",
+        text: JSON.stringify(result, null, 2),
+      },
+    ];
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : String(error);
+    return [
+      {
+        type: "text",
+        text: JSON.stringify(
+          {
+            error: "Failed to list playbooks",
+            details: message,
+          },
+          null,
+          2
+        ),
+      },
+    ];
+  }
+}
+
+/**
+ * Tool 4: openemis_get_playbook
+ * Returns full playbook by id.
+ */
+export const openemisGetPlaybookSpec = {
+  name: "openemis_get_playbook",
+  description:
+    "Get the full playbook details including steps and coverage by playbook id.",
+};
+
+export const openemisGetPlaybookInputSchema = z.object({
+  id: z.string().describe("Playbook id (e.g., 'mark-student-attendance')"),
+});
+
+export async function openemisGetPlaybookHandler(args: {
+  id: string;
+}): Promise<ToolContentBlock[]> {
+  try {
+    const grouped = loadGroupedManifest();
+    if (!grouped) {
+      return [
+        {
+          type: "text",
+          text: JSON.stringify(
+            { error: "Failed to load grouped manifest" },
+            null,
+            2
+          ),
+        },
+      ];
+    }
+
+    const playbook = grouped.playbooks.find((p) => p.id === args.id);
+    if (!playbook) {
+      return [
+        {
+          type: "text",
+          text: JSON.stringify(
+            {
+              error: "Playbook not found",
+              requested_id: args.id,
+              available: grouped.playbooks.map((p) => p.id),
+            },
+            null,
+            2
+          ),
+        },
+      ];
+    }
+
+    return [
+      {
+        type: "text",
+        text: JSON.stringify(playbook, null, 2),
+      },
+    ];
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : String(error);
+    return [
+      {
+        type: "text",
+        text: JSON.stringify(
+          {
+            error: "Failed to get playbook",
+            details: message,
+            id: args.id,
+          },
+          null,
+          2
+        ),
+      },
+    ];
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "note": "Curated task playbooks for common OpenEMIS workflows. Each playbook names the minimal resource chain an agent needs to accomplish a user-level goal. Hand-maintained; extend as new workflows are mapped.",
+  "playbooks": [
+    {
+      "id": "mark-student-attendance",
+      "title": "Mark student attendance for a class",
+      "audience": ["teacher", "admin"],
+      "domain": "Attendance",
+      "description": "Daily or period-based roll call. Teacher selects a class, loads the enrolled students, marks each one present/late/absent with an absence type, and saves.",
+      "resources": [
+        "institution-classes",
+        "institution-students",
+        "absence-types",
+        "student-attendance-marked-records",
+        "institution-class-attendances"
+      ],
+      "steps": [
+        "Resolve the class: openemis_get('institution-classes', params: {institution_id, academic_period_id})",
+        "List enrolled students: openemis_get('institution-students', params: {institution_id, education_grade_id, academic_period_id, student_status_id: 1})",
+        "Load absence types for the dropdown: openemis_get('absence-types')",
+        "Write attendance records: openemis_create('student-attendance-marked-records', body: {...}) — (write tool arrives in v0.2)"
+      ]
+    },
+    {
+      "id": "mark-staff-attendance",
+      "title": "Mark staff attendance",
+      "audience": ["admin", "hr"],
+      "domain": "Staff",
+      "description": "Daily staff check-in. Lookup active staff for an institution, record attendance or leave.",
+      "resources": [
+        "institution-staff",
+        "staff-leaves",
+        "staff-leave-types",
+        "absence-types"
+      ],
+      "steps": [
+        "List active staff: openemis_get('institution-staff', params: {institution_id, status_id: 1})",
+        "If absent: openemis_get('staff-leave-types') then openemis_create('staff-leaves', body: {...})"
+      ]
+    },
+    {
+      "id": "view-student-timetable",
+      "title": "See a student's timetable (parent / student view)",
+      "audience": ["parent", "student"],
+      "domain": "Schedule",
+      "description": "Given a student id, return the class timetable — subjects, teachers, rooms, and time slots for the current academic period.",
+      "resources": [
+        "institution-students",
+        "institution-classes",
+        "institution-class-subjects",
+        "institution-subject-staff",
+        "institution-timetable",
+        "institution-rooms"
+      ],
+      "steps": [
+        "Resolve student → class: openemis_get('institution-students', params: {student_id, academic_period_id, student_status_id: 1, _fields: [institution_class_id, institution_id, education_grade_id]})",
+        "Read the timetable for that class: openemis_get('institution-timetable', params: {institution_class_id, academic_period_id})",
+        "Enrich with subject/staff/room lookups as needed"
+      ]
+    },
+    {
+      "id": "student-dashboard",
+      "title": "Parent/student dashboard — latest attendance, behavior, marks",
+      "audience": ["parent", "student"],
+      "domain": "Student",
+      "description": "Aggregate the three things parents ask about most: how often has my child been absent lately, any behavior incidents, and recent test/assessment marks.",
+      "resources": [
+        "institution-students",
+        "student-attendance-marked-records",
+        "institution-student-behaviours",
+        "assessment-item-results",
+        "report-card-comment-codes"
+      ],
+      "steps": [
+        "Resolve student record: openemis_get('institution-students', id: <id>)",
+        "Latest attendance: openemis_get('student-attendance-marked-records', params: {student_id, limit: 30, orderby: date, order: desc})",
+        "Behavior incidents: openemis_get('institution-student-behaviours', params: {student_id, limit: 10, orderby: date_of_behaviour, order: desc})",
+        "Recent marks: openemis_get('assessment-item-results', params: {student_id, academic_period_id, limit: 50})"
+      ]
+    },
+    {
+      "id": "generate-student-report-card-pdf",
+      "title": "Generate a student's report card (PDF)",
+      "audience": ["teacher", "admin"],
+      "domain": "Report",
+      "description": "Triggers the async report card generator for one student. Returns a process id that the caller polls until PDF is ready for download.",
+      "resources": [
+        "institution-students-report-cards",
+        "institution-report-cards",
+        "institution-report-card-processes",
+        "report-card-processes",
+        "report-card-email-processes",
+        "report-card-subjects",
+        "report-card-comment-codes",
+        "institution-students-report-cards-comments"
+      ],
+      "steps": [
+        "Identify the configured report card: openemis_get('institution-report-cards', params: {institution_id, academic_period_id})",
+        "Kick off generation: openemis_create('institution-report-card-processes', body: {institution_id, student_id, report_card_id}) — (write tool arrives in v0.2)",
+        "Poll status: openemis_get('institution-report-card-processes', id: <process_id>)",
+        "Once 'completed', fetch the PDF URL: openemis_get('institution-students-report-cards', params: {student_id, report_card_id})"
+      ]
+    },
+    {
+      "id": "enroll-new-student",
+      "title": "Enrol a new student at an institution",
+      "audience": ["admin", "registrar"],
+      "domain": "Student",
+      "description": "Create the user record, attach guardianship, and enrol into a class with a status of 'Current'.",
+      "resources": [
+        "users",
+        "user-identities",
+        "guardians",
+        "institution-students",
+        "education-grades",
+        "institution-classes"
+      ],
+      "steps": [
+        "Create user: openemis_create('users', body: {...first_name, last_name, date_of_birth, gender_id...})",
+        "Optional identity doc: openemis_create('user-identities', body: {...})",
+        "Attach guardian: openemis_create('guardians', body: {...})",
+        "Enrol into a grade/class: openemis_create('institution-students', body: {institution_id, student_id, education_grade_id, academic_period_id, student_status_id: 1, ...})"
+      ]
+    },
+    {
+      "id": "record-behavior-incident",
+      "title": "Record a student behavior incident",
+      "audience": ["teacher", "admin"],
+      "domain": "Student",
+      "description": "Log an incident against a student with a category, severity, description, and follow-up action.",
+      "resources": [
+        "institution-student-behaviours",
+        "institution-student-behaviour-categories",
+        "student-behaviours"
+      ],
+      "steps": [
+        "Load category codes: openemis_get('institution-student-behaviour-categories')",
+        "Write incident: openemis_create('institution-student-behaviours', body: {student_id, institution_id, category_id, date_of_behaviour, description, ...})"
+      ]
+    },
+    {
+      "id": "submit-exam-marks",
+      "title": "Submit subject exam marks for an assessment period",
+      "audience": ["teacher"],
+      "domain": "Assessment",
+      "description": "Bulk-enter per-student marks for one assessment item, commit, then verify the weighted result was calculated.",
+      "resources": [
+        "assessments",
+        "assessment-periods",
+        "assessment-items",
+        "assessment-item-results",
+        "education-subjects",
+        "institution-class-students"
+      ],
+      "steps": [
+        "Get the assessment + period: openemis_get('assessments', params: {academic_period_id, education_grade_id})",
+        "Fetch class roster: openemis_get('institution-class-students', params: {institution_class_id, academic_period_id, student_status_id: 1})",
+        "Submit a mark per student: openemis_create('assessment-item-results', body: {assessment_id, assessment_period_id, student_id, marks, ...})"
+      ]
+    },
+    {
+      "id": "institution-summary",
+      "title": "Institution basic info — counts of students, staff, vacant positions",
+      "audience": ["admin", "parent"],
+      "domain": "Institution",
+      "description": "The classic 'tell me about this school' query. Single institution fetch + three count pagination calls.",
+      "resources": [
+        "institutions",
+        "institution-students",
+        "institution-staff",
+        "institution-positions"
+      ],
+      "steps": [
+        "Resolve institution: openemis_get('institutions', params: {name: 'Avory Primary', _fields: [id,name,code]})",
+        "Count current students: openemis_get('institution-students', params: {institution_id, student_status_id: 1, limit: 1}) → read last_page",
+        "Count active staff: openemis_get('institution-staff', params: {institution_id, status_id: 1, limit: 1}) → read last_page",
+        "Count vacant positions: openemis_get('institution-positions', params: {institution_id, status: 'vacant', limit: 1}) → read last_page"
+      ]
+    },
+    {
+      "id": "generate-institution-statistics-pdf",
+      "title": "Generate institution statistics PDF report",
+      "audience": ["admin"],
+      "domain": "Report",
+      "description": "Admin requests a summary PDF for one institution covering enrolment, staff, attendance stats.",
+      "resources": [
+        "institutions",
+        "custom-reports",
+        "report-card-processes",
+        "institution-report-card-processes"
+      ],
+      "steps": [
+        "Identify the report template: openemis_get('custom-reports', params: {type: 'institution-statistics'})",
+        "Start generation: openemis_create('report-card-processes', body: {...template_id, institution_id, ...})",
+        "Poll and download once 'completed'"
+      ]
+    },
+    {
+      "id": "view-latest-attendance",
+      "title": "Teacher dashboard — latest attendance stats for my class",
+      "audience": ["teacher"],
+      "domain": "Attendance",
+      "description": "Quick snapshot: who was absent today, week-to-date totals, chronic absentees.",
+      "resources": [
+        "institution-classes",
+        "institution-class-students",
+        "student-attendance-marked-records",
+        "absence-types"
+      ],
+      "steps": [
+        "Get today's attendance: openemis_get('student-attendance-marked-records', params: {institution_class_id, date: <today>})",
+        "Week totals: openemis_get('student-attendance-marked-records', params: {institution_class_id, date_from: <monday>, date_to: <today>, limit: 500})",
+        "Chronic absentees: filter by count per student client-side"
+      ]
+    }
+  ]
+}

@@ -17,6 +17,12 @@ import {
   openemisDiscoverSpec,
   openemisDiscoverInputSchema,
   openemisDiscoverHandler,
+  openemisListPlaybooksSpec,
+  openemisListPlaybooksInputSchema,
+  openemisListPlaybooksHandler,
+  openemisGetPlaybookSpec,
+  openemisGetPlaybookInputSchema,
+  openemisGetPlaybookHandler,
 } from "./tools/describe.js";
 
 const config = loadConfig();
@@ -101,6 +107,28 @@ async function main(): Promise<void> {
     async (args: { topic: string }) => {
       return {
         content: await openemisDiscoverHandler(args),
+      };
+    }
+  );
+
+  server.tool(
+    openemisListPlaybooksSpec.name,
+    openemisListPlaybooksSpec.description,
+    openemisListPlaybooksInputSchema.shape,
+    async () => {
+      return {
+        content: await openemisListPlaybooksHandler(),
+      };
+    }
+  );
+
+  server.tool(
+    openemisGetPlaybookSpec.name,
+    openemisGetPlaybookSpec.description,
+    openemisGetPlaybookInputSchema.shape,
+    async (args: { id: string }) => {
+      return {
+        content: await openemisGetPlaybookHandler(args),
       };
     }
   );
