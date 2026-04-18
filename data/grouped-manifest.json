@@ -155,9 +155,51 @@
     "domain_endpoint_total": 20,
     "family_endpoint_total": 25,
     "orphan_endpoint_total": 5,
-    "playbook_count": 11
+    "playbook_count": 12
   },
   "playbooks": [
+    {
+      "id": "count-vacant-positions",
+      "title": "Count vacant positions (by institution or system-wide, optionally filtered by role)",
+      "audience": [
+        "admin",
+        "hr"
+      ],
+      "domain": "Staff",
+      "description": "A position is vacant when EITHER (a) no institution_staff record references its institution_position_id, OR (b) the sum of FTE across all staff on that position is less than 1.00 (100%). This captures both 'nobody assigned' and 'under-staffed' cases. Apply per-institution or aggregate across the whole system. Filter to a specific role (e.g. teacher) by restricting institution-positions to a matching staff_position_title_id.",
+      "resources": [
+        "institution-positions",
+        "institution-staff",
+        "staff-position-titles",
+        "institutions"
+      ],
+      "definition_of_vacant": {
+        "rule": "count_vacant = count of positions where (no institution_staff rows reference institution_position_id) OR (SUM(FTE) across institution_staff rows for that institution_position_id < 1.0)",
+        "notes": [
+          "FTE is a string like '1.00' in the API response \u2014 parse to float before summing.",
+          "Only consider institution_staff rows that are currently active \u2014 typically staff_status_id corresponds to an 'Assigned' or 'Current' code.",
+          "Do NOT include end-dated or resigned staff in the FTE sum (they free up the position)."
+        ]
+      },
+      "steps": [
+        "If filtering by role, resolve the title id: openemis_get('staff-position-titles', params: {limit: 200, _fields: ['id','name']}) then find entries whose name contains 'teacher' (case-insensitive)",
+        "For an institution-scoped question: openemis_get('institution-positions', params: {institution_id: <id>, limit: 500, _fields: ['id','staff_position_title_id','status_id']}) \u2014 optionally filter by staff_position_title_id:<teacher_id>",
+        "For a system-wide question: paginate openemis_get('institution-positions', params: {limit: 200, page: N}) across all pages, optionally filtered by staff_position_title_id",
+        "For each returned position, fetch its staff: openemis_get('institution-staff', params: {institution_position_id: <pos_id>, limit: 50, _fields: ['id','FTE','staff_status_id','end_date']})",
+        "Tally vacant: a position counts as vacant if (returned rows = 0) OR (sum of parseFloat(row.FTE) across active rows < 1.0)",
+        "Return the vacant count (and optionally under-staffed positions with their current FTE total)"
+      ],
+      "coverage": {
+        "present": [],
+        "missing": [
+          "institution-positions",
+          "institution-staff",
+          "staff-position-titles",
+          "institutions"
+        ],
+        "pct": 0
+      }
+    },
     {
       "id": "mark-student-attendance",
       "title": "Mark student attendance for a class",
