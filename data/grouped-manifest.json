@@ -7251,68 +7251,134 @@
     },
     {
       "id": "mark-student-attendance",
-      "title": "Mark student attendance for a class",
+      "title": "Mark student attendance for a class (period roll call)",
       "audience": [
         "teacher",
         "admin"
       ],
       "domain": "Attendance",
-      "description": "Daily or period-based roll call. Teacher selects a class, loads the enrolled students, marks each one present/late/absent with an absence type, and saves.",
+      "description": "Daily/period roll call. Teacher picks a class, loads the roster, marks each student present/late/absent with an absence_type_id, and POSTs rows to student-attendance-marked-records. The month-level aggregate in institution-class-attendance-records is updated automatically by an afterSaveCommit hook on the backend \u2014 do NOT write it yourself. student-attendance-marked-records has a 7-field composite PK, and POSTing the same key UPSERTs (re-marking is safe). POST an ARRAY for batch create (transaction-wrapped) or a single object for one row.",
       "resources": [
         "institution-classes",
         "institution-students",
         "absence-types",
         "student-attendance-marked-records",
-        "institution-class-attendances"
+        "institution-student-absence-details",
+        "institution-class-attendance-records"
       ],
+      "composite_key": {
+        "table": "student-attendance-marked-records",
+        "fields": [
+          "institution_id",
+          "academic_period_id",
+          "institution_class_id",
+          "education_grade_id",
+          "date",
+          "period",
+          "subject_id"
+        ],
+        "upsert": true,
+        "verified_at": "api/app/Models/Api5/StudentAttendanceMarkedRecords.php:20-23, :366-377"
+      },
       "steps": [
         "Resolve the class: openemis_get('institution-classes', params: {institution_id, academic_period_id})",
-        "List enrolled students: openemis_get('institution-students', params: {institution_id, education_grade_id, academic_period_id, student_status_id: 1})",
-        "Load absence types for the dropdown: openemis_get('absence-types')",
-        "Write attendance records: openemis_create('student-attendance-marked-records', body: {...}) \u2014 (write tool arrives in v0.2)"
+        "List enrolled students in the class: openemis_get('institution-students', params: {institution_id, institution_class_id, academic_period_id, student_status_id: 1})",
+        "Load absence types (present/late/absent/excused lookup): openemis_get('absence-types')",
+        "POST a batch of attendance rows: openemis_create('student-attendance-marked-records', body: [{institution_id, academic_period_id, institution_class_id, education_grade_id, date, period, subject_id, student_id, absence_type_id, no_scheduled_class, ...}, ...])",
+        "If per-student free-text reason/comment/excuse is needed, POST to 'institution-student-absence-details' with the same 7-field composite key"
+      ],
+      "notes": [
+        "Frontend (Angular) uses a legacy v4-style nested path /institutions/{institution_id}/students/{student_id}/absences (see frontend/src/app/student-attendance/student-attendance.component.ts). Agents should prefer the v5 routes above \u2014 they're the stable contract.",
+        "UI maps present/late/absent/excused onto absence_type_id; 'no_scheduled_class' uses sentinels 99 (no class) and 0 (scheduled). See frontend/src/app/student-attendance/student_attendance.config.ts:501-623 for the full remap.",
+        "Do NOT POST to institution-class-attendance-records directly for marking \u2014 it is a month-level aggregate that the backend updates via afterSaveCommit hook in plugins/Attendance/src/Model/Table/StudentAttendanceMarkedRecordsTable.php."
       ],
       "coverage": {
         "present": [
           "institution-students",
           "absence-types",
-          "student-attendance-marked-records"
+          "student-attendance-marked-records",
+          "institution-student-absence-details",
+          "institution-class-attendance-records"
         ],
         "missing": [
-          "institution-classes",
-          "institution-class-attendances"
+          "institution-classes"
         ],
-        "pct": 60
+        "pct": 83
       }
     },
     {
       "id": "mark-staff-attendance",
-      "title": "Mark staff attendance",
+      "title": "Mark staff attendance (present) OR request leave (absent)",
       "audience": [
         "admin",
-        "hr"
+        "hr",
+        "teacher"
       ],
       "domain": "Staff",
-      "description": "Daily staff check-in. Lookup active staff for an institution, record attendance or leave.",
+      "description": "Two DISTINCT flows \u2014 do not mix. PRESENT = quick check-in with optional time_in/time_out via institution-staff-attendances (simple id PK, no workflow). ABSENT = leave request with staff_leave_type_id via institution-staff-leave, which is workflow-controlled (status_id -> WorkflowSteps). They write different tables.",
       "resources": [
         "institution-staff",
-        "staff-leaves",
+        "institution-staff-attendances",
+        "institution-staff-leave",
         "staff-leave-types",
         "absence-types"
       ],
+      "flows": {
+        "present": {
+          "endpoint": "institution-staff-attendances",
+          "body": {
+            "staff_id": "<id>",
+            "institution_id": "<id>",
+            "academic_period_id": "<id>",
+            "date": "YYYY-MM-DD",
+            "time_in": "HH:MM:SS",
+            "time_out": "HH:MM:SS (optional)",
+            "comment": "optional",
+            "absence_type_id": "optional"
+          },
+          "workflow": false,
+          "verified_at": "api/app/Models/Api5/InstitutionStaffAttendances.php:18-21"
+        },
+        "absent": {
+          "endpoint": "institution-staff-leave",
+          "body": {
+            "staff_id": "<id>",
+            "institution_id": "<id>",
+            "academic_period_id": "<id>",
+            "date_from": "YYYY-MM-DD",
+            "date_to": "YYYY-MM-DD",
+            "full_day": "bool",
+            "staff_leave_type_id": "<id>",
+            "status_id": "<workflow_step_id>",
+            "comments": "optional",
+            "number_of_days": "float (optional)"
+          },
+          "workflow": true,
+          "verified_at": "api/app/Models/Api5/InstitutionStaffLeave.php:295-297 (status_id -> WorkflowSteps)"
+        }
+      },
       "steps": [
-        "List active staff: openemis_get('institution-staff', params: {institution_id, status_id: 1})",
-        "If absent: openemis_get('staff-leave-types') then openemis_create('staff-leaves', body: {...})"
+        "List active staff at institution: openemis_get('institution-staff', params: {institution_id, status_id: 1})",
+        "For a present check-in: openemis_create('institution-staff-attendances', body: {staff_id, institution_id, academic_period_id, date, time_in, ...})",
+        "For an absence/leave request: openemis_get('staff-leave-types') then openemis_create('institution-staff-leave', body: {staff_id, institution_id, academic_period_id, date_from, date_to, full_day, staff_leave_type_id, ...})"
+      ],
+      "notes": [
+        "WARNING: there is no v5 alias 'staff-leaves' \u2014 use 'institution-staff-leave' (singular, institution-prefixed). Earlier playbook guess was wrong.",
+        "For historical/migrated leave records, see 'historical-staff-leave' and 'institution-staff-leave-archived' \u2014 these are read-heavy and shouldn't be your write target.",
+        "Frontend posts staff check-in to the v4-style path /institutions/{institution_id}/staff/{staff_id}/attendances (frontend/src/app/staff-attendance/staff-attendance.component.ts:514-526). No frontend POST to institution-staff-leave was found \u2014 it may go through a different admin-only UI. Agents should use the v5 routes.",
+        "Leave requests go through an approval chain (status_id FKs WorkflowSteps). A fresh POST lands in the configured initial workflow state; approvals are subsequent state transitions."
       ],
       "coverage": {
         "present": [
+          "institution-staff-attendances",
+          "institution-staff-leave",
           "staff-leave-types",
           "absence-types"
         ],
         "missing": [
-          "institution-staff",
-          "staff-leaves"
+          "institution-staff"
         ],
-        "pct": 50
+        "pct": 80
       }
     },
     {
