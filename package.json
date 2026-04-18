@@ -1,6 +1,6 @@
 {
   "name": "openemis-mcp",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "private": false,
   "description": "MCP server wrapping the OpenEMIS v5 REST API",
   "license": "MIT",
