@@ -107,17 +107,6 @@
           }
         },
         {
-          "name": "CustomFields",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "CustomForms",
           "endpoints": 5,
           "kinds": {
@@ -668,6 +657,17 @@
           }
         },
         {
+          "name": "InstitutionAssociationStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InstitutionAssociationStudent",
           "endpoints": 5,
           "kinds": {
@@ -800,17 +800,6 @@
           }
         },
         {
-          "name": "InstitutionClassAttendanceRecords",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "InstitutionClassGrades",
           "endpoints": 5,
           "kinds": {
@@ -900,17 +889,6 @@
         },
         {
           "name": "InstitutionCompetencyPeriodComments",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionCompetencyResults",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1185,17 +1163,6 @@
           }
         },
         {
-          "name": "InstitutionMealStudents",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "InstitutionOutcomeResults",
           "endpoints": 5,
           "kinds": {
@@ -1219,17 +1186,6 @@
         },
         {
           "name": "InstitutionOwnerships",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionPositions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1317,17 +1273,6 @@
           }
         },
         {
-          "name": "InstitutionRepeaterSurveys",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "InstitutionReportCardProcesses",
           "endpoints": 5,
           "kinds": {
@@ -1336,16 +1281,6 @@
             "GET": 1,
             "UPDATE": 1,
             "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionReportCards",
-          "endpoints": 4,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1
           }
         },
         {
@@ -1382,137 +1317,7 @@
           }
         },
         {
-          "name": "InstitutionScheduleCurriculumLessons",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionScheduleIntervals",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionScheduleLessonDetails",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionScheduleLessonRooms",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionScheduleLessons",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionScheduleNonCurriculumLessons",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionScheduleTerms",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionScheduleTimeslots",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionScheduleTimetableCustomizes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionScheduleTimetables",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "InstitutionSectors",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionShiftPeriods",
-          "endpoints": 3,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1
-          }
-        },
-        {
-          "name": "InstitutionShifts",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1535,17 +1340,6 @@
         },
         {
           "name": "InstitutionStatuses",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentAbsenceDetails",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1651,51 +1445,7 @@
           }
         },
         {
-          "name": "InstitutionStudentWithdraw",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudents",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentsGpa",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "InstitutionStudentsReportCards",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentsReportCardsComments",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1762,17 +1512,6 @@
         },
         {
           "name": "InstitutionSurveyTableCells",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionSurveys",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1948,11 +1687,14 @@
           }
         },
         {
-          "name": "SummaryAreaInstitutionGradeAttendances",
-          "endpoints": 2,
+          "name": "SecurityGroupInstitutions",
+          "endpoints": 5,
           "kinds": {
             "LIST": 1,
-            "CREATE": 1
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
           }
         },
         {
@@ -2077,17 +1819,6 @@
           }
         },
         {
-          "name": "WorkflowModels",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "WorkflowRuleEvents",
           "endpoints": 5,
           "kinds": {
@@ -2121,6 +1852,17 @@
           }
         },
         {
+          "name": "WorkflowStepsParams",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "WorkflowTransitions",
           "endpoints": 5,
           "kinds": {
@@ -2132,7 +1874,7 @@
           }
         }
       ],
-      "endpoint_count": 960
+      "endpoint_count": 846
     },
     {
       "name": "Staff",
@@ -2326,28 +2068,6 @@
           }
         },
         {
-          "name": "InstitutionAssociationStaff",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionClassesSecondaryStaff",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "InstitutionCurricularStaff",
           "endpoints": 5,
           "kinds": {
@@ -2359,7 +2079,7 @@
           }
         },
         {
-          "name": "InstitutionStaffAppraisals",
+          "name": "InstitutionPositions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2370,7 +2090,16 @@
           }
         },
         {
-          "name": "InstitutionStaffAttendances",
+          "name": "InstitutionShiftPeriods",
+          "endpoints": 3,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffAppraisals",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3063,29 +2792,7 @@
           }
         },
         {
-          "name": "SurveyForms",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "SurveyFormsFilters",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SurveyFormsQuestions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3119,6 +2826,17 @@
         },
         {
           "name": "SurveyResponses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyStatusPeriods",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3437,6 +3155,17 @@
           }
         },
         {
+          "name": "WorkflowModels",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "WorkflowStatuses",
           "endpoints": 5,
           "kinds": {
@@ -3459,17 +3188,6 @@
           }
         },
         {
-          "name": "WorkflowStepsParams",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "WorkflowStepsRoles",
           "endpoints": 5,
           "kinds": {
@@ -3481,23 +3199,12 @@
           }
         }
       ],
-      "endpoint_count": 610
+      "endpoint_count": 598
     },
     {
       "name": "Student",
       "summary": "The Student domain manages the complete academic, administrative, and assessment lifecycle of learners within OpenEMIS, from initial registration, demographic profiling, and institutional enrollment to attendance trackin",
       "resources": [
-        {
-          "name": "AssessmentItemStudentExemptions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
         {
           "name": "CompetencyCriterias",
           "endpoints": 5,
@@ -3543,7 +3250,7 @@
           }
         },
         {
-          "name": "EmploymentStatusTypes",
+          "name": "CustomFields",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3554,7 +3261,7 @@
           }
         },
         {
-          "name": "ExaminationStudentSubjectResults",
+          "name": "EmploymentStatusTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3632,6 +3339,72 @@
         },
         {
           "name": "HealthTestTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCompetencyResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionMealStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentAbsenceDetails",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentWithdraw",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentsReportCardsComments",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3818,17 +3591,6 @@
           }
         },
         {
-          "name": "StudentAbsenceReasons",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "StudentAdmissionCustomFieldValues",
           "endpoints": 5,
           "kinds": {
@@ -3841,17 +3603,6 @@
         },
         {
           "name": "StudentAttachmentTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "StudentAttendanceMarkTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -4038,17 +3789,6 @@
           }
         },
         {
-          "name": "StudentMarkTypeStatusGrades",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "StudentMarkTypeStatuses",
           "endpoints": 5,
           "kinds": {
@@ -4203,29 +3943,7 @@
           }
         },
         {
-          "name": "SummaryStudentAttendances",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "UserActivities",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "UserAttachments",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -4277,17 +3995,6 @@
           }
         },
         {
-          "name": "UserContacts",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "UserDemographics",
           "endpoints": 5,
           "kinds": {
@@ -4310,7 +4017,7 @@
           }
         },
         {
-          "name": "UserHealths",
+          "name": "UserHealthAllergies",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -4321,7 +4028,73 @@
           }
         },
         {
-          "name": "UserIdentities",
+          "name": "UserHealthConsultations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthFamilies",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthHistories",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthImmunizations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthMedications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealthTests",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserHealths",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -4348,17 +4121,6 @@
           "kinds": {
             "LIST": 1,
             "CREATE": 1
-          }
-        },
-        {
-          "name": "UserNationalities",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
           }
         },
         {
@@ -4417,7 +4179,7 @@
           }
         }
       ],
-      "endpoint_count": 419
+      "endpoint_count": 439
     },
     {
       "name": "Attendance",
@@ -4754,6 +4516,28 @@
           }
         },
         {
+          "name": "InstitutionClassAttendanceRecords",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffAttendances",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InsuranceTypes",
           "endpoints": 5,
           "kinds": {
@@ -4941,6 +4725,28 @@
           }
         },
         {
+          "name": "StudentAbsenceReasons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentAttendanceMarkTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "StudentAttendanceMarkedRecords",
           "endpoints": 5,
           "kinds": {
@@ -4971,6 +4777,25 @@
             "GET": 1,
             "UPDATE": 1,
             "DELETE": 1
+          }
+        },
+        {
+          "name": "StudentMarkTypeStatusGrades",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SummaryAreaInstitutionGradeAttendances",
+          "endpoints": 2,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1
           }
         },
         {
@@ -5016,6 +4841,17 @@
           }
         },
         {
+          "name": "SummaryStudentAttendances",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "UtilityElectricityTypes",
           "endpoints": 5,
           "kinds": {
@@ -5038,7 +4874,7 @@
           }
         }
       ],
-      "endpoint_count": 279
+      "endpoint_count": 311
     },
     {
       "name": "Assessment",
@@ -5122,6 +4958,17 @@
           }
         },
         {
+          "name": "AssessmentItemStudentExemptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "AssessmentItems",
           "endpoints": 5,
           "kinds": {
@@ -5166,6 +5013,17 @@
           }
         },
         {
+          "name": "Assessments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "CompetencyGradingOptions",
           "endpoints": 5,
           "kinds": {
@@ -5196,17 +5054,6 @@
             "GET": 1,
             "DELETE": 1,
             "UPDATE": 1
-          }
-        },
-        {
-          "name": "ConfigItems",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
           }
         },
         {
@@ -5270,17 +5117,6 @@
           "kinds": {
             "CREATE": 1,
             "LIST": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "EducationGradesGpa",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
             "GET": 1,
             "UPDATE": 1,
             "DELETE": 1
@@ -5515,6 +5351,17 @@
           }
         },
         {
+          "name": "SystemProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "TrainingSessionResults",
           "endpoints": 5,
           "kinds": {
@@ -5537,300 +5384,7 @@
           }
         }
       ],
-      "endpoint_count": 223
-    },
-    {
-      "name": "User",
-      "summary": "The User domain manages the complete lifecycle, authentication, authorization, and demographic data of all system actors (students, staff, guardians, administrators, and external integrators). It centralizes identity pro",
-      "resources": [
-        {
-          "name": "AlertsRoles",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "DELETE": 1,
-            "UPDATE": 1
-          }
-        },
-        {
-          "name": "IdpOauth",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InsuranceProviders",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "MessagingSecurityRoles",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "OpenemisTemps",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityFunctions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityGroupAreas",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityGroupInstitutions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityGroupUsers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityGroups",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityRestSessions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityRoleFunctions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityRoles",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUserCodes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUserLogins",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUserPasswordRequests",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUserSessions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUsers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "UserAttachmentsRoles",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "UserHealthAllergies",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "UserHealthConsultations",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "UserHealthFamilies",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "UserHealthHistories",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "UserHealthImmunizations",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "UserHealthMedications",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "UserHealthTests",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 130
+      "endpoint_count": 228
     },
     {
       "name": "Examination",
@@ -5844,6 +5398,17 @@
             "CREATE": 1,
             "GET": 1,
             "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ConfigItems",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
             "DELETE": 1
           }
         },
@@ -6057,6 +5622,17 @@
           }
         },
         {
+          "name": "ExaminationStudentSubjectResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "ExaminationSubjects",
           "endpoints": 5,
           "kinds": {
@@ -6099,14 +5675,36 @@
             "UPDATE": 1,
             "DELETE": 1
           }
+        },
+        {
+          "name": "SecurityGroupAreas",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
         }
       ],
-      "endpoint_count": 120
+      "endpoint_count": 135
     },
     {
       "name": "Report",
       "summary": "The Report domain manages the end-to-end lifecycle of academic, examination, health, survey, WASH, and institutional reporting. It serves school administrators, principals, teachers, exam officers, and ministry officials",
       "resources": [
+        {
+          "name": "Areas",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
         {
           "name": "ClassProfileProcesses",
           "endpoints": 5,
@@ -6120,6 +5718,17 @@
         },
         {
           "name": "ClassProfileTemplates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "EducationGradesGpa",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -6160,6 +5769,60 @@
             "GET": 1,
             "DELETE": 1,
             "UPDATE": 1
+          }
+        },
+        {
+          "name": "InstitutionClassesSecondaryStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionRepeaterSurveys",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionReportCards",
+          "endpoints": 4,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentsGpa",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSurveys",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
           }
         },
         {
@@ -6284,7 +5947,7 @@
           }
         },
         {
-          "name": "SurveyStatusPeriods",
+          "name": "SurveyForms",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -6295,7 +5958,7 @@
           }
         },
         {
-          "name": "SystemProcesses",
+          "name": "SurveyFormsQuestions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -6306,12 +5969,382 @@
           }
         }
       ],
-      "endpoint_count": 90
+      "endpoint_count": 124
+    },
+    {
+      "name": "User",
+      "summary": "The User domain manages the complete lifecycle, authentication, authorization, and demographic data of all system actors (students, staff, guardians, administrators, and external integrators). It centralizes identity pro",
+      "resources": [
+        {
+          "name": "AlertsRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "DELETE": 1,
+            "UPDATE": 1
+          }
+        },
+        {
+          "name": "IdpOauth",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InsuranceProviders",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MessagingSecurityRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "OpenemisTemps",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityFunctions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityGroupUsers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityGroups",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityRestSessions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityRoleFunctions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUserCodes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUserLogins",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUserPasswordRequests",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUserSessions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUsers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SystemAuthentications",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserAttachments",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserAttachmentsRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserContacts",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserIdentities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UserNationalities",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 110
     },
     {
       "name": "Schedule",
       "summary": "The Schedule domain manages institutional timetables, mapping classes, teachers, subjects, and rooms to specific days, time slots, shifts, and academic terms. It supports a strict `DRAFT` \u2192 `PUBLISHED` lifecycle, handles",
       "resources": [
+        {
+          "name": "InstitutionScheduleCurriculumLessons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleIntervals",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleLessonDetails",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleLessonRooms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleLessons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleNonCurriculumLessons",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleTerms",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleTimeslots",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleTimetableCustomizes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionScheduleTimetables",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionShifts",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
         {
           "name": "ScholarshipRecipientAcademicStandings",
           "endpoints": 5,
@@ -6324,7 +6357,7 @@
           }
         }
       ],
-      "endpoint_count": 5
+      "endpoint_count": 60
     }
   ],
   "families": [
@@ -6550,56 +6583,6 @@
       "endpoint_count": 30
     },
     {
-      "prefix": "System*",
-      "resources": [
-        {
-          "name": "SystemAuthentications",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SystemErrors",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SystemPatches",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SystemUpdates",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 20
-    },
-    {
       "prefix": "Utility*",
       "resources": [
         {
@@ -6682,6 +6665,45 @@
             "CREATE": 1,
             "UPDATE": 1,
             "GET": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 15
+    },
+    {
+      "prefix": "System*",
+      "resources": [
+        {
+          "name": "SystemErrors",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SystemPatches",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SystemUpdates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
             "DELETE": 1
           }
         }
@@ -6810,28 +6832,6 @@
         "CREATE": 1,
         "GET": 1,
         "UPDATE": 1,
-        "DELETE": 1
-      }
-    },
-    {
-      "name": "Areas",
-      "endpoints": 5,
-      "kinds": {
-        "LIST": 1,
-        "CREATE": 1,
-        "UPDATE": 1,
-        "GET": 1,
-        "DELETE": 1
-      }
-    },
-    {
-      "name": "Assessments",
-      "endpoints": 5,
-      "kinds": {
-        "LIST": 1,
-        "CREATE": 1,
-        "UPDATE": 1,
-        "GET": 1,
         "DELETE": 1
       }
     },
@@ -7200,9 +7200,9 @@
     }
   ],
   "summary": {
-    "domain_endpoint_total": 2836,
-    "family_endpoint_total": 190,
-    "orphan_endpoint_total": 180,
+    "domain_endpoint_total": 2851,
+    "family_endpoint_total": 185,
+    "orphan_endpoint_total": 170,
     "playbook_count": 12
   },
   "playbooks": [
@@ -7257,15 +7257,43 @@
         "admin"
       ],
       "domain": "Attendance",
-      "description": "Daily/period roll call. Teacher picks a class, loads the roster, marks each student present/late/absent with an absence_type_id, and POSTs rows to student-attendance-marked-records. The month-level aggregate in institution-class-attendance-records is updated automatically by an afterSaveCommit hook on the backend \u2014 do NOT write it yourself. student-attendance-marked-records has a 7-field composite PK, and POSTing the same key UPSERTs (re-marking is safe). POST an ARRAY for batch create (transaction-wrapped) or a single object for one row.",
+      "description": "Daily/period roll call supporting three attendance modes: DAY (once per day, subject_id=0), SUBJECT (once per subject, period always 1), DAY_AND_SUBJECT (both axes). Always use the same endpoint: POST /api/v5/student-attendance-marked-records. The mode is configured per grade via student-attendance-mark-types \u2014 check it first to know which field values to send. The month-level aggregate in institution-class-attendance-records is updated automatically by an afterSaveCommit hook \u2014 do NOT write it yourself. The 7-field composite PK supports upsert (re-marking is safe). POST an ARRAY for batch.",
       "resources": [
         "institution-classes",
         "institution-students",
         "absence-types",
         "student-attendance-marked-records",
+        "student-attendance-mark-types",
+        "student-attendance-per-day-periods",
+        "institution-class-subjects",
+        "institution-subjects",
         "institution-student-absence-details",
         "institution-class-attendance-records"
       ],
+      "attendance_modes": {
+        "source": "student-attendance-mark-types (education_grade_id + academic_period_id) \u2192 student_attendance_type_id code",
+        "modes": {
+          "DAY": {
+            "code": 1,
+            "subject_id": "always 0 (sentinel, not a real FK)",
+            "period": "1..N from student-attendance-per-day-periods",
+            "validated_at": "StudentAttendanceMarkedRecordsTable.php:136-138 (subject_id!=0 rejected)"
+          },
+          "SUBJECT": {
+            "code": 2,
+            "subject_id": "real institution_subject_id from institution-class-subjects",
+            "period": "always 1",
+            "validated_at": "StudentAttendanceMarkedRecordsTable.php:143-148 (period>1 rejected)"
+          },
+          "DAY_AND_SUBJECT": {
+            "code": "string DAY_AND_SUBJECT",
+            "subject_id": "real institution_subject_id",
+            "period": "1..N from student-attendance-per-day-periods",
+            "validated_at": "StudentAttendanceMarkedRecordsTable.php:136-148 (passes both guards)"
+          }
+        },
+        "get_subjects_for_class": "openemis_get('institution-class-subjects', params: {institution_class_id}) \u2192 institution_subject_id list, then openemis_get('institution-subjects', params: {institution_id, academic_period_id}) for names"
+      },
       "composite_key": {
         "table": "student-attendance-marked-records",
         "fields": [
@@ -7281,11 +7309,15 @@
         "verified_at": "api/app/Models/Api5/StudentAttendanceMarkedRecords.php:20-23, :366-377"
       },
       "steps": [
+        "STRICT-V5-ONLY: the write target is POST /api/v5/student-attendance-marked-records. DO NOT POST to /institutions/{id}/students/{id}/absences (frontend wrapper). DO NOT POST to /api/v4/anything. If login is needed, the endpoint is POST /api/v5/login with body {username, password, api_key} \u2014 v4 login is forbidden.",
         "Resolve the class: openemis_get('institution-classes', params: {institution_id, academic_period_id})",
         "List enrolled students in the class: openemis_get('institution-students', params: {institution_id, institution_class_id, academic_period_id, student_status_id: 1})",
+        "Detect attendance mode \u2014 ALWAYS do this before building rows: openemis_get('student-attendance-mark-types', params: {education_grade_id, academic_period_id}) \u2192 check student_attendance_type_id code: DAY=1 (period varies, subject_id=0), SUBJECT=2 (period always 1, subject_id=real subject), DAY_AND_SUBJECT (both vary). DO NOT use institution-shift-periods \u2014 that is shift scheduling only with no attendance fields.",
+        "For DAY or DAY_AND_SUBJECT mode \u2014 resolve periods: openemis_get('student-attendance-per-day-periods', params: {student_attendance_mark_type_id}) \u2192 each row's 'period' integer is the ordinal to use in the attendance record. Period is a plain integer (no FK), enforced by beforeSave in StudentAttendanceMarkedRecordsTable.php:143.",
+        "For SUBJECT or DAY_AND_SUBJECT mode \u2014 resolve subjects for the class: (a) openemis_get('institution-class-subjects', params: {institution_class_id}) \u2192 get institution_subject_id list; (b) openemis_get('institution-subjects', params: {institution_id, academic_period_id}) \u2192 get subject names. Build one attendance row per student per subject (period=1 for SUBJECT mode).",
         "Load absence types (present/late/absent/excused lookup): openemis_get('absence-types')",
-        "POST a batch of attendance rows: openemis_create('student-attendance-marked-records', body: [{institution_id, academic_period_id, institution_class_id, education_grade_id, date, period, subject_id, student_id, absence_type_id, no_scheduled_class, ...}, ...])",
-        "If per-student free-text reason/comment/excuse is needed, POST to 'institution-student-absence-details' with the same 7-field composite key"
+        "POST a batch of attendance rows: openemis_create('student-attendance-marked-records', body: [{institution_id, academic_period_id, institution_class_id, education_grade_id, date, period, subject_id, student_id, absence_type_id, no_scheduled_class, ...}, ...]) \u2014 this resolves to POST /api/v5/student-attendance-marked-records. In v0.2.x the MCP has no openemis_create tool yet; tell the user to mark this in the official OpenEMIS app and cite the v5 endpoint above. DO NOT fall back to raw curl against /api/v4/ or the Angular nested path.",
+        "If per-student free-text reason/comment/excuse is needed, POST to 'institution-student-absence-details' (\u2192 /api/v5/institution-student-absence-details) with the same 7-field composite key"
       ],
       "notes": [
         "Frontend (Angular) uses a legacy v4-style nested path /institutions/{institution_id}/students/{student_id}/absences (see frontend/src/app/student-attendance/student-attendance.component.ts). Agents should prefer the v5 routes above \u2014 they're the stable contract.",
@@ -7299,13 +7331,17 @@
           "institution-students",
           "absence-types",
           "student-attendance-marked-records",
+          "student-attendance-mark-types",
+          "student-attendance-per-day-periods",
+          "institution-class-subjects",
+          "institution-subjects",
           "institution-student-absence-details",
           "institution-class-attendance-records"
         ],
         "missing": [
           "institution-classes"
         ],
-        "pct": 83
+        "pct": 90
       }
     },
     {
@@ -7360,9 +7396,10 @@
         }
       },
       "steps": [
+        "STRICT-V5-ONLY: present \u2192 POST /api/v5/institution-staff-attendances. absent/leave \u2192 POST /api/v5/institution-staff-leave (but leave is workflow-controlled \u2014 see warning below). DO NOT POST to /institutions/{id}/staff/{id}/attendances (frontend wrapper). DO NOT POST to /api/v4/anything. Login endpoint if needed: POST /api/v5/login.",
         "List active staff at institution: openemis_get('institution-staff', params: {institution_id, status_id: 1})",
-        "For a present check-in: openemis_create('institution-staff-attendances', body: {staff_id, institution_id, academic_period_id, date, time_in, ...})",
-        "For an absence/leave request: openemis_get('staff-leave-types') then openemis_create('institution-staff-leave', body: {staff_id, institution_id, academic_period_id, date_from, date_to, full_day, staff_leave_type_id, ...})"
+        "For a present check-in: openemis_create('institution-staff-attendances', body: {staff_id, institution_id, academic_period_id, date, time_in, ...}) \u2014 resolves to POST /api/v5/institution-staff-attendances. In v0.2.x the MCP has no openemis_create yet; tell the user to mark this in the official app and cite the v5 endpoint.",
+        "For an absence/leave request: DO NOT CREATE VIA MCP \u2014 institution-staff-leave is workflow-controlled (needs approval chain). Respond: 'This process involves workflow and assignment for approval. Please use the official OpenEMIS application or website to submit and approve leave.' Reading leave via openemis_get('institution-staff-leave', ...) is safe. For context you can show the user: openemis_get('staff-leave-types') lists the leave type catalog."
       ],
       "notes": [
         "WARNING: there is no v5 alias 'staff-leaves' \u2014 use 'institution-staff-leave' (singular, institution-prefixed). Earlier playbook guess was wrong.",

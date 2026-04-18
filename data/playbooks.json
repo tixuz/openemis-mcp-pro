@@ -1,9 +1,22 @@
 {
   "version": 1,
   "note": "Curated task playbooks for common OpenEMIS workflows. Each playbook names the minimal resource chain an agent needs to accomplish a user-level goal. Hand-maintained; extend as new workflows are mapped.",
+  "api_contract": {
+    "base_path": "/api/v5",
+    "auth_endpoint": "/api/v5/login",
+    "auth_body": {"username": "<username>", "password": "<password>", "api_key": "<api_key>"},
+    "auth_response": "{ data: { token: <jwt>, client_id?: <id> } } — send as 'Authorization: Bearer <jwt>' on every subsequent call.",
+    "STRICT_V5_ONLY": "All OpenEMIS CRUD in this MCP runs through /api/v5/{resource}. DO NOT use /api/v4/anything, DO NOT use the Angular frontend's legacy nested paths (e.g. /institutions/{id}/students/{id}/absences, /institutions/{id}/staff/{id}/attendances). Those legacy paths resolve to the same v5 tables server-side but are unstable wrappers for UI use only. If you find yourself reaching for curl with a v4 URL, stop — either the v5 CRUD tool already exists or you need to tell the user the MCP cannot do that write yet (v0.2.x is read-only).",
+    "do_not_use_paths": [
+      "/api/v4/* (unsupported legacy)",
+      "/institutions/{institution_id}/students/{student_id}/absences (frontend wrapper for student-attendance-marked-records)",
+      "/institutions/{institution_id}/staff/{staff_id}/attendances (frontend wrapper for institution-staff-attendances)"
+    ]
+  },
   "global_policies": {
+    "v5_only": "EVERY call to OpenEMIS goes to /api/v5/{resource}. See top-level api_contract for the strict rule and the list of forbidden legacy paths. If a playbook ever mentions a v4 path or an Angular nested route, it is in a 'frontend_quirks' / caution note — NEVER in the steps/resources an agent should execute.",
     "workflow_writes_deferred_to_app": "The MCP MUST NOT create, update, or delete resources whose records flow through CakePHP's Workflow plugin (status_id → WorkflowSteps). These records need a human-in-the-loop approval chain that cannot be safely driven by an agent. Known workflow-controlled resources include but are not limited to: institution-staff-leave, assessment-period-excluded-security-roles, custom-reports (generation jobs), scholarship applications, some profile-change requests. For any CREATE/UPDATE/DELETE ask on a workflow resource, the MCP should reply: 'This process involves workflow and assignment for approval. Please use the official OpenEMIS application or website at https://demo.openemis.org/core (or your configured instance) to submit and approve it.' GET (read) operations on workflow resources remain safe and encouraged.",
-    "read_only_v0_2_x": "This MCP is getter-only in the 0.2.x line. openemis_create / openemis_update / openemis_delete arrive in 0.3.0. Until then, playbooks that describe writes are informative only — the agent cannot execute them and should tell the user what to do in the official app."
+    "read_only_v0_2_x": "This MCP is getter-only in the 0.2.x line. openemis_create / openemis_update / openemis_delete arrive in 0.3.0. Until then, playbooks that describe writes are informative only — the agent cannot execute them. If the user asks for a write, respond: 'The OpenEMIS MCP is read-only in v0.2.x; please mark this in the official OpenEMIS application. The v5 endpoint that would be used is POST /api/v5/{resource} with body {...}.' DO NOT fall back to raw curl against v4 — that bypasses the MCP contract and will hit wrong or legacy endpoints."
   },
   "playbooks": [
     {
@@ -40,15 +53,28 @@
       "title": "Mark student attendance for a class (period roll call)",
       "audience": ["teacher", "admin"],
       "domain": "Attendance",
-      "description": "Daily/period roll call. Teacher picks a class, loads the roster, marks each student present/late/absent with an absence_type_id, and POSTs rows to student-attendance-marked-records. The month-level aggregate in institution-class-attendance-records is updated automatically by an afterSaveCommit hook on the backend — do NOT write it yourself. student-attendance-marked-records has a 7-field composite PK, and POSTing the same key UPSERTs (re-marking is safe). POST an ARRAY for batch create (transaction-wrapped) or a single object for one row.",
+      "description": "Daily/period roll call supporting three attendance modes: DAY (once per day, subject_id=0), SUBJECT (once per subject, period always 1), DAY_AND_SUBJECT (both axes). Always use the same endpoint: POST /api/v5/student-attendance-marked-records. The mode is configured per grade via student-attendance-mark-types — check it first to know which field values to send. The month-level aggregate in institution-class-attendance-records is updated automatically by an afterSaveCommit hook — do NOT write it yourself. The 7-field composite PK supports upsert (re-marking is safe). POST an ARRAY for batch.",
       "resources": [
         "institution-classes",
         "institution-students",
         "absence-types",
         "student-attendance-marked-records",
+        "student-attendance-mark-types",
+        "student-attendance-per-day-periods",
+        "institution-class-subjects",
+        "institution-subjects",
         "institution-student-absence-details",
         "institution-class-attendance-records"
       ],
+      "attendance_modes": {
+        "source": "student-attendance-mark-types (education_grade_id + academic_period_id) → student_attendance_type_id code",
+        "modes": {
+          "DAY": {"code": 1, "subject_id": "always 0 (sentinel, not a real FK)", "period": "1..N from student-attendance-per-day-periods", "validated_at": "StudentAttendanceMarkedRecordsTable.php:136-138 (subject_id!=0 rejected)"},
+          "SUBJECT": {"code": 2, "subject_id": "real institution_subject_id from institution-class-subjects", "period": "always 1", "validated_at": "StudentAttendanceMarkedRecordsTable.php:143-148 (period>1 rejected)"},
+          "DAY_AND_SUBJECT": {"code": "string DAY_AND_SUBJECT", "subject_id": "real institution_subject_id", "period": "1..N from student-attendance-per-day-periods", "validated_at": "StudentAttendanceMarkedRecordsTable.php:136-148 (passes both guards)"}
+        },
+        "get_subjects_for_class": "openemis_get('institution-class-subjects', params: {institution_class_id}) → institution_subject_id list, then openemis_get('institution-subjects', params: {institution_id, academic_period_id}) for names"
+      },
       "composite_key": {
         "table": "student-attendance-marked-records",
         "fields": ["institution_id", "academic_period_id", "institution_class_id", "education_grade_id", "date", "period", "subject_id"],
@@ -56,11 +82,15 @@
         "verified_at": "api/app/Models/Api5/StudentAttendanceMarkedRecords.php:20-23, :366-377"
       },
       "steps": [
+        "STRICT-V5-ONLY: the write target is POST /api/v5/student-attendance-marked-records. DO NOT POST to /institutions/{id}/students/{id}/absences (frontend wrapper). DO NOT POST to /api/v4/anything. If login is needed, the endpoint is POST /api/v5/login with body {username, password, api_key} — v4 login is forbidden.",
         "Resolve the class: openemis_get('institution-classes', params: {institution_id, academic_period_id})",
         "List enrolled students in the class: openemis_get('institution-students', params: {institution_id, institution_class_id, academic_period_id, student_status_id: 1})",
+        "Detect attendance mode — ALWAYS do this before building rows: openemis_get('student-attendance-mark-types', params: {education_grade_id, academic_period_id}) → check student_attendance_type_id code: DAY=1 (period varies, subject_id=0), SUBJECT=2 (period always 1, subject_id=real subject), DAY_AND_SUBJECT (both vary). DO NOT use institution-shift-periods — that is shift scheduling only with no attendance fields.",
+        "For DAY or DAY_AND_SUBJECT mode — resolve periods: openemis_get('student-attendance-per-day-periods', params: {student_attendance_mark_type_id}) → each row's 'period' integer is the ordinal to use in the attendance record. Period is a plain integer (no FK), enforced by beforeSave in StudentAttendanceMarkedRecordsTable.php:143.",
+        "For SUBJECT or DAY_AND_SUBJECT mode — resolve subjects for the class: (a) openemis_get('institution-class-subjects', params: {institution_class_id}) → get institution_subject_id list; (b) openemis_get('institution-subjects', params: {institution_id, academic_period_id}) → get subject names. Build one attendance row per student per subject (period=1 for SUBJECT mode).",
         "Load absence types (present/late/absent/excused lookup): openemis_get('absence-types')",
-        "POST a batch of attendance rows: openemis_create('student-attendance-marked-records', body: [{institution_id, academic_period_id, institution_class_id, education_grade_id, date, period, subject_id, student_id, absence_type_id, no_scheduled_class, ...}, ...])",
-        "If per-student free-text reason/comment/excuse is needed, POST to 'institution-student-absence-details' with the same 7-field composite key"
+        "POST a batch of attendance rows: openemis_create('student-attendance-marked-records', body: [{institution_id, academic_period_id, institution_class_id, education_grade_id, date, period, subject_id, student_id, absence_type_id, no_scheduled_class, ...}, ...]) — this resolves to POST /api/v5/student-attendance-marked-records. In v0.2.x the MCP has no openemis_create tool yet; tell the user to mark this in the official OpenEMIS app and cite the v5 endpoint above. DO NOT fall back to raw curl against /api/v4/ or the Angular nested path.",
+        "If per-student free-text reason/comment/excuse is needed, POST to 'institution-student-absence-details' (→ /api/v5/institution-student-absence-details) with the same 7-field composite key"
       ],
       "notes": [
         "Frontend (Angular) uses a legacy v4-style nested path /institutions/{institution_id}/students/{student_id}/absences (see frontend/src/app/student-attendance/student-attendance.component.ts). Agents should prefer the v5 routes above — they're the stable contract.",
@@ -98,9 +128,10 @@
         }
       },
       "steps": [
+        "STRICT-V5-ONLY: present → POST /api/v5/institution-staff-attendances. absent/leave → POST /api/v5/institution-staff-leave (but leave is workflow-controlled — see warning below). DO NOT POST to /institutions/{id}/staff/{id}/attendances (frontend wrapper). DO NOT POST to /api/v4/anything. Login endpoint if needed: POST /api/v5/login.",
         "List active staff at institution: openemis_get('institution-staff', params: {institution_id, status_id: 1})",
-        "For a present check-in: openemis_create('institution-staff-attendances', body: {staff_id, institution_id, academic_period_id, date, time_in, ...})",
-        "For an absence/leave request: openemis_get('staff-leave-types') then openemis_create('institution-staff-leave', body: {staff_id, institution_id, academic_period_id, date_from, date_to, full_day, staff_leave_type_id, ...})"
+        "For a present check-in: openemis_create('institution-staff-attendances', body: {staff_id, institution_id, academic_period_id, date, time_in, ...}) — resolves to POST /api/v5/institution-staff-attendances. In v0.2.x the MCP has no openemis_create yet; tell the user to mark this in the official app and cite the v5 endpoint.",
+        "For an absence/leave request: DO NOT CREATE VIA MCP — institution-staff-leave is workflow-controlled (needs approval chain). Respond: 'This process involves workflow and assignment for approval. Please use the official OpenEMIS application or website to submit and approve leave.' Reading leave via openemis_get('institution-staff-leave', ...) is safe. For context you can show the user: openemis_get('staff-leave-types') lists the leave type catalog."
       ],
       "notes": [
         "WARNING: there is no v5 alias 'staff-leaves' — use 'institution-staff-leave' (singular, institution-prefixed). Earlier playbook guess was wrong.",

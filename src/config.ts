@@ -1,5 +1,13 @@
 import { readFileSync } from "fs";
-import { resolve } from "path";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
+
+/**
+ * Resolve a path relative to the package root (the directory that contains
+ * package.json / data/). Works regardless of where the user launches the server from.
+ * config.ts compiles to dist/config.js, so __dirname = <pkg>/dist, and <pkg> = ..
+ */
+const PKG_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 /**
  * Configuration for OpenEMIS MCP server.
@@ -65,13 +73,15 @@ export function loadConfig(): AppConfig {
     process.env.OPENEMIS_VAULT_PATH ??
     resolve("/Users/khindol/Documents/Vaults/Openemis/claude");
 
+  // Default to package-bundled data files (resolved from dist/config.js location),
+  // NOT process.cwd() — the server may be launched from anywhere.
   const manifestPath =
     process.env.OPENEMIS_MANIFEST_PATH ??
-    resolve("/Users/khindol/webstore/utils/mcp-openemis-gen/manifest.jsonl");
+    resolve(PKG_ROOT, "data/manifest.jsonl");
 
   const groupedPath =
     process.env.OPENEMIS_GROUPED_PATH ??
-    resolve(process.cwd(), "data/grouped-manifest.json");
+    resolve(PKG_ROOT, "data/grouped-manifest.json");
 
   return {
     baseUrl,
