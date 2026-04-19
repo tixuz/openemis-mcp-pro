@@ -244,26 +244,47 @@ This removes `OPENEMIS_BASE_URL`, `OPENEMIS_USERNAME`, `OPENEMIS_PASSWORD`, and 
 
 `view-student-risks` and `view-institution-risks` — shipped. Risk scores, per-criterion breakdown, welfare cases, alert rules, and delivery logs.
 
-### v0.6.0 — Workflow Routes *(Country Subscription tier)*
+### v0.6.0 — Workflow Routes *(Institution Pro + Country Pro)*
 
-Current Pro write tools (`openemis_create`, `openemis_update`, `openemis_delete`) let an individual execute a single operation directly. Workflow routes take this further: the MCP **orchestrates a full multi-step playbook automatically**, carrying state from step to step and enforcing pre-commit validation at each stage.
-
-This feature is **Country Subscription only** — it is intentionally not available in individual Pro licences. The reason: when a country (ministry, district) deploys OpenEMIS at scale, bulk AI-driven operations must be visible to the people responsible for data quality. An individual teacher marking 30 students needs speed. A national enrollment campaign across 500 schools needs oversight.
-
-**What Workflow Routes add:**
-
-| Feature | Individual Pro | Country Subscription |
-|---|---|---|
-| Direct write (single record) | ✅ | ✅ |
-| Workflow route execution | — | ✅ |
-| Step-by-step audit trail (who ran what, when, with what inputs) | — | ✅ |
-| Approval gates (ministry/admin must confirm before batch commits) | — | ✅ |
-| Batch operations (multi-student, multi-institution) | — | ✅ |
-| Roll-back on partial failure | — | ✅ |
+Current write tools (`openemis_create`, `openemis_update`, `openemis_delete`) execute one operation at a time. Workflow routes take this further: the MCP **orchestrates a complete multi-step playbook automatically**, carrying state from step to step and enforcing pre-commit validation at each stage.
 
 **New tool:** `openemis_run_workflow { playbook_id, params, dry_run? }` — accepts a playbook ID and structured input parameters, executes all steps in sequence, returns a structured run log. In dry-run mode, reports what would change without writing anything.
 
-**Why country-gated:** Workflow routes touch records at scale. A single mis-configured run could affect thousands of students across dozens of schools. The country tier exists precisely because a ministry has the mandate — and the responsibility — to oversee those changes.
+Workflow routes are gated above Individual Pro because bulk AI writes at institution or national scale need oversight. A teacher marking 30 students needs speed; a district office enrolling 500 students across 20 schools needs audit and approval.
+
+| Feature | Individual Pro | Institution Pro | Country Pro |
+|---|---|---|---|
+| Direct write (single record) | ✅ | ✅ | ✅ |
+| Institution audit trail | — | ✅ | ✅ |
+| Workflow route execution | — | ✅ | ✅ |
+| Institution-admin approval gate | — | ✅ | ✅ |
+| Batch ops within one institution | — | ✅ | ✅ |
+| Multi-institution batch ops | — | — | ✅ |
+| Ministry approval gates | — | — | ✅ |
+| Cross-institution oversight dashboard | — | — | ✅ |
+| Roll-back on partial failure | — | — | ✅ |
+
+---
+
+## Plans
+
+| | **Free** | **Individual Pro** | **Institution Pro** | **Country Pro** |
+|---|---|---|---|---|
+| **Scope** | Any user | One person | One school | Ministry / national |
+| **Licence** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
+| Read tools (all 645 resources) | ✅ | ✅ | ✅ | ✅ |
+| 24 curated playbooks + translations | ✅ | ✅ | ✅ | ✅ |
+| Direct write — single record | — | ✅ | ✅ | ✅ |
+| Institution audit trail | — | — | ✅ | ✅ |
+| Workflow route execution | — | — | ✅ | ✅ |
+| Institution-admin approval gate | — | — | ✅ | ✅ |
+| Batch ops within one institution | — | — | ✅ | ✅ |
+| Multi-institution batch ops | — | — | — | ✅ |
+| Ministry approval gates | — | — | — | ✅ |
+| Cross-institution oversight | — | — | — | ✅ |
+| Roll-back on partial failure | — | — | — | ✅ |
+
+→ **Pricing and access:** khindol.madraimov@gmail.com
 
 ---
 
