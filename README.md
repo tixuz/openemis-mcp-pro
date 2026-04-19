@@ -14,7 +14,7 @@ The agent plans the calls, this MCP delivers the data, and you get the answer:
 
 You never write a line of code. You never see JSON. You just ask.
 
-> **Status:** v0.1 — **getter-only** MVP. Read queries work against every OpenEMIS v5 resource. Write tools (create/update/delete) are deliberately out of scope for the first release and will land behind an explicit opt-in flag.
+> **Status:** v0.3.0 — **full CRUD** for non-workflow resources. Read queries work against every OpenEMIS v5 resource. Write tools (create/update/delete) are live for all resources that do not flow through the CakePHP Workflow plugin. Workflow-controlled resources (attendance, staff leave) are blocked at the tool level and redirect to the appropriate playbook.
 
 ---
 
@@ -31,16 +31,21 @@ The net effect: agents answer natural-language questions in 2–4 tool calls, no
 
 ---
 
-## The four tools
+## Tools
 
-| Tool | What it does |
-|---|---|
-| `openemis_health` | Pings the configured instance and reports reachability. Safe to call anytime. |
-| `openemis_list_domains` | Lists the curated OpenEMIS domains — Attendance, Assessment, Staff, Student, Institution, Schedule, Examination, Report — each with a one-line summary. The agent uses this to figure out *where* a question lives. |
-| `openemis_discover` | Input: a topic string. Output: up to 30 endpoints relevant to that topic, drawn from the domain knowledge pack and the per-instance manifest. Keeps conversations small regardless of how large the underlying API is. |
-| `openemis_get` | Unified read tool. `{ resource, id?, params? }` — if `id` is present, fetches the singleton; otherwise lists with any combination of `_fields`, `_conditions`, `orderby`, `order`, `page`, `limit`, plus any ad-hoc filter key. |
+| Tool | Since | What it does |
+|---|---|---|
+| `openemis_health` | v0.1 | Pings the configured instance and reports reachability. Performs a real login round-trip — if this passes, CRUD will work. |
+| `openemis_list_domains` | v0.1 | Lists the curated OpenEMIS domains — Attendance, Assessment, Staff, Student, Institution, Schedule, Examination, Report — each with a one-line summary. The agent uses this to figure out *where* a question lives. |
+| `openemis_discover` | v0.1 | Input: a topic string. Output: up to 30 endpoints relevant to that topic, drawn from the domain knowledge pack and the per-instance manifest. Keeps conversations small regardless of how large the underlying API is. |
+| `openemis_list_playbooks` | v0.2 | Lists all 16 curated workflow playbooks with id, title, domain, and audience. The agent uses this to find the right step-by-step guide for a user-level task. |
+| `openemis_get_playbook` | v0.2 | Input: a playbook id. Output: the full playbook — resources, ordered steps, guidance notes, and example queries. |
+| `openemis_get` | v0.1 | Unified read tool. `{ resource, id?, params? }` — if `id` is present, fetches the singleton; otherwise lists with any combination of `_fields`, `_conditions`, `orderby`, `order`, `page`, `limit`, plus any ad-hoc filter key. |
+| `openemis_create` | v0.3.0 | Create a new record. `{ resource, body }` — non-workflow resources only. Workflow-controlled resources (e.g. institution-staff-leave) are blocked and will redirect to the appropriate playbook. |
+| `openemis_update` | v0.3.0 | Update an existing record by id. `{ resource, id, body }` — non-workflow resources only. |
+| `openemis_delete` | v0.3.0 | Delete a record by id. `{ resource, id }` — non-workflow resources only. |
 
-A representative natural-language question like *"how many teachers at Avory Primary, how many vacant positions?"* resolves to three `openemis_get` calls — chained by the agent, narrowed by `_conditions`, delivered back as a single English answer.
+A representative natural-language question like *"how many teachers at Avory Primary, how many vacant positions?"* resolves to three `openemis_get` calls — chained by the agent, narrowed by `_conditions`, delivered back as a single English answer. A write request like *"enrol a new student"* uses `openemis_get_playbook` to load the step-by-step guide, then `openemis_create` for each write step.
 
 ---
 
@@ -58,9 +63,23 @@ The sample `scripts/smoke-login.mjs` shipped with this repo performs the login t
 
 ---
 
+## Compatible agents
+
+openemis-mcp speaks the **Model Context Protocol** over stdio — any MCP-compatible client works:
+
+| Agent | How to connect |
+|---|---|
+| **Claude Code** (`claude` CLI) | `claude mcp add` — primary tested client, all 9 tools available |
+| **Cursor** | Add to `.cursor/mcp.json` — full tool access |
+| **Cline / Continue** (VS Code) | Add server in MCP settings |
+| **Codex** | Via [gemmy-and-qwenny](https://github.com/tixuz/gemmy-and-qwenny) bridge |
+| **Any MCP client** | Point at `node dist/server.js` with env vars set |
+
+---
+
 ## Install
 
-Requires **Node 22** (or later, for built-in `fetch` and `AbortController`).
+Requires **Node 22+** (for built-in `fetch` and `AbortController`) and **Python 3.10+** (for the manifest builder and playbook generator scripts in `mcp-openemis-gen/`). The MCP server itself is Node-only; Python is only needed if you rebuild the manifest from source.
 
 ### From GitHub
 
@@ -132,7 +151,7 @@ claude mcp list | grep openemis
 # Expected: openemis: node /…/dist/server.js - ✓ Connected
 ```
 
-Any new Claude Code session in this project will see all four tools automatically.
+Any new Claude Code session in this project will see all nine tools automatically.
 
 ---
 
@@ -144,11 +163,13 @@ Any new Claude Code session in this project will see all four tools automaticall
 └───────────┬────────────┘
             │ MCP stdio (JSON-RPC)
 ┌───────────▼────────────┐
-│  openemis-mcp          │  ← four typed tools, ZodRawShape schemas
+│  openemis-mcp          │  ← nine typed tools, ZodRawShape schemas
 │  • openemis_health     │
 │  • openemis_list_dom…  │  ← reads Domain-*.md from vault
 │  • openemis_discover   │  ← topic → ≤30 scoped endpoints
-│  • openemis_get        │  ← unified list / singleton / filter
+│  • openemis_list_play… │  ← list all 16 workflow playbooks
+│  • openemis_get_playbk │  ← load a playbook by id
+│  • openemis_get / _create / _update / _delete   │
 └───────────┬────────────┘
             │ HTTPS + Bearer JWT (cached, auto-refresh on 401)
 ┌───────────▼────────────┐
@@ -160,20 +181,37 @@ Any new Claude Code session in this project will see all four tools automaticall
 Design principles, from the first line of code:
 
 1. **Domain-scoped, never firehose.** The manifest can grow to thousands of endpoints; the agent's context is not going to. `openemis_discover(topic)` is the funnel — every conversation only ever sees the slice it needs.
-2. **Getter-only for v0.1.** Writes are powerful and risky. We'll add them behind an explicit `OPENEMIS_ALLOW_WRITES=1` flag so nobody mutates a production instance by accident.
+2. **Write tools in v0.3.0.** `openemis_create` / `openemis_update` / `openemis_delete` are live for all non-workflow resources. Workflow-controlled resources (attendance, staff-attendance) are blocked at the tool level and redirect to the appropriate playbook.
 3. **Stateless between calls.** Only the JWT is cached in memory. No disk persistence, no analytics, nothing phones home.
 4. **Thin over the real API.** This bridge doesn't invent new concepts — `resource` names are kebab-case v5 paths, query params are the native `_conditions` / `_fields` DSL. What you'd write in curl translates 1:1.
 
 ---
 
-## Roadmap
+## Documentation
 
-- [ ] Full-vault manifest (`build_manifest.py --all`) so `openemis_discover` covers every v5 resource rather than the initial 50-endpoint sample
-- [ ] Optional write tools (`openemis_create`, `openemis_update`, `openemis_delete`) behind `OPENEMIS_ALLOW_WRITES=1`
-- [ ] Response-field filtering helpers (agents say *"just names and ids"* instead of spelling out `_fields=id,name`)
-- [ ] Local embedding cache (via `text-embedding-nomic-embed-text-v1.5` on LM Studio) for semantic topic matching in `openemis_discover`
-- [ ] Example `codex.mcp.json` so the same bridge works from Codex-side too
-- [ ] Published `claude.mcp.json` template
+- [Resource Reference](docs/resources.md) — all 645 resources with HTTP method availability and write status
+- [Playbooks](docs/playbooks/) — 16 curated workflow guides
+
+### Playbooks
+
+| # | Playbook | Domain | Audience |
+|---|---|---|---|
+| 1 | [Count Vacant Positions](docs/playbooks/count-vacant-positions.md) | Staff | admin, hr |
+| 2 | [Mark Student Attendance](docs/playbooks/mark-student-attendance.md) | Attendance | teacher, admin |
+| 3 | [Mark Staff Attendance](docs/playbooks/mark-staff-attendance.md) | Staff | admin, hr, teacher |
+| 4 | [View Student Timetable](docs/playbooks/view-student-timetable.md) | Schedule | parent, student |
+| 5 | [Student Dashboard](docs/playbooks/student-dashboard.md) | Student | parent, student |
+| 6 | [Generate Student Report Card PDF](docs/playbooks/generate-student-report-card-pdf.md) | Report | teacher, admin |
+| 7 | [Enrol a New Student](docs/playbooks/enroll-new-student.md) | Student | admin, registrar |
+| 8 | [Record a Behaviour Incident](docs/playbooks/record-behavior-incident.md) | Student | teacher, admin |
+| 9 | [Submit Exam Marks](docs/playbooks/submit-exam-marks.md) | Assessment | teacher |
+| 10 | [Institution Summary](docs/playbooks/institution-summary.md) | Institution | admin, parent |
+| 11 | [Generate Institution Statistics PDF](docs/playbooks/generate-institution-statistics-pdf.md) | Report | admin |
+| 12 | [View Latest Attendance](docs/playbooks/view-latest-attendance.md) | Attendance | teacher, admin, parent |
+| 13 | [View Student Profile](docs/playbooks/view-student-profile.md) | Student | teacher, admin |
+| 14 | [View Student Marks](docs/playbooks/view-student-marks.md) | Assessment | teacher, admin, parent |
+| 15 | [View Class Report](docs/playbooks/view-class-report.md) | Report | teacher, admin |
+| 16 | [View Timetable](docs/playbooks/view-timetable.md) | Schedule | teacher, admin, student |
 
 ## License
 

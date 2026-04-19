@@ -7203,7 +7203,7 @@
     "domain_endpoint_total": 2851,
     "family_endpoint_total": 185,
     "orphan_endpoint_total": 170,
-    "playbook_count": 12
+    "playbook_count": 16
   },
   "playbooks": [
     {
@@ -7217,7 +7217,7 @@
       "description": "A position is vacant when EITHER (a) no institution_staff record references its institution_position_id, OR (b) the sum of FTE across all staff on that position is less than 1.00 (100%). This captures both 'nobody assigned' and 'under-staffed' cases. Apply per-institution or aggregate across the whole system. Filter to a specific role (e.g. teacher) by restricting institution-positions to a matching staff_position_title_id.",
       "resources": [
         "institution-positions",
-        "institution-staff",
+        "institution-staff-position-profiles",
         "staff-position-titles",
         "institutions"
       ],
@@ -7240,13 +7240,12 @@
       "coverage": {
         "present": [
           "institution-positions",
+          "institution-staff-position-profiles",
           "staff-position-titles",
           "institutions"
         ],
-        "missing": [
-          "institution-staff"
-        ],
-        "pct": 75
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -7257,9 +7256,9 @@
         "admin"
       ],
       "domain": "Attendance",
-      "description": "Daily/period roll call supporting three attendance modes: DAY (once per day, subject_id=0), SUBJECT (once per subject, period always 1), DAY_AND_SUBJECT (both axes). Always use the same endpoint: POST /api/v5/student-attendance-marked-records. The mode is configured per grade via student-attendance-mark-types \u2014 check it first to know which field values to send. The month-level aggregate in institution-class-attendance-records is updated automatically by an afterSaveCommit hook \u2014 do NOT write it yourself. The 7-field composite PK supports upsert (re-marking is safe). POST an ARRAY for batch.",
+      "description": "Daily/period roll call. Teacher speaks naturally ('mark Sherman excused, Divya unexcused, Ehteram late, all others present') \u2014 agent resolves the roster, fuzzy-matches names, maps phrases to absence_type_ids, and POSTs ONLY the exception students. Everyone without a row is PRESENT by omission (absence-by-omission invariant). Supports three modes: DAY (subject_id=0), SUBJECT (period=1), DAY_AND_SUBJECT. Always POST /api/v5/student-attendance-marked-records. Month aggregate updates automatically \u2014 do NOT write institution-class-attendance-records yourself. Composite PK supports upsert.",
       "resources": [
-        "institution-classes",
+        "institution-class-grades",
         "institution-students",
         "absence-types",
         "student-attendance-marked-records",
@@ -7268,6 +7267,7 @@
         "institution-class-subjects",
         "institution-subjects",
         "institution-student-absence-details",
+        "student-absence-reasons",
         "institution-class-attendance-records"
       ],
       "attendance_modes": {
@@ -7294,6 +7294,70 @@
         },
         "get_subjects_for_class": "openemis_get('institution-class-subjects', params: {institution_class_id}) \u2192 institution_subject_id list, then openemis_get('institution-subjects', params: {institution_id, academic_period_id}) for names"
       },
+      "natural_language_roll_call": {
+        "pattern": "Teacher names exceptions only. Everyone not named is PRESENT by omission \u2014 do NOT create rows for them.",
+        "absence_type_map": {
+          "1": {
+            "code": "EXCUSED",
+            "phrases": [
+              "excused",
+              "excused absent",
+              "has a note",
+              "doctor note",
+              "official reason",
+              "permission"
+            ]
+          },
+          "2": {
+            "code": "UNEXCUSED",
+            "phrases": [
+              "absent",
+              "unexcused",
+              "unexcused absent",
+              "no show",
+              "missing",
+              "not here",
+              "didn't come"
+            ]
+          },
+          "3": {
+            "code": "LATE",
+            "phrases": [
+              "late",
+              "tardy",
+              "arrived late",
+              "came in late",
+              "present after class",
+              "present after classes",
+              "showed up late"
+            ]
+          }
+        },
+        "name_resolution": "GET institution-students for the class \u2192 build a list of {id, first_name, last_name}. For each name the teacher mentions, fuzzy-match case-insensitively against first_name OR last_name. If ambiguous (two students named 'John'), ask the teacher to clarify before posting.",
+        "reason_wiring": {
+          "step_1_main_row": "POST to student-attendance-marked-records with absence_type_id set. This is the canonical absence record.",
+          "step_2_details_row": "If teacher gives a reason or comment, POST a second row to institution-student-absence-details using the SAME composite key fields (student_id, institution_id, academic_period_id, institution_class_id, education_grade_id, date, period, subject_id) PLUS: comment (free text string) and/or student_absence_reason_id (structured reason FK).",
+          "absence_reasons_lookup": "GET student-absence-reasons to map natural language to student_absence_reason_id. Known codes: 1=Illness, 2=Family emergency, 3=Emergency, 4=Weather, 5=Family Matter, 7=Personal Reasons, 8=Transportation, 9=Death, 10=Medical Appointment.",
+          "reason_phrase_map": {
+            "sick / ill / unwell / mother is ill / fever / cold": "student_absence_reason_id=1 (Illness)",
+            "doctor / dentist / hospital / medical / appointment": "student_absence_reason_id=10 (Medical Appointment)",
+            "family emergency / family problem": "student_absence_reason_id=2 (Family emergency)",
+            "emergency": "student_absence_reason_id=3 (Emergency)",
+            "weather / storm / flood / road blocked": "student_absence_reason_id=4 (Weather)",
+            "funeral / death / passed away / bereavement": "student_absence_reason_id=9 (Death)",
+            "transport / bus / no ride": "student_absence_reason_id=8 (Transportation)",
+            "personal / private": "student_absence_reason_id=7 (Personal Reasons)"
+          }
+        },
+        "examples": [
+          "\"mark everyone present except Sherman who is excused\" \u2192 POST 1 main row: Sherman absence_type_id=1. No details row needed.",
+          "\"Divya unexcused, Ehteram late, all others present\" \u2192 POST 2 main rows. No reason given \u2192 no details rows.",
+          "\"Sherman excused absent because his mother is ill\" \u2192 POST main row: absence_type_id=1. POST details row: comment='mother is ill', student_absence_reason_id=1 (Illness).",
+          "\"Khindol excused absent \u2014 dentist appointment\" \u2192 POST main row: absence_type_id=1. POST details row: comment='dentist appointment', student_absence_reason_id=10 (Medical Appointment).",
+          "\"Divya unexcused absent, Ehteram late, everyone else present\" \u2192 POST 2 main rows. No reasons given \u2192 no details rows."
+        ],
+        "edge_case_all_present": "If the teacher says 'everyone present' or 'all present', the day will remain NOT_MARKED (no rows exist). To mark the day as taken, POST one row for any student with absence_type_id=null/0 OR confirm with the teacher whether any student was absent."
+      },
       "composite_key": {
         "table": "student-attendance-marked-records",
         "fields": [
@@ -7315,9 +7379,10 @@
         "Detect attendance mode \u2014 ALWAYS do this before building rows: openemis_get('student-attendance-mark-types', params: {education_grade_id, academic_period_id}) \u2192 check student_attendance_type_id code: DAY=1 (period varies, subject_id=0), SUBJECT=2 (period always 1, subject_id=real subject), DAY_AND_SUBJECT (both vary). DO NOT use institution-shift-periods \u2014 that is shift scheduling only with no attendance fields.",
         "For DAY or DAY_AND_SUBJECT mode \u2014 resolve periods: openemis_get('student-attendance-per-day-periods', params: {student_attendance_mark_type_id}) \u2192 each row's 'period' integer is the ordinal to use in the attendance record. Period is a plain integer (no FK), enforced by beforeSave in StudentAttendanceMarkedRecordsTable.php:143.",
         "For SUBJECT or DAY_AND_SUBJECT mode \u2014 resolve subjects for the class: (a) openemis_get('institution-class-subjects', params: {institution_class_id}) \u2192 get institution_subject_id list; (b) openemis_get('institution-subjects', params: {institution_id, academic_period_id}) \u2192 get subject names. Build one attendance row per student per subject (period=1 for SUBJECT mode).",
-        "Load absence types (present/late/absent/excused lookup): openemis_get('absence-types')",
-        "POST a batch of attendance rows: openemis_create('student-attendance-marked-records', body: [{institution_id, academic_period_id, institution_class_id, education_grade_id, date, period, subject_id, student_id, absence_type_id, no_scheduled_class, ...}, ...]) \u2014 this resolves to POST /api/v5/student-attendance-marked-records. In v0.2.x the MCP has no openemis_create tool yet; tell the user to mark this in the official OpenEMIS app and cite the v5 endpoint above. DO NOT fall back to raw curl against /api/v4/ or the Angular nested path.",
-        "If per-student free-text reason/comment/excuse is needed, POST to 'institution-student-absence-details' (\u2192 /api/v5/institution-student-absence-details) with the same 7-field composite key"
+        "Load absence types and absence reasons in parallel: openemis_get('absence-types') \u2192 {1:EXCUSED, 2:UNEXCUSED, 3:LATE}; openemis_get('student-absence-reasons') \u2192 {1:Illness, 2:Family emergency, 3:Emergency, 4:Weather, 5:Family Matter, 7:Personal Reasons, 8:Transportation, 9:Death, 10:Medical Appointment}. Use these to map natural language phrases to IDs (see natural_language_roll_call.reason_phrase_map).",
+        "Build the exception list: from the teacher's instruction, identify ONLY the non-present students. Fuzzy-match each name case-insensitively against the roster (first_name OR last_name). If a name is ambiguous, ask the teacher before posting. Everyone NOT mentioned = PRESENT by omission \u2014 do NOT create rows for them.",
+        "POST the exception rows as a batch: openemis_create('student-attendance-marked-records', body: [{institution_id, academic_period_id, institution_class_id, education_grade_id, date, period, subject_id, student_id, absence_type_id, no_scheduled_class:0}, ...]) \u2014 one row per exception student per period.",
+        "For each student where a reason or comment was given, POST a details row: openemis_create('institution-student-absence-details', body: {student_id, institution_id, academic_period_id, institution_class_id, education_grade_id, date, period, subject_id, absence_type_id, comment: '<teacher free text>', student_absence_reason_id: <matched reason id>}). Example: 'excused because his mother is ill' \u2192 comment='mother is ill', student_absence_reason_id=1."
       ],
       "notes": [
         "Frontend (Angular) uses a legacy v4-style nested path /institutions/{institution_id}/students/{student_id}/absences (see frontend/src/app/student-attendance/student-attendance.component.ts). Agents should prefer the v5 routes above \u2014 they're the stable contract.",
@@ -7328,6 +7393,7 @@
       ],
       "coverage": {
         "present": [
+          "institution-class-grades",
           "institution-students",
           "absence-types",
           "student-attendance-marked-records",
@@ -7336,12 +7402,11 @@
           "institution-class-subjects",
           "institution-subjects",
           "institution-student-absence-details",
+          "student-absence-reasons",
           "institution-class-attendance-records"
         ],
-        "missing": [
-          "institution-classes"
-        ],
-        "pct": 90
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -7355,7 +7420,7 @@
       "domain": "Staff",
       "description": "Two DISTINCT flows \u2014 do not mix. PRESENT = quick check-in with optional time_in/time_out via institution-staff-attendances (simple id PK, no workflow). ABSENT = leave request with staff_leave_type_id via institution-staff-leave, which is workflow-controlled (status_id -> WorkflowSteps). They write different tables.",
       "resources": [
-        "institution-staff",
+        "institution-staff-position-profiles",
         "institution-staff-attendances",
         "institution-staff-leave",
         "staff-leave-types",
@@ -7413,15 +7478,14 @@
       ],
       "coverage": {
         "present": [
+          "institution-staff-position-profiles",
           "institution-staff-attendances",
           "institution-staff-leave",
           "staff-leave-types",
           "absence-types"
         ],
-        "missing": [
-          "institution-staff"
-        ],
-        "pct": 80
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -7435,10 +7499,10 @@
       "description": "Given a student id, return the class timetable \u2014 subjects, teachers, rooms, and time slots for the current academic period.",
       "resources": [
         "institution-students",
-        "institution-classes",
+        "institution-class-grades",
         "institution-class-subjects",
         "institution-subject-staff",
-        "institution-timetable",
+        "institution-schedule-timetables",
         "institution-rooms"
       ],
       "steps": [
@@ -7449,15 +7513,14 @@
       "coverage": {
         "present": [
           "institution-students",
+          "institution-class-grades",
           "institution-class-subjects",
           "institution-subject-staff",
+          "institution-schedule-timetables",
           "institution-rooms"
         ],
-        "missing": [
-          "institution-classes",
-          "institution-timetable"
-        ],
-        "pct": 67
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -7472,7 +7535,7 @@
       "resources": [
         "institution-students",
         "student-attendance-marked-records",
-        "institution-student-behaviours",
+        "student-behaviours",
         "assessment-item-results",
         "report-card-comment-codes"
       ],
@@ -7486,13 +7549,12 @@
         "present": [
           "institution-students",
           "student-attendance-marked-records",
+          "student-behaviours",
           "assessment-item-results",
           "report-card-comment-codes"
         ],
-        "missing": [
-          "institution-student-behaviours"
-        ],
-        "pct": 80
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -7543,62 +7605,130 @@
         "registrar"
       ],
       "domain": "Student",
-      "description": "Create the user record, attach guardianship, and enrol into a class with a status of 'Current'.",
+      "description": "BYPASS MODE ONLY: direct enrolment works only when the system configuration has 'bypass enrolment workflow' enabled. If the admission \u2192 enrolment workflow is active, use the OpenEMIS application \u2014 the workflow requires supervisor approval at each stage and cannot be driven via API alone.",
+      "workflow_gate": {
+        "config_check": "Administration \u2192 System Configuration \u2192 Student \u2192 Bypass Enrolment Workflow",
+        "if_disabled": "Use the official application Admission and Enrolment forms instead."
+      },
       "resources": [
-        "users",
+        "security-users",
         "user-identities",
-        "guardians",
-        "institution-students",
+        "student-guardians",
         "education-grades",
-        "institution-classes"
+        "academic-periods",
+        "institution-students"
       ],
       "steps": [
-        "Create user: openemis_create('users', body: {...first_name, last_name, date_of_birth, gender_id...})",
-        "Optional identity doc: openemis_create('user-identities', body: {...})",
-        "Attach guardian: openemis_create('guardians', body: {...})",
-        "Enrol into a grade/class: openemis_create('institution-students', body: {institution_id, student_id, education_grade_id, academic_period_id, student_status_id: 1, ...})"
+        {
+          "step": 1,
+          "title": "Confirm bypass mode is active",
+          "action": "openemis_get",
+          "resource": "academic-periods",
+          "purpose": "Fetch current academic period id \u2014 also confirms the API is reachable before any writes.",
+          "guidance": "Verify with the admin that bypass enrolment workflow is enabled before proceeding. Filter by _conditions=current:1 or pick the active period by date."
+        },
+        {
+          "step": 2,
+          "title": "Look up target education grade",
+          "action": "openemis_get",
+          "resource": "education-grades",
+          "purpose": "Resolve the education_grade_id for the grade the student is joining.",
+          "guidance": "Filter by _conditions=name:Grade 5 or similar. Note the id."
+        },
+        {
+          "step": 3,
+          "title": "Create the student user account",
+          "action": "openemis_create",
+          "resource": "security-users",
+          "purpose": "Create the base user record (OpenEMIS users are shared across roles).",
+          "guidance": "Required: first_name, last_name, date_of_birth, gender_id. The response returns the new user id \u2014 save it as student_id for step 5."
+        },
+        {
+          "step": 4,
+          "title": "Attach identity document (optional)",
+          "action": "openemis_create",
+          "resource": "user-identities",
+          "purpose": "Link a national ID or passport number to the student.",
+          "guidance": "Required: user_id (from step 3), identity_type_id, number. Skip if not applicable."
+        },
+        {
+          "step": 5,
+          "title": "Enrol student into the institution",
+          "action": "openemis_create",
+          "resource": "institution-students",
+          "purpose": "Create the enrolment record linking the student to the institution, grade, and period.",
+          "guidance": "Required: student_id (from step 3), institution_id, education_grade_id (from step 2), academic_period_id (from step 1), student_status_id: 1 (Current). start_date defaults to today."
+        },
+        {
+          "step": 6,
+          "title": "Link guardian contact (optional)",
+          "action": "openemis_create",
+          "resource": "student-guardians",
+          "purpose": "Associate a guardian/parent record with the student.",
+          "guidance": "Required: student_id, guardian_id (pre-existing user id), guardian_relation_id."
+        }
       ],
       "coverage": {
         "present": [
+          "security-users",
           "user-identities",
-          "institution-students",
-          "education-grades"
+          "student-guardians",
+          "education-grades",
+          "academic-periods",
+          "institution-students"
         ],
-        "missing": [
-          "users",
-          "guardians",
-          "institution-classes"
-        ],
-        "pct": 50
+        "missing": [],
+        "pct": 100
       }
     },
     {
       "id": "record-behavior-incident",
-      "title": "Record a student behavior incident",
+      "title": "Record a student behaviour incident",
       "audience": [
         "teacher",
         "admin"
       ],
       "domain": "Student",
-      "description": "Log an incident against a student with a category, severity, description, and follow-up action.",
+      "description": "Log a behaviour incident against a student: look up categories and severity classifications, then write the incident record with description and follow-up action. Available in v0.3.0 write tools.",
       "resources": [
-        "institution-student-behaviours",
-        "institution-student-behaviour-categories",
+        "student-behaviour-categories",
+        "student-behaviour-classifications",
         "student-behaviours"
       ],
       "steps": [
-        "Load category codes: openemis_get('institution-student-behaviour-categories')",
-        "Write incident: openemis_create('institution-student-behaviours', body: {student_id, institution_id, category_id, date_of_behaviour, description, ...})"
+        {
+          "step": 1,
+          "title": "List behaviour categories",
+          "action": "openemis_get",
+          "resource": "student-behaviour-categories",
+          "purpose": "Get the id for the category that matches the incident (e.g. Bullying, Tardiness).",
+          "guidance": "Note the category_id to use in step 3."
+        },
+        {
+          "step": 2,
+          "title": "List severity classifications",
+          "action": "openemis_get",
+          "resource": "student-behaviour-classifications",
+          "purpose": "Get the id for the severity level (Minor, Major, Critical).",
+          "guidance": "Note the classification_id to use in step 3."
+        },
+        {
+          "step": 3,
+          "title": "Write the incident record",
+          "action": "openemis_create",
+          "resource": "student-behaviours",
+          "purpose": "Create the behaviour record linked to the student, institution, and academic period.",
+          "guidance": "Required fields: student_id, institution_id, academic_period_id, date_of_behaviour, description, student_behaviour_category_id, student_behaviour_classification_id. Optional: action_taken, follow_up_date."
+        }
       ],
       "coverage": {
         "present": [
+          "student-behaviour-categories",
+          "student-behaviour-classifications",
           "student-behaviours"
         ],
-        "missing": [
-          "institution-student-behaviours",
-          "institution-student-behaviour-categories"
-        ],
-        "pct": 33
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -7647,7 +7777,7 @@
       "resources": [
         "institutions",
         "institution-students",
-        "institution-staff",
+        "institution-staff-position-profiles",
         "institution-positions"
       ],
       "steps": [
@@ -7660,12 +7790,11 @@
         "present": [
           "institutions",
           "institution-students",
+          "institution-staff-position-profiles",
           "institution-positions"
         ],
-        "missing": [
-          "institution-staff"
-        ],
-        "pct": 75
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -7678,7 +7807,6 @@
       "description": "Admin requests a summary PDF for one institution covering enrolment, staff, attendance stats.",
       "resources": [
         "institutions",
-        "custom-reports",
         "report-card-processes",
         "institution-report-card-processes"
       ],
@@ -7687,16 +7815,15 @@
         "Start generation: openemis_create('report-card-processes', body: {...template_id, institution_id, ...})",
         "Poll and download once 'completed'"
       ],
+      "notes": "NOTE: 'custom-reports' is not available via the v5 REST API. Statistics PDF generation uses the report engine inside the application. This playbook covers data lookup only \u2014 trigger the PDF from the application UI.",
       "coverage": {
         "present": [
           "institutions",
           "report-card-processes",
           "institution-report-card-processes"
         ],
-        "missing": [
-          "custom-reports"
-        ],
-        "pct": 75
+        "missing": [],
+        "pct": 100
       }
     },
     {
@@ -7710,7 +7837,7 @@
       "domain": "Attendance",
       "description": "Quick snapshot: who was absent today, week-to-date totals, chronic absentees. CRITICAL reading invariant: OpenEMIS does NOT store a row per present student. Presence is inferred by absence-by-omission once a day is marked. So reading attendance in three layers: (1) which days were actually taken as rolls (institution-class-attendance-records states: NOT_MARKED, PARTIAL_MARKED, MARKED); (2) which days had no_scheduled_class=99 (holiday/force-majeure/cancelled) \u2014 skip them for stats; (3) for the remaining MARKED days, pull student-attendance-marked-records: each row is an absence/late/excused event; every rostered student WITHOUT a row that day is PRESENT.",
       "resources": [
-        "institution-classes",
+        "institution-class-grades",
         "institution-class-students",
         "institution-class-attendance-records",
         "student-attendance-marked-records",
@@ -7736,15 +7863,264 @@
       ],
       "coverage": {
         "present": [
+          "institution-class-grades",
           "institution-class-students",
           "institution-class-attendance-records",
           "student-attendance-marked-records",
           "absence-types"
         ],
-        "missing": [
-          "institution-classes"
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "view-student-profile",
+      "title": "View student profile, guardian contacts, and absence history",
+      "audience": [
+        "teacher",
+        "admin"
+      ],
+      "domain": "Student",
+      "description": "Retrieve a student's full enrollment record, the list of guardians associated with them, and their recent absence history in one workflow. The guardian step enriches each contact with the relationship type (e.g., mother, father, legal guardian) by resolving the guardian-relations lookup table. Absence history is fetched from student-attendance-marked-records \u2014 each row is an absence/late/excused event; days with no row are implicitly present.",
+      "resources": [
+        "institution-students",
+        "student-guardians",
+        "guardian-relations",
+        "student-attendance-marked-records"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Fetch Student Enrollment Record",
+          "action": "openemis_get",
+          "resource": "institution-students",
+          "purpose": "Retrieve the student's current enrollment details including institution, education grade, class, and academic period.",
+          "guidance": "Filter by student_id and optionally academic_period_id. Include _fields: [id, student_id, institution_id, institution_class_id, education_grade_id, academic_period_id, student_status_id]. If student_status_id=1 is not set, the student may appear in multiple periods \u2014 narrow to the current one."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Guardian Contacts",
+          "action": "openemis_get",
+          "resource": "student-guardians",
+          "purpose": "Retrieve all guardian records linked to this student, including contact details and relationship type id.",
+          "guidance": "Filter by student_id. Expect fields: guardian_relation_id, first_name, last_name, contact_number, email. A student may have 0\u20134 guardians; an empty result is valid for older students. The guardian_relation_id will be resolved in the next step."
+        },
+        {
+          "step": 3,
+          "title": "Resolve Guardian Relationship Types",
+          "action": "openemis_discover",
+          "resource": "guardian-relations",
+          "purpose": "Look up the full list of relationship type labels so each guardian_relation_id from step 2 can be displayed as a human-readable label (e.g., 'Mother', 'Legal Guardian').",
+          "guidance": "This is a small reference table \u2014 no filters needed. Map each guardian's guardian_relation_id to the matching name from this response. Skip this step if the caller only needs contact numbers and does not need to display the relationship label."
+        },
+        {
+          "step": 4,
+          "title": "Fetch Absence History",
+          "action": "openemis_get",
+          "resource": "student-attendance-marked-records",
+          "purpose": "Retrieve the student's recent absence, late, and excused events to give the teacher or admin a quick overview of attendance patterns.",
+          "guidance": "Filter by student_id. Add orderby=date&order=desc and limit=30 for the most recent 30 events. Each row has absence_type_id (1=Excused, 2=Unexcused, 3=Late) and date. Remember: only exception rows are stored \u2014 a student with no rows on a given MARKED day was PRESENT by omission. To check total absences over a period, also filter by date_from/date_to."
+        }
+      ],
+      "coverage": {
+        "present": [
+          "institution-students",
+          "student-guardians",
+          "guardian-relations",
+          "student-attendance-marked-records"
         ],
-        "pct": 80
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "view-student-marks",
+      "title": "Look up a student's marks and assessment results for a subject or period",
+      "audience": [
+        "teacher",
+        "admin",
+        "parent"
+      ],
+      "domain": "Assessment",
+      "description": "Retrieve a student's scored results from assessment-item-results for one or more assessments in a given academic period. This playbook first locates the relevant assessment definitions and period identifiers, then fetches the raw mark rows, and finally enriches them with subject names from education-subjects. Results include the numeric mark plus grading_option_id which can be resolved against the assessment's grading table for a letter grade or pass/fail label.",
+      "resources": [
+        "institution-students",
+        "assessments",
+        "assessment-periods",
+        "assessment-items",
+        "assessment-item-results",
+        "education-subjects"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Confirm Student Enrollment",
+          "action": "openemis_get",
+          "resource": "institution-students",
+          "purpose": "Verify the student is enrolled and retrieve their institution_id, education_grade_id, and academic_period_id \u2014 all required to filter assessments correctly.",
+          "guidance": "Filter by student_id and student_status_id=1. If the user provides the student's name instead of an id, search with first_name or last_name filter. Capture education_grade_id and academic_period_id from this response \u2014 they are the join keys for assessments."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Assessments for the Grade and Period",
+          "action": "openemis_get",
+          "resource": "assessments",
+          "purpose": "List the assessments (e.g., mid-term, final exam, quarterly) available for this student's grade and academic period.",
+          "guidance": "Filter by education_grade_id and academic_period_id from step 1. The response includes assessment id and name. If the user named a specific assessment (e.g., 'final exam'), match by name. If not specified, return all and let the user pick or fetch results for all."
+        },
+        {
+          "step": 3,
+          "title": "Fetch Assessment Periods",
+          "action": "openemis_discover",
+          "resource": "assessment-periods",
+          "purpose": "Resolve the assessment period labels (e.g., Term 1, Semester 2) so marks can be displayed with the correct period name.",
+          "guidance": "Filter by assessment_id from step 2 if available. The assessment_period_id on each result row will be matched against these records to display a human-readable period label."
+        },
+        {
+          "step": 4,
+          "title": "Fetch Assessment Items (Subjects)",
+          "action": "openemis_get",
+          "resource": "assessment-items",
+          "purpose": "Retrieve the list of assessed subjects/components within the selected assessment, including their maximum marks and education_subject_id.",
+          "guidance": "Filter by assessment_id. Each item has education_subject_id \u2014 use this to resolve subject names from education-subjects in step 5. Also captures the passing mark threshold if available."
+        },
+        {
+          "step": 5,
+          "title": "Resolve Subject Names",
+          "action": "openemis_discover",
+          "resource": "education-subjects",
+          "purpose": "Map education_subject_id values from assessment items to human-readable subject names for display.",
+          "guidance": "No filters needed \u2014 fetch all subjects or filter by education_grade_id. Build a lookup map of {id \u2192 name} to enrich the marks rows in step 6."
+        },
+        {
+          "step": 6,
+          "title": "Fetch Student Marks",
+          "action": "openemis_get",
+          "resource": "assessment-item-results",
+          "purpose": "Retrieve the actual scored marks for this student across all assessment items in the selected assessment and period.",
+          "guidance": "Filter by student_id and assessment_id. Optionally filter by assessment_period_id if the user asked for a specific period. Each row contains assessment_item_id (join to step 4 for subject), marks (numeric score), and grading_option_id (letter grade reference). Absent rows mean the mark was not yet entered \u2014 distinguish from a zero mark."
+        }
+      ],
+      "coverage": {
+        "present": [
+          "institution-students",
+          "assessments",
+          "assessment-periods",
+          "assessment-items",
+          "assessment-item-results",
+          "education-subjects"
+        ],
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "view-class-report",
+      "title": "View class-level report card overview for a grade",
+      "audience": [
+        "teacher",
+        "admin"
+      ],
+      "domain": "Report",
+      "description": "Retrieve the report card configuration for a class, list the subjects included in it, and pull the assessment item results for all students in that grade and period. This gives a class-level overview equivalent to what a teacher sees on the report card summary screen. Note that this is a read workflow \u2014 PDF generation requires a separate async process (see generate-student-report-card-pdf playbook).",
+      "resources": [
+        "report-cards",
+        "institution-class-grades",
+        "report-card-subjects",
+        "assessment-item-results"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Fetch Report Card Configuration",
+          "action": "openemis_get",
+          "resource": "report-cards",
+          "purpose": "Retrieve the report card definition for the institution and academic period, which determines which subjects and grading components are included.",
+          "guidance": "Filter by institution_id and academic_period_id. The response includes report_card_id (needed for step 3), grading scale reference, and whether comments are enabled. If multiple report cards exist for the same period, match by education_grade_id or ask the user which one to use."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Grade Assignments for the Class",
+          "action": "openemis_get",
+          "resource": "institution-class-grades",
+          "purpose": "Retrieve the education_grade_id(s) assigned to this institution class, needed to filter assessment results by grade.",
+          "guidance": "Filter by institution_class_id. A class typically maps to one grade, but some institutions configure multi-grade classes. Capture education_grade_id for use in steps 3 and 4."
+        },
+        {
+          "step": 3,
+          "title": "Fetch Subjects on the Report Card",
+          "action": "openemis_get",
+          "resource": "report-card-subjects",
+          "purpose": "List the subjects that are included on the report card and their display order, so the overview matches the official report card layout.",
+          "guidance": "Filter by report_card_id from step 1. Each row links a subject to the report card via education_subject_id. Use this list to determine which subjects to show in the class overview \u2014 subjects not in this list do not appear on the official report card."
+        },
+        {
+          "step": 4,
+          "title": "Fetch Assessment Results for the Class",
+          "action": "openemis_get",
+          "resource": "assessment-item-results",
+          "purpose": "Pull all student mark rows for this grade and academic period to construct the class-level summary table.",
+          "guidance": "Filter by education_grade_id (from step 2) and academic_period_id. For a large class, paginate using limit=200. Each row has student_id, assessment_item_id, marks, and grading_option_id. Group by student_id and assessment_item_id to build the per-student per-subject grid. Rows with marks=null indicate not-yet-entered grades."
+        }
+      ],
+      "coverage": {
+        "present": [
+          "report-cards",
+          "institution-class-grades",
+          "report-card-subjects",
+          "assessment-item-results"
+        ],
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "view-timetable",
+      "title": "View timetable for a class or teacher",
+      "audience": [
+        "teacher",
+        "admin",
+        "student"
+      ],
+      "domain": "Schedule",
+      "description": "Retrieve the weekly schedule for a specific institution class \u2014 including day, period slot, subject, and assigned teacher \u2014 for the current or specified academic period. The timetable is stored in institution-schedule-timetables; class-grade mapping from institution-class-grades is used to enrich the response with the education grade context. For a student's personal timetable view (parent/student-facing), use the view-student-timetable playbook instead.",
+      "resources": [
+        "institution-schedule-timetables",
+        "institution-class-grades"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Fetch Class Timetable",
+          "action": "openemis_get",
+          "resource": "institution-schedule-timetables",
+          "purpose": "Retrieve all scheduled slots for the specified class and academic period, including day of week, period number, subject id, and teacher assignment.",
+          "guidance": "Filter by institution_class_id and academic_period_id. If the user provides a teacher name instead of a class, first resolve the staff_id and then filter institution-schedule-timetables by staff_id. Each row includes day_of_week (integer 1\u20137), period (integer), institution_subject_id, and staff_id. Order by day_of_week, period for a readable schedule grid."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Grade Information for the Class",
+          "action": "openemis_get",
+          "resource": "institution-class-grades",
+          "purpose": "Retrieve the education grade associated with this class to enrich the timetable display with grade context.",
+          "guidance": "Filter by institution_class_id. Capture education_grade_id to label the timetable output (e.g., 'Grade 4 \u2014 Class A timetable'). In multi-grade class configurations, multiple rows may be returned \u2014 display all associated grades."
+        },
+        {
+          "step": 3,
+          "title": "Identify Gaps or Unscheduled Periods",
+          "action": "openemis_discover",
+          "resource": "institution-schedule-timetables",
+          "purpose": "Check for missing period slots in the timetable by comparing the fetched rows against the expected number of periods per day.",
+          "guidance": "Group the results from step 1 by day_of_week and list the period numbers present. If consecutive periods are missing (e.g., day 2 has periods 1, 2, 4 but not 3), note them as unscheduled or free periods. This is informational \u2014 the resource does not have a 'gap' field; the caller must compute it."
+        }
+      ],
+      "coverage": {
+        "present": [
+          "institution-schedule-timetables",
+          "institution-class-grades"
+        ],
+        "missing": [],
+        "pct": 100
       }
     }
   ]
