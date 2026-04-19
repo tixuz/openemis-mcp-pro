@@ -27,14 +27,31 @@ import {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+const MAX_BODY_BYTES = 1_048_576; // 1 MB — reject oversized payloads before they hit memory
+
 async function readBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
-    req.on("data", (c: Buffer) => chunks.push(c));
+    let totalBytes = 0;
+    req.on("data", (c: Buffer) => {
+      totalBytes += c.byteLength;
+      if (totalBytes > MAX_BODY_BYTES) {
+        req.destroy();
+        reject(new Error("PAYLOAD_TOO_LARGE"));
+        return;
+      }
+      chunks.push(c);
+    });
     req.on("end",  () => resolve(Buffer.concat(chunks).toString("utf-8")));
     req.on("error", reject);
   });
 }
+
+const SECURITY_HEADERS: Record<string, string> = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options":        "DENY",
+  "Content-Security-Policy": "default-src 'none'",
+};
 
 function jsonResponse(res: ServerResponse, status: number, data: unknown): void {
   const body = JSON.stringify(data, null, 2);
@@ -42,9 +59,34 @@ function jsonResponse(res: ServerResponse, status: number, data: unknown): void 
     "Content-Type":                "application/json",
     "Access-Control-Allow-Origin": "*",
     "Content-Length":              String(Buffer.byteLength(body)),
+    ...SECURITY_HEADERS,
   });
   res.end(body);
 }
+
+// ─── Simple in-memory rate limiter (per IP, token bucket) ─────────────────────
+// Allows RATE_LIMIT_MAX requests per RATE_LIMIT_WINDOW_MS window per client IP.
+// Resets the bucket when the window expires. Keeps no external dependencies.
+
+const RATE_LIMIT_MAX        = 60;
+const RATE_LIMIT_WINDOW_MS  = 60_000;
+const rateBuckets = new Map<string, { count: number; resetAt: number }>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const bucket = rateBuckets.get(ip);
+  if (!bucket || now >= bucket.resetAt) {
+    rateBuckets.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return false;
+  }
+  bucket.count += 1;
+  return bucket.count > RATE_LIMIT_MAX;
+}
+
+// ─── Input validation ─────────────────────────────────────────────────────────
+
+/** Kebab-case resource slug — must be lowercase, start with a letter, ≤80 chars. */
+const VALID_RESOURCE = /^[a-z][a-z0-9-]{0,79}$/;
 
 // ─── OpenAPI schema ────────────────────────────────────────────────────────────
 
@@ -217,10 +259,20 @@ export async function handleRestRequest(
 ): Promise<boolean> {
   const rawUrl = req.url ?? "/";
   const hostHeader = (req.headers["host"] ?? `localhost:${config.port}`) as string;
-  const serverUrl  = `http://${hostHeader}`;           // use X-Forwarded-Proto in nginx setups
+  const proto      = (req.headers["x-forwarded-proto"] as string | undefined) ?? "http";
+  const serverUrl  = `${proto}://${hostHeader}`;
   const url    = new URL(rawUrl, serverUrl);
   const path   = url.pathname;
   const method = (req.method ?? "GET").toUpperCase();
+
+  // ── Rate limiting (per client IP) ─────────────────────────────────────────
+  const clientIp = (req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0].trim()
+    ?? req.socket.remoteAddress
+    ?? "unknown";
+  if (isRateLimited(clientIp)) {
+    jsonResponse(res, 429, { error: "Too many requests — slow down." });
+    return true;
+  }
 
   // ── CORS preflight ────────────────────────────────────────────────────────
   if (method === "OPTIONS") {
@@ -228,6 +280,7 @@ export async function handleRestRequest(
       "Access-Control-Allow-Origin":  "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      ...SECURITY_HEADERS,
     });
     res.end();
     return true;
@@ -247,7 +300,7 @@ export async function handleRestRequest(
 
   // ── Discover ──────────────────────────────────────────────────────────────
   if (method === "GET" && path === "/api/discover") {
-    const topic  = url.searchParams.get("topic") ?? "";
+    const topic  = (url.searchParams.get("topic") ?? "").slice(0, 200);
     const blocks = await openemisDiscoverHandler({ topic });
     const text   = blocks.map((b) => b.text).join("\n");
     jsonResponse(res, 200, { topic, content: text });
@@ -278,6 +331,15 @@ export async function handleRestRequest(
   const resource = decodeURIComponent(resMatch[1]);
   const recordId = resMatch[2];  // undefined for collection endpoints
 
+  // Validate resource slug — kebab-case only; reject anything suspicious.
+  if (!VALID_RESOURCE.test(resource)) {
+    jsonResponse(res, 400, { error: `Invalid resource name: "${resource}"` });
+    return true;
+  }
+
+  // ── Request log (stderr — safe in both stdio and HTTP mode) ──────────────
+  const ts = new Date().toISOString();
+
   try {
     if (method === "GET") {
       const query: Record<string, unknown> = {};
@@ -285,34 +347,53 @@ export async function handleRestRequest(
         const num = Number(v);
         query[k] = v !== "" && Number.isFinite(num) ? num : v;
       }
-      jsonResponse(res, 200, await client.get(resource, query));
+      const result = await client.get(resource, query);
+      console.error(ts, method, path, 200);
+      jsonResponse(res, 200, result);
       return true;
     }
 
     if (method === "POST" && !recordId) {
-      const raw  = await readBody(req);
-      const body = JSON.parse(raw) as unknown;
-      jsonResponse(res, 200, await client.post(resource, body));
+      const raw = await readBody(req);
+      let body: unknown;
+      try { body = JSON.parse(raw); }
+      catch { jsonResponse(res, 400, { error: "Invalid JSON body" }); return true; }
+      const result = await client.post(resource, body);
+      console.error(ts, method, path, 200);
+      jsonResponse(res, 200, result);
       return true;
     }
 
     if (method === "PUT" && recordId) {
-      const raw  = await readBody(req);
-      const body = JSON.parse(raw) as unknown;
-      jsonResponse(res, 200, await client.put(`${resource}/${recordId}`, body));
+      const raw = await readBody(req);
+      let body: unknown;
+      try { body = JSON.parse(raw); }
+      catch { jsonResponse(res, 400, { error: "Invalid JSON body" }); return true; }
+      const result = await client.put(`${resource}/${recordId}`, body);
+      console.error(ts, method, path, 200);
+      jsonResponse(res, 200, result);
       return true;
     }
 
     if (method === "DELETE" && recordId) {
-      jsonResponse(res, 200, await client.delete(`${resource}/${recordId}`));
+      const result = await client.delete(`${resource}/${recordId}`);
+      console.error(ts, method, path, 200);
+      jsonResponse(res, 200, result);
       return true;
     }
 
     return false;
 
   } catch (err) {
-    const msg    = err instanceof Error ? err.message : String(err);
-    const status = /422/.test(msg) ? 422 : /404/.test(msg) ? 404 : /401/.test(msg) ? 401 : 500;
+    const msg = err instanceof Error ? err.message : String(err);
+    // Parse status from "[422] ..." style error messages produced by openemis.ts
+    if (msg === "PAYLOAD_TOO_LARGE") {
+      jsonResponse(res, 413, { error: "Request body exceeds 1 MB limit" });
+      return true;
+    }
+    const statusMatch = msg.match(/\[(\d{3})\]/);
+    const status = statusMatch ? Number(statusMatch[1]) : 500;
+    console.error(ts, method, path, status, msg.slice(0, 120));
     jsonResponse(res, status, { error: msg });
     return true;
   }

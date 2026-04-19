@@ -1,8 +1,8 @@
 {
-  "name": "openemis-mcp",
+  "name": "openemis-mcp-pro",
   "version": "0.3.0",
   "private": false,
-  "description": "MCP server wrapping the OpenEMIS v5 REST API",
+  "description": "MCP server for the OpenEMIS v5 REST API — read/write tools, HTTP server mode, and ChatGPT OpenAPI adapter",
   "license": "MIT",
   "keywords": [
     "mcp",
@@ -14,16 +14,28 @@
   ],
   "type": "module",
   "bin": {
-    "openemis-mcp": "dist/server.js"
+    "openemis-mcp-pro": "dist/server.js"
   },
   "engines": {
     "node": ">=22.0.0"
+  },
+  "files": [
+    "dist",
+    "data",
+    "docs/playbooks",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "exports": {
+    ".": "./dist/server.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc --noEmit -p tsconfig.json",
     "start": "node dist/server.js",
-    "dev": "tsx src/server.ts"
+    "dev": "tsx src/server.ts",
+    "smoke": "node scripts/smoke-login.mjs",
+    "prepublishOnly": "npm run check && npm run build"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",

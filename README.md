@@ -228,7 +228,7 @@ curl http://your-server:3000/health
 │  • openemis_health     │
 │  • openemis_list_dom…  │  ← reads Domain-*.md from vault
 │  • openemis_discover   │  ← topic → ≤30 scoped endpoints
-│  • openemis_list_play… │  ← list all 16 workflow playbooks
+│  • openemis_list_play… │  ← list all 27 workflow playbooks
 │  • openemis_get_playbk │  ← load a playbook by id
 │  • openemis_get / _create / _update / _delete   │
 └───────────┬────────────┘
@@ -338,7 +338,7 @@ Workflow routes are gated above Individual Pro because bulk AI writes at institu
 | **Scope** | Any user | One person | One school | Ministry / national |
 | **Licence** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
 | Read tools (all 645 resources) | ✅ | ✅ | ✅ | ✅ |
-| 24 curated playbooks + translations | ✅ | ✅ | ✅ | ✅ |
+| 27 curated playbooks + translations | ✅ | ✅ | ✅ | ✅ |
 | stdio mode (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
 | **HTTP server mode** (Oracle / VPS install) | — | ✅ | ✅ | ✅ |
 | **OpenAPI adapter** (ChatGPT Custom GPT, any REST client) | — | ✅ | ✅ | ✅ |

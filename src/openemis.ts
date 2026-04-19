@@ -82,7 +82,7 @@ export class OpenemisClientImpl implements OpenemisClient {
       }
 
       this.cachedToken = token;
-      console.log(
+      console.error(
         `[OpenEMIS] Login successful; cached JWT (${token.length} chars)`
       );
       return token;
