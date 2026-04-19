@@ -194,32 +194,32 @@ Design principles, from the first line of code:
 
 ### Playbooks
 
-| # | Playbook | Domain | Audience |
-|---|---|---|---|
-| 1 | [Count Vacant Positions](docs/playbooks/count-vacant-positions.md) | Staff | admin, hr |
-| 2 | [Mark Student Attendance](docs/playbooks/mark-student-attendance.md) | Attendance | teacher, admin |
-| 3 | [Mark Staff Attendance](docs/playbooks/mark-staff-attendance.md) | Staff | admin, hr, teacher |
-| 4 | [View Student Timetable](docs/playbooks/view-student-timetable.md) | Schedule | parent, student |
-| 5 | [Student Dashboard](docs/playbooks/student-dashboard.md) | Student | parent, student |
-| 6 | [Generate Student Report Card PDF](docs/playbooks/generate-student-report-card-pdf.md) | Report | teacher, admin |
-| 7 | [Enrol a New Student](docs/playbooks/enroll-new-student.md) | Student | admin, registrar |
-| 8 | [Record a Behaviour Incident](docs/playbooks/record-behavior-incident.md) | Student | teacher, admin |
-| 9 | [Submit Exam Marks](docs/playbooks/submit-exam-marks.md) | Assessment | teacher |
-| 10 | [Institution Summary](docs/playbooks/institution-summary.md) | Institution | admin, parent |
-| 11 | [Generate Institution Statistics PDF](docs/playbooks/generate-institution-statistics-pdf.md) | Report | admin |
-| 12 | [View Latest Attendance](docs/playbooks/view-latest-attendance.md) | Attendance | teacher, admin, parent |
-| 13 | [View Student Profile](docs/playbooks/view-student-profile.md) | Student | teacher, admin |
-| 14 | [View Student Marks](docs/playbooks/view-student-marks.md) | Assessment | teacher, admin, parent |
-| 15 | [View Class Report](docs/playbooks/view-class-report.md) | Report | teacher, admin |
-| 16 | [View Timetable](docs/playbooks/view-timetable.md) | Schedule | teacher, admin, student |
-| 17 | [View Full Institution Profile](docs/playbooks/view-institution-profile.md) | Institution | admin, parent, public |
-| 18 | [View Full Class Profile](docs/playbooks/view-class-profile.md) | Student | teacher, admin |
-| 19 | [View a Staff Member's Full Profile](docs/playbooks/view-staff-profile.md) | Staff | admin, hr |
-| 20 | [Enhance Student Profile](docs/playbooks/enhance-student-profile.md) | Student | teacher, admin, counsellor |
-| 21 | [View Institution Infrastructure](docs/playbooks/view-institution-infrastructure.md) | Institution | admin, facilities |
-| 22 | [View Institution Meals](docs/playbooks/view-institution-meals.md) | Institution | admin, nutritionist, parent |
-| 23 | [View Student Risk Profile](docs/playbooks/view-student-risks.md) | Student | admin, counsellor, teacher |
-| 24 | [View Institution Risk Summary](docs/playbooks/view-institution-risks.md) | Institution | admin, ministry |
+| # | Playbook | Domain | Audience | Translations |
+|---|---|---|---|---|
+| 1 | [Count Vacant Positions](docs/playbooks/count-vacant-positions.md) | Staff | admin, hr | [RU](docs/playbooks/count-vacant-positions.ru.md) · [ES](docs/playbooks/count-vacant-positions.es.md) |
+| 2 | [Mark Student Attendance](docs/playbooks/mark-student-attendance.md) | Attendance | teacher, admin | [RU](docs/playbooks/mark-student-attendance.ru.md) · [ES](docs/playbooks/mark-student-attendance.es.md) |
+| 3 | [Mark Staff Attendance](docs/playbooks/mark-staff-attendance.md) | Staff | admin, hr, teacher | [RU](docs/playbooks/mark-staff-attendance.ru.md) · [ES](docs/playbooks/mark-staff-attendance.es.md) |
+| 4 | [View Student Timetable](docs/playbooks/view-student-timetable.md) | Schedule | parent, student | [RU](docs/playbooks/view-student-timetable.ru.md) |
+| 5 | [Student Dashboard](docs/playbooks/student-dashboard.md) | Student | parent, student | [RU](docs/playbooks/student-dashboard.ru.md) |
+| 6 | [Generate Student Report Card PDF](docs/playbooks/generate-student-report-card-pdf.md) | Report | teacher, admin | [RU](docs/playbooks/generate-student-report-card-pdf.ru.md) · [ES](docs/playbooks/generate-student-report-card-pdf.es.md) |
+| 7 | [Enrol a New Student](docs/playbooks/enroll-new-student.md) | Student | admin, registrar | [RU](docs/playbooks/enroll-new-student.ru.md) · [ES](docs/playbooks/enroll-new-student.es.md) |
+| 8 | [Record a Behaviour Incident](docs/playbooks/record-behavior-incident.md) | Student | teacher, admin | [RU](docs/playbooks/record-behavior-incident.ru.md) · [ES](docs/playbooks/record-behavior-incident.es.md) |
+| 9 | [Submit Exam Marks](docs/playbooks/submit-exam-marks.md) | Assessment | teacher | [RU](docs/playbooks/submit-exam-marks.ru.md) |
+| 10 | [Institution Summary](docs/playbooks/institution-summary.md) | Institution | admin, parent | [RU](docs/playbooks/institution-summary.ru.md) |
+| 11 | [Generate Institution Statistics PDF](docs/playbooks/generate-institution-statistics-pdf.md) | Report | admin | [RU](docs/playbooks/generate-institution-statistics-pdf.ru.md) · [ES](docs/playbooks/generate-institution-statistics-pdf.es.md) |
+| 12 | [View Latest Attendance](docs/playbooks/view-latest-attendance.md) | Attendance | teacher, admin, parent | |
+| 13 | [View Student Profile](docs/playbooks/view-student-profile.md) | Student | teacher, admin | [RU](docs/playbooks/view-student-profile.ru.md) |
+| 14 | [View Student Marks](docs/playbooks/view-student-marks.md) | Assessment | teacher, admin, parent | [RU](docs/playbooks/view-student-marks.ru.md) |
+| 15 | [View Class Report](docs/playbooks/view-class-report.md) | Report | teacher, admin | [RU](docs/playbooks/view-class-report.ru.md) |
+| 16 | [View Timetable](docs/playbooks/view-timetable.md) | Schedule | teacher, admin, student | [RU](docs/playbooks/view-timetable.ru.md) |
+| 17 | [View Full Institution Profile](docs/playbooks/view-institution-profile.md) | Institution | admin, parent, public | |
+| 18 | [View Full Class Profile](docs/playbooks/view-class-profile.md) | Student | teacher, admin | |
+| 19 | [View a Staff Member's Full Profile](docs/playbooks/view-staff-profile.md) | Staff | admin, hr | [RU](docs/playbooks/view-staff-profile.ru.md) |
+| 20 | [Enhance Student Profile](docs/playbooks/enhance-student-profile.md) | Student | teacher, admin, counsellor | [ES](docs/playbooks/enhance-student-profile.es.md) |
+| 21 | [View Institution Infrastructure](docs/playbooks/view-institution-infrastructure.md) | Institution | admin, facilities | |
+| 22 | [View Institution Meals](docs/playbooks/view-institution-meals.md) | Institution | admin, nutritionist, parent | |
+| 23 | [View Student Risk Profile](docs/playbooks/view-student-risks.md) | Student | admin, counsellor, teacher | |
+| 24 | [View Institution Risk Summary](docs/playbooks/view-institution-risks.md) | Institution | admin, ministry | |
 
 ---
 
