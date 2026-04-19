@@ -7203,7 +7203,7 @@
     "domain_endpoint_total": 2851,
     "family_endpoint_total": 185,
     "orphan_endpoint_total": 170,
-    "playbook_count": 16
+    "playbook_count": 20
   },
   "playbooks": [
     {
@@ -8118,6 +8118,282 @@
         "present": [
           "institution-schedule-timetables",
           "institution-class-grades"
+        ],
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "view-institution-profile",
+      "title": "View Full Institution Profile",
+      "audience": [
+        "admin",
+        "parent",
+        "public"
+      ],
+      "domain": "Institution",
+      "description": "View detailed information about an institution: core record, active grades, locality, and contact persons. Steps follow the canonical order: core institution fetch first, then grades, then locality resolution, then contacts.",
+      "resources": [
+        "institutions",
+        "institution-grades",
+        "institution-localities",
+        "institution-contact-persons"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Fetch Core Institution Record",
+          "action": "openemis_get",
+          "resource": "institutions",
+          "purpose": "Retrieve the institution's base record: name, code, address, contact_person (free-text), telephone, locality_id, and institution type.",
+          "guidance": "Filter by id, name, or code. Always add ?is_deleted=0 to exclude soft-deleted records \u2014 DELETE on the institutions endpoint sets is_deleted=1; the row stays in the DB. The response's locality_id integer will be resolved in step 3. GET /api/v5/institutions/{id} returns more detail than the list endpoint; prefer the single-record fetch once you have the id."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Active Grades Offered",
+          "action": "openemis_get",
+          "resource": "institution-grades",
+          "purpose": "List the education grade levels the institution currently offers for the active academic period.",
+          "guidance": "Filter by institution_id (from step 1) and academic_period_id. Without both filters the endpoint returns a global dump. Returns an empty array if no grades are configured \u2014 that is valid for new institutions. Use ?_fields=id,education_grade_id,start_date,end_date to trim the payload."
+        },
+        {
+          "step": 3,
+          "title": "Resolve Locality Name",
+          "action": "openemis_get",
+          "resource": "institution-localities",
+          "purpose": "Resolve the locality_id from the institution record to a human-readable locality name (e.g. 'Selangor', 'Kuala Lumpur').",
+          "guidance": "institution-localities is a GLOBAL master reference list \u2014 it has NO institution_id filter parameter. Fetch all entries (or cache once per session), then match the institution's locality_id to the correct row. Do NOT attempt ?institution_id=... \u2014 that parameter is not supported on this resource and will return an empty or unfiltered result."
+        },
+        {
+          "step": 4,
+          "title": "Fetch Contact Persons",
+          "action": "openemis_get",
+          "resource": "institution-contact-persons",
+          "purpose": "Retrieve the named contact persons for the institution, including designation, phone, mobile, and email.",
+          "guidance": "Filter by institution_id. A record with preferred=1 is the primary contact; preferred is stored as tinyint 0/1, cast to boolean for display. An empty result is valid \u2014 some institutions have no separate contacts beyond the contact_person field on the institutions record itself."
+        }
+      ],
+      "notes": [
+        "Step order is intentional: core record first (provides locality_id and institution_id for subsequent steps), then grades (depends on institution_id), then locality (global lookup needing only locality_id from step 1), then contacts (depends on institution_id).",
+        "is_deleted=0 is essential on the institutions fetch \u2014 soft-deleted schools remain in the DB and will appear in list results without this filter.",
+        "institution-localities has NO institution-specific filter. It is a standalone reference table. To find which locality an institution belongs to, read locality_id from the institutions record and look it up in this table.",
+        "contact_person on the institutions record is a free-text string, NOT a FK to security_users. Separate, richer contact records live in institution-contact-persons filtered by institution_id."
+      ],
+      "coverage": {
+        "present": [
+          "institutions",
+          "institution-grades",
+          "institution-localities",
+          "institution-contact-persons"
+        ],
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "view-class-profile",
+      "title": "View Full Class Profile",
+      "audience": [
+        "teacher",
+        "admin"
+      ],
+      "domain": "Student",
+      "description": "View a class profile: grade level assignment, enrolled student roster, active subjects, and monthly attendance summary. The attendance resource uses a composite primary key \u2014 there is no integer id field; always use list-style filters to fetch it.",
+      "resources": [
+        "institution-class-grades",
+        "institution-class-students",
+        "institution-class-subjects",
+        "institution-class-attendance-records"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Fetch Class Grade Assignment",
+          "action": "openemis_get",
+          "resource": "institution-class-grades",
+          "purpose": "Resolve which education grade level this class belongs to. Required before fetching the student roster.",
+          "guidance": "Filter by institution_class_id. Returns the education_grade_id \u2014 a mapping table (class \u2194 grade). Typically one row per class, but multi-grade configurations are valid."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Enrolled Students",
+          "action": "openemis_get",
+          "resource": "institution-class-students",
+          "purpose": "List all currently enrolled students in the class.",
+          "guidance": "Filter by institution_class_id and academic_period_id. Set student_status_id=1 to return only currently enrolled students. This is a join table \u2014 the id field here is the enrollment record id, not the student id. student_id is the FK to security_users."
+        },
+        {
+          "step": 3,
+          "title": "Fetch Active Subjects",
+          "action": "openemis_get",
+          "resource": "institution-class-subjects",
+          "purpose": "List the subjects taught in this class.",
+          "guidance": "Filter by institution_class_id and status=1 to return only active subjects. Subject names are not included \u2014 only institution_subject_id FK. Resolve names separately via institution-subjects if needed."
+        },
+        {
+          "step": 4,
+          "title": "Fetch Monthly Attendance Summary",
+          "action": "openemis_get",
+          "resource": "institution-class-attendance-records",
+          "purpose": "Retrieve the monthly attendance summary for the class showing daily present-student counts.",
+          "guidance": "CRITICAL: institution-class-attendance-records has NO integer id field. Its primary key is composite: (institution_class_id, academic_period_id, year, month). NEVER pass an id= param \u2014 it will return empty or error. Use list filters only: ?institution_class_id={id}&academic_period_id={period}&year={year}&month={month}. Alternatively use the composite-key path: GET /institution-class-attendance-records/institution_class_id/{X}/academic_period_id/{Y}/year/{Z}/month/{M}. day_1 through day_31 fields hold the daily present count; null means attendance was not yet submitted for that day."
+        }
+      ],
+      "notes": [
+        "institution-class-attendance-records composite PK: (institution_class_id, academic_period_id, year, month). There is NO integer id column. Any call using a bare numeric id= filter will fail silently or return wrong data.",
+        "This resource holds monthly aggregates (present-count per day). It is NOT the per-student absence log \u2014 for individual absences use student-attendance-marked-records.",
+        "day_X fields return null for days attendance was not submitted \u2014 treat as 'Pending', not as 0 absent."
+      ],
+      "coverage": {
+        "present": [
+          "institution-class-grades",
+          "institution-class-students",
+          "institution-class-subjects",
+          "institution-class-attendance-records"
+        ],
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "view-staff-profile",
+      "title": "View a Staff Member's Full Profile",
+      "audience": [
+        "admin",
+        "hr"
+      ],
+      "domain": "Staff",
+      "description": "View a staff member's current and historical position profiles, leave history, historical positions, and direct contact details. Combines four resources using the correct filter keys for each.",
+      "resources": [
+        "institution-staff-position-profiles",
+        "institution-staff-leave",
+        "historical-staff-positions",
+        "user-contacts"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Fetch Current and Past Position Profiles",
+          "action": "openemis_get",
+          "resource": "institution-staff-position-profiles",
+          "purpose": "Retrieve the staff member's FTE, status, and assignment history at the institution.",
+          "guidance": "Filter by institution_staff_id (the school-specific assignment ID, NOT the global staff_id). To find the active record, also filter status_id=1 and look for end_date=null. Order by start_date desc. The FTE field is uppercase in the API response (FTE, not fte) \u2014 parse as float: parseFloat(row.FTE). end_date=null means currently active; treat null as 'ongoing', not as empty string."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Leave History",
+          "action": "openemis_get",
+          "resource": "institution-staff-leave",
+          "purpose": "Retrieve the staff member's leave records (approved or pending) ordered most-recent first.",
+          "guidance": "Filter by staff_id \u2014 this is the global person ID (FK to security_users), NOT institution_staff_id. Using institution_staff_id here will return empty results. Add ?orderby=date_from&order=desc. institution-staff-leave is workflow-controlled (status_id \u2192 WorkflowSteps) \u2014 GET is safe; CREATE/UPDATE/DELETE must go through the official application."
+        },
+        {
+          "step": 3,
+          "title": "Fetch Historical Positions",
+          "action": "openemis_get",
+          "resource": "historical-staff-positions",
+          "purpose": "Retrieve the staff member's archived position title history at past institutions.",
+          "guidance": "Filter by institution_id to scope to the current institution's history. historical-staff-positions tracks positional titles at past institutions; it is distinct from institution-staff-position-profiles which tracks FTE/status changes. Note: the documented response fields do not include a direct staff_id FK \u2014 filtering by institution_id plus date range is the recommended approach."
+        },
+        {
+          "step": 4,
+          "title": "Fetch Staff Contact Details",
+          "action": "openemis_get",
+          "resource": "user-contacts",
+          "purpose": "Retrieve the staff member's phone numbers and email addresses.",
+          "guidance": "Filter by security_user_id \u2014 this is the staff member's global user ID (same FK used in step 2 as staff_id). Do NOT filter by institution_staff_id \u2014 user-contacts is a global user table not scoped by institution. Resolve contact_type_id against /api/v5/contact-types to display human-readable labels (e.g. 'Mobile', 'Email')."
+        }
+      ],
+      "notes": [
+        "Two staff identity fields: staff_id = global person across all schools (FK to security_users); institution_staff_id = that person's assignment at a specific school. Use institution_staff_id for position-profiles (step 1), staff_id for leave (step 2) and user-contacts (step 4).",
+        "FTE is uppercase in the API response: row.FTE not row.fte. Parse to float before displaying or computing (e.g. parseFloat(row.FTE)).",
+        "institution-staff-leave is workflow-controlled. GET is always safe. For CREATE/UPDATE/DELETE, direct the user to the official OpenEMIS application.",
+        "user-contacts covers both phone and email in one endpoint. contact_type_id must be resolved via /api/v5/contact-types for human-readable labels."
+      ],
+      "coverage": {
+        "present": [
+          "institution-staff-position-profiles",
+          "institution-staff-leave",
+          "historical-staff-positions",
+          "user-contacts"
+        ],
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "enhance-student-profile",
+      "title": "Enhance Student Profile with Contacts, Nationality, and Special Needs",
+      "audience": [
+        "teacher",
+        "admin",
+        "counsellor"
+      ],
+      "domain": "Student",
+      "description": "Augment an existing student profile view by fetching direct contact details, nationality assignments, special-needs assessments, and special-needs plans. All four resources filter by security_user_id (the student's global user ID from security_users), NOT by student_id (the enrollment FK). Empty results for special-needs are valid \u2014 most students have no records.",
+      "resources": [
+        "institution-students",
+        "user-contacts",
+        "user-nationalities",
+        "user-special-needs-assessments",
+        "user-special-needs-plans"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Confirm Active Enrollment and Resolve security_user_id",
+          "action": "openemis_get",
+          "resource": "institution-students",
+          "purpose": "Verify the student's active enrollment and capture the security_user_id needed to filter all subsequent resources.",
+          "guidance": "Filter by student_id and student_status_id=1. The student_id field on institution-students IS the security_user_id (FK to security_users). Capture it \u2014 steps 2 through 5 all filter by security_user_id."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Student Contact Details",
+          "action": "openemis_get",
+          "resource": "user-contacts",
+          "purpose": "Retrieve the student's phone numbers and email addresses.",
+          "guidance": "Filter by security_user_id \u2014 the global user ID from step 1. Do NOT filter by student_id alone \u2014 user-contacts is a global user table and the FK is security_user_id. Resolve contact_type_id via /api/v5/contact-types for human-readable labels (e.g. 'Mobile', 'Email'). preferred=true/1 marks the primary contact of each type."
+        },
+        {
+          "step": 3,
+          "title": "Fetch Nationality Assignments",
+          "action": "openemis_get",
+          "resource": "user-nationalities",
+          "purpose": "Retrieve the student's nationality records, including dual-citizenship cases.",
+          "guidance": "Filter by security_user_id. Multiple rows are valid (dual citizenship). Use preferred=true to identify the primary nationality. Resolve nationality_id via /api/v5/nationalities for the country name."
+        },
+        {
+          "step": 4,
+          "title": "Fetch Special Needs Assessments",
+          "action": "openemis_get",
+          "resource": "user-special-needs-assessments",
+          "purpose": "Retrieve any special educational needs (SEN) assessments recorded for the student.",
+          "guidance": "Filter by security_user_id. An empty result is valid and common \u2014 most students have no SEN assessments. Resolve special_need_type_id via /api/v5/special-need-types and special_need_difficulty_id via /api/v5/special-need-difficulties for human-readable labels. file_content is always null in list responses \u2014 call GET /{id} if the file is needed."
+        },
+        {
+          "step": 5,
+          "title": "Fetch Special Needs Plans",
+          "action": "openemis_get",
+          "resource": "user-special-needs-plans",
+          "purpose": "Retrieve any Individual Education Plans (IEPs) or similar plans created for the student.",
+          "guidance": "Filter by security_user_id and optionally academic_period_id. SPELLING WARNING: the FK field on this resource is special_needs_plan_types_id (plural 'needs') \u2014 NOT special_need_plan_type_id (singular). Using the wrong spelling will silently fail. An empty result is valid \u2014 most students have no plans. file_content is always null in list responses."
+        }
+      ],
+      "notes": [
+        "All four enhancement resources (user-contacts, user-nationalities, user-special-needs-assessments, user-special-needs-plans) use security_user_id as the filter key \u2014 the student's global FK to security_users. The institution-students student_id column IS that same security_user_id.",
+        "Empty results for special-needs resources are expected and valid \u2014 do NOT treat an empty array as an error. Most students have no SEN assessments or plans.",
+        "user-special-needs-plans FK spelling: special_needs_plan_types_id (plural). Resolve via /api/v5/special-needs-plan-types.",
+        "file_content on both user-special-needs-assessments and user-special-needs-plans is always null in list responses to save bandwidth. Call GET /{id} on a specific record to retrieve the base64 file.",
+        "Steps 2\u20135 can be fetched in parallel once security_user_id is known from step 1."
+      ],
+      "coverage": {
+        "present": [
+          "institution-students",
+          "user-contacts",
+          "user-nationalities",
+          "user-special-needs-assessments",
+          "user-special-needs-plans"
         ],
         "missing": [],
         "pct": 100
