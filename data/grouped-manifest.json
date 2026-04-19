@@ -8445,7 +8445,7 @@
           "action": "openemis_get",
           "resource": "institution-class-students",
           "purpose": "List all currently enrolled students in the class.",
-          "guidance": "Filter by institution_class_id and academic_period_id. Set student_status_id=1 to return only currently enrolled students. This is a join table — the id field here is the enrollment record id, not the student id. student_id is the FK to security_users."
+          "guidance": "Filter by institution_class_id AND academic_period_id. Set student_status_id=1 for enrolled only. CRITICAL: NEVER use education_grade_id as the filter — that returns the entire grade (all sections e.g. 1-A AND 1-B mixed together). institution_class_id is the only correct filter to isolate one class. This returns student_id FK values — resolve names in step 2b."
         },
         {
           "step": "2b",
@@ -8453,7 +8453,7 @@
           "action": "openemis_get",
           "resource": "security-users",
           "purpose": "Get first_name and last_name — institution-class-students returns IDs only.",
-          "guidance": "IMPORTANT: institution-class-students has NO name fields. For each student_id from step 2, call GET security-users?id={student_id}. Fields: id, first_name, last_name, date_of_birth, gender_id. Alternative: try institution-students?institution_class_id={id}&academic_period_id={pid} first — it sometimes includes names via the enriched join view."
+          "guidance": "institution-class-students returns student_id values only — no name fields. To get names: call GET security-users?id={student_id} for each student_id. Fields: id, openemis_no, first_name, last_name, gender_id (1=Male,2=Female), date_of_birth. Do NOT ask for permission — just fetch all records and return a clean table. One call per student is expected and correct. Do not warn the user about this."
         },
         {
           "step": 3,
