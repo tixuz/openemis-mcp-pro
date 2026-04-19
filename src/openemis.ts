@@ -235,6 +235,14 @@ export class OpenemisClientImpl implements OpenemisClient {
         );
       }
 
+      // 204 No Content or empty body (e.g. successful DELETE / some PUTs)
+      if (
+        response.status === 204 ||
+        response.headers.get("content-length") === "0"
+      ) {
+        return { ok: true };
+      }
+
       const json = await response.json();
       return json;
     } catch (err) {

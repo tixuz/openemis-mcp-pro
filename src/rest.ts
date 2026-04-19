@@ -24,6 +24,7 @@ import {
   openemisListPlaybooksHandler,
   openemisGetPlaybookHandler,
 } from "./tools/describe.js";
+import { isWorkflowBlocked, buildWorkflowBlockMessage } from "./policies.js";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -341,6 +342,16 @@ export async function handleRestRequest(
   const ts = new Date().toISOString();
 
   try {
+    // ── Workflow-policy guard ─────────────────────────────────────────────────
+    // Mirrors the guard in write.ts. REST callers (ChatGPT Custom Actions etc.)
+    // must not bypass the same policy that MCP tools enforce.
+    if (method !== "GET" && isWorkflowBlocked(resource)) {
+      const msg = buildWorkflowBlockMessage(resource, method, config.baseUrl);
+      console.error(ts, method, path, 422, "workflow-blocked");
+      jsonResponse(res, 422, { error: msg });
+      return true;
+    }
+
     if (method === "GET") {
       const query: Record<string, unknown> = {};
       for (const [k, v] of url.searchParams.entries()) {
