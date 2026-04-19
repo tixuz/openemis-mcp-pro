@@ -315,7 +315,11 @@ export async function handleRestRequest(
     const policyKey = (key: string) =>
       key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
 
+    // Only render user-facing policies (keys ending in _policy) on the public page.
+    // test_policy is already shown as the banner — skip it in body sections.
+    // Internal AI rules (current_academic_period, student_names, etc.) are excluded.
     const policySections = Object.entries(policies)
+      .filter(([key]) => key.endsWith("_policy") && key !== "test_policy")
       .map(([key, text]) => `
   <h2>${policyKey(key)}</h2>
   <p>${text.replace(/\n/g, "<br>")}</p>`)
