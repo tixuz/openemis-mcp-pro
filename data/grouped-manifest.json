@@ -7427,7 +7427,7 @@
     "domain_endpoint_total": 0,
     "family_endpoint_total": 2931,
     "orphan_endpoint_total": 275,
-    "playbook_count": 22
+    "playbook_count": 24
   },
   "playbooks": [
     {
@@ -8782,6 +8782,159 @@
           "meal-nutritional-records",
           "meal-benefits",
           "institution-meal-students"
+        ],
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "view-student-risks",
+      "title": "View a Student's Risk Profile and Welfare Cases",
+      "audience": [
+        "admin",
+        "counsellor",
+        "teacher"
+      ],
+      "domain": "Student",
+      "description": "View a student's calculated risk score, the individual risk criteria that contributed to it, and any welfare cases opened for that student. institution-risks has a composite PK (no integer id). institution-cases is workflow-controlled \u2014 GET is safe, writes must go through the application.",
+      "resources": [
+        "institution-student-risks",
+        "risks",
+        "risk-criterias",
+        "student-risks-criterias",
+        "institution-cases",
+        "case-types",
+        "case-priorities"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Fetch Student Risk Score",
+          "action": "openemis_get",
+          "resource": "institution-student-risks",
+          "purpose": "Retrieve the student's overall risk score for the current academic period.",
+          "guidance": "Filter by institution_id AND academic_period_id AND student_id (student's security_user_id). The total_risk field is the calculated aggregate score. Both institution_id and academic_period_id are required for meaningful filtering \u2014 without them the endpoint returns all risk records across all institutions and periods. Capture the id field for use in step 3."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Risk Definitions",
+          "action": "openemis_get",
+          "resource": "risks",
+          "purpose": "Resolve risk_id to a human-readable risk name and understand what each risk measures.",
+          "guidance": "Filter by academic_period_id \u2014 it is required on this resource (cannot be empty). risks is the master definition table; each row defines one risk type for an academic period. Resolve risk_id from step 1 here."
+        },
+        {
+          "step": 3,
+          "title": "Fetch Per-Criterion Scores",
+          "action": "openemis_get",
+          "resource": "student-risks-criterias",
+          "purpose": "Break down the total risk score into individual criterion scores.",
+          "guidance": "Filter by institution_student_risk_id (from step 1 id field). This is a join table \u2014 likely a composite PK (institution_student_risk_id + risk_criteria_id) with no standalone integer id. The value field holds each criterion's evaluated score. Resolve risk_criteria_id via risk-criterias (risk_value range 1\u201399, threshold field) to show which criteria contributed most."
+        },
+        {
+          "step": 4,
+          "title": "Fetch Open Welfare Cases",
+          "action": "openemis_get",
+          "resource": "institution-cases",
+          "purpose": "List any welfare or safeguarding cases opened for this student at this institution.",
+          "guidance": "Filter by institution_id. institution-cases is WORKFLOW-CONTROLLED \u2014 status_id references workflow_steps, not a simple status enum. GET is always safe. case_number is auto-generated as {institution_code}-{date}-{id}. Resolve case_type_id via case-types and case_priority_id via case-priorities (both FieldOption lookups, no institution/period filter needed)."
+        }
+      ],
+      "notes": [
+        "institution-student-risks requires both institution_id AND academic_period_id \u2014 omitting either returns unscoped global results.",
+        "risks master table also requires academic_period_id as a mandatory field.",
+        "student-risks-criterias is a composite-PK join table \u2014 do NOT filter by a bare integer id. Use institution_student_risk_id.",
+        "institution-cases is WORKFLOW-CONTROLLED. GET is safe. For creating or updating cases, use the OpenEMIS application \u2014 direct API writes bypass the approval chain.",
+        "case_priority_id FK name \u2014 not priority_id. case_type_id \u2014 not type_id."
+      ],
+      "coverage": {
+        "present": [
+          "institution-student-risks",
+          "risks",
+          "risk-criterias",
+          "student-risks-criterias",
+          "institution-cases",
+          "case-types",
+          "case-priorities"
+        ],
+        "missing": [],
+        "pct": 100
+      }
+    },
+    {
+      "id": "view-institution-risks",
+      "title": "View Institution Risk Summary and Alert Rules",
+      "audience": [
+        "admin",
+        "ministry"
+      ],
+      "domain": "Institution",
+      "description": "View which risks are configured for an institution, the alert rules that fire when thresholds are crossed, and recent alert delivery logs. institution-risks has a composite PK (risk_id + institution_id) \u2014 no integer id field. Alerts link to AlertRules via a string name\u2194feature binding, not an integer FK.",
+      "resources": [
+        "institution-risks",
+        "risks",
+        "risk-criterias",
+        "alerts",
+        "alert-rules",
+        "alert-logs"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Fetch Institution Risk Configuration",
+          "action": "openemis_get",
+          "resource": "institution-risks",
+          "purpose": "List which risk types are configured for this institution.",
+          "guidance": "Filter by institution_id. CRITICAL: institution-risks has NO integer id column \u2014 its primary key is composite (risk_id + institution_id). Never query by a bare id= parameter. academic_period_id is not stored on this table \u2014 period scoping is done via the risks master table. Resolve risk_id via the risks resource."
+        },
+        {
+          "step": 2,
+          "title": "Fetch Risk Definitions and Criteria",
+          "action": "openemis_get",
+          "resource": "risks",
+          "purpose": "Resolve risk names and fetch the criteria thresholds for each configured risk.",
+          "guidance": "Filter by academic_period_id (required \u2014 cannot be empty). Then fetch risk-criterias filtered by risk_id to get the threshold values. risk_value on risk-criterias must be 1\u201399 (validated). The threshold field uses a custom range validator."
+        },
+        {
+          "step": 3,
+          "title": "Fetch Alert Definitions",
+          "action": "openemis_get",
+          "resource": "alerts",
+          "purpose": "List the alerts configured in the system \u2014 these fire when risk thresholds are crossed.",
+          "guidance": "No institution_id or academic_period_id filter on this resource. CRITICAL non-standard binding: alerts links to alert-rules via alerts.name \u2194 alert_rules.feature (string match), NOT via an integer FK. Do not attempt ?alert_rule_id=... on the alerts endpoint. Fetch alert-rules separately and match by feature string."
+        },
+        {
+          "step": 4,
+          "title": "Fetch Alert Rules",
+          "action": "openemis_get",
+          "resource": "alert-rules",
+          "purpose": "View the configured notification rules \u2014 enabled/disabled, method (Email), threshold, and which roles receive them.",
+          "guidance": "No institution_id or academic_period_id filter. The feature field is the join key back to alerts.name. enabled flag (0/1) shows whether the rule is active. security_roles is populated via alerts-roles join table \u2014 a composite PK table (alert_rule_id + security_role_id) with no integer id."
+        },
+        {
+          "step": 5,
+          "title": "Fetch Recent Alert Logs",
+          "action": "openemis_get",
+          "resource": "alert-logs",
+          "purpose": "View recent alert delivery history \u2014 whether notifications were sent successfully.",
+          "guidance": "No institution_id or academic_period_id filter. The feature field classifies which alert type fired. status field: 0=Pending, 1=Success, -1=Failed. The checksum field is used for deduplication. Filter by feature to scope to a specific alert type, or by status=-1 to find failed deliveries."
+        }
+      ],
+      "notes": [
+        "institution-risks composite PK: (risk_id + institution_id). No integer id. Never filter by bare id=.",
+        "alerts-roles is also a composite PK table (alert_rule_id + security_role_id) \u2014 no integer id.",
+        "alerts\u2194alert-rules join is by STRING (alerts.name = alert_rules.feature), not by integer FK. This is the most non-obvious join in this domain.",
+        "risks.academic_period_id is mandatory \u2014 the resource validates it cannot be empty.",
+        "alert-logs.status values: 0=Pending, 1=Success, -1=Failed."
+      ],
+      "coverage": {
+        "present": [
+          "institution-risks",
+          "risks",
+          "risk-criterias",
+          "alerts",
+          "alert-rules",
+          "alert-logs"
         ],
         "missing": [],
         "pct": 100

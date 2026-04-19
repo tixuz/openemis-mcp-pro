@@ -190,7 +190,7 @@ Design principles, from the first line of code:
 ## Documentation
 
 - [Resource Reference](docs/resources.md) — all 645 resources with HTTP method availability and write status
-- [Playbooks](docs/playbooks/) — 22 curated workflow guides
+- [Playbooks](docs/playbooks/) — 24 curated workflow guides
 
 ### Playbooks
 
@@ -218,6 +218,8 @@ Design principles, from the first line of code:
 | 20 | [Enhance Student Profile](docs/playbooks/enhance-student-profile.md) | Student | teacher, admin, counsellor |
 | 21 | [View Institution Infrastructure](docs/playbooks/view-institution-infrastructure.md) | Institution | admin, facilities |
 | 22 | [View Institution Meals](docs/playbooks/view-institution-meals.md) | Institution | admin, nutritionist, parent |
+| 23 | [View Student Risk Profile](docs/playbooks/view-student-risks.md) | Student | admin, counsellor, teacher |
+| 24 | [View Institution Risk Summary](docs/playbooks/view-institution-risks.md) | Institution | admin, ministry |
 
 ---
 
@@ -238,9 +240,9 @@ This removes `OPENEMIS_BASE_URL`, `OPENEMIS_USERNAME`, `OPENEMIS_PASSWORD`, and 
 
 **`.env`-based credentials remain fully supported** — existing setups are unchanged. Browser auth is opt-in via the new tool.
 
-### v0.5.0 — Risk Dashboards (planned)
+### v0.5.0 — Risk Dashboards ✅
 
-`view-student-risks` and `view-institution-risks` — early-warning and risk-flag resources for learner welfare and institutional compliance.
+`view-student-risks` and `view-institution-risks` — shipped. Risk scores, per-criterion breakdown, welfare cases, alert rules, and delivery logs.
 
 ---
 
