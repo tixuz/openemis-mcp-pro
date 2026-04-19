@@ -15,15 +15,49 @@ LANGS    = [
     ("ar", "Arabic"),
 ]
 
-SYSTEM = (
-    "You are a professional technical translator. "
-    "Translate the following Markdown document faithfully. "
-    "Keep ALL Markdown formatting, code blocks, inline code, links, and table structure exactly as-is. "
-    "Only translate the human-readable text — do NOT translate: "
-    "resource names in backticks, URLs, file paths, tool names (openemis_get etc), JSON keys, "
-    "code examples, or anything inside ``` blocks. "
-    "Output ONLY the translated Markdown — no explanation, no preamble."
+SYSTEM_BASE = (
+    "You are a professional technical translator for an education management system (OpenEMIS). "
+    "Translate the following Markdown document faithfully into {lang_name}.\n\n"
+    "UNIVERSAL RULES (apply to all languages):\n"
+    "- Keep ALL Markdown formatting, table structure, heading levels, bold, italic exactly as-is.\n"
+    "- NEVER translate anything inside backticks (`like_this`) or code blocks (``` blocks).\n"
+    "- NEVER translate: resource slugs (institution-lands, openemis_get, etc), field names "
+    "(institution_id, academic_period_id), URLs, file paths, or JSON keys.\n"
+    "- Preserve all emoji callouts (⚠️ 📌 ✅) unchanged.\n"
+    "- Preserve bold emphasis (**text**) and WARNING-STYLE CAPS in the target language.\n\n"
+    "LANGUAGE-SPECIFIC RULES:\n"
+    "{lang_rules}\n\n"
+    "Output ONLY the translated Markdown — no explanation, no preamble, no commentary."
 )
+
+LANG_RULES = {
+    "Russian": (
+        "Register: formal. Use ВЫ (вы) throughout. Imperative mood for instructions "
+        "(«Передайте», «Используйте», «Не передавайте»). "
+        "Translate conceptual nouns: 'resource' → 'ресурс', 'endpoint' → 'эндпоинт'. "
+        "Translate UI menu paths: 'Administration → System Configuration → Student' → "
+        "'Администрирование → Конфигурация системы → Студент'."
+    ),
+    "Arabic": (
+        "Register: formal Modern Standard Arabic (فصحى). Address form: أنتم (plural formal) for instructions. "
+        "Translate conceptual terms: 'resource' → 'مورد', 'endpoint' → 'نقطة نهاية'. "
+        "Text flows RTL but code blocks remain LTR — do not change code block direction. "
+        "Translate UI menu labels into Arabic; keep English in parentheses on first use if space allows."
+    ),
+    "Hindi": (
+        "Register: formal, respectful. Use आप (aap). Mix Hindi with English technical loan words naturally. "
+        "Translate: 'resource' → 'संसाधन', 'endpoint' → 'एंडपॉइंट' (loan word acceptable). "
+        "Translate UI menu paths: 'Administration → System Configuration → Student' → "
+        "'प्रशासन → सिस्टम कॉन्फ़िगरेशन → छात्र'."
+    ),
+    "Spanish": (
+        "Register: formal. Use USTED (usted) for singular instructions throughout. "
+        "Latin America variant preferred for wider reach. "
+        "Translate: 'resource' → 'recurso', 'endpoint' → 'endpoint' (accepted in tech Spanish). "
+        "Translate UI menu paths: 'Administration → System Configuration → Student' → "
+        "'Administración → Configuración del sistema → Estudiante'."
+    ),
+}
 
 FILES = (
     [BASE / "README.md"] +
@@ -34,10 +68,14 @@ FILES = (
 FILES = [f for f in FILES if not any(f.name.endswith(f".{lc}.md") for lc,_ in LANGS)]
 
 def call_gemma(text: str, lang_name: str) -> str:
+    system_prompt = SYSTEM_BASE.format(
+        lang_name=lang_name,
+        lang_rules=LANG_RULES[lang_name],
+    )
     payload = {
         "model": MODEL,
         "messages": [
-            {"role": "system", "content": f"{SYSTEM}\nTarget language: {lang_name}."},
+            {"role": "system", "content": system_prompt},
             {"role": "user",   "content": text},
         ],
         "temperature": 0.1,

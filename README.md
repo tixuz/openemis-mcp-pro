@@ -246,7 +246,13 @@ This removes `OPENEMIS_BASE_URL`, `OPENEMIS_USERNAME`, `OPENEMIS_PASSWORD`, and 
 
 ## License
 
-MIT
+[MIT](LICENSE.md) — © 2026 Khindol Madraimov
+
+---
+
+## Acknowledgements
+
+Built by a coordinated team of AI agents under human direction — see [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) for the full team: Adviser Arastu, Marshal Sunny, Samurai Haiku, Xéphyrin Xirdal, Captain Nemo, Coddy (GPT-5), Miniqwenco (Qwen 2.5 Coder 7B), Miniqwen (Qwen 3.5 9B), and Gemmy (Gemma 4e4b) — each with distinct roles across architecture, code, analysis, and multilingual translation.
 
 ---
 
