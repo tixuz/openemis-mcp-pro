@@ -1,21 +1,17 @@
-MIT License
+# Business Source License 1.1
 
-Copyright (c) 2026 Khindol Madraimov (github.com/tixuz)
+License text: https://mariadb.com/bsl11/
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Licensor: Khindol Madraimov (github.com/tixuz)
+Licensed Work: openemis-mcp-pro
+Additional Use Grant: You may use the Licensed Work for non-production evaluation and internal testing only.
+Change Date: 2029-01-01
+Change License: MIT
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+---
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The Licensed Work is (c) 2026 Khindol Madraimov.
+
+Under the BSL 1.1, you may not offer the Licensed Work as a commercial hosted service or embed it in a commercial product without a separate commercial licence. On the Change Date above, this version automatically converts to MIT.
+
+For commercial licensing: khindol.madraimov@gmail.com
