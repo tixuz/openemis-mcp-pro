@@ -25,6 +25,7 @@ import {
   openemisGetPlaybookHandler,
 } from "./tools/describe.js";
 import { isWorkflowBlocked, buildWorkflowBlockMessage } from "./policies.js";
+import { snapshot } from "./logger.js";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -347,6 +348,129 @@ export async function handleRestRequest(
   <h2>Contact</h2>
   <p>For questions about this deployment, contact the operator at
      <a href="mailto:khindol.madraimov@gmail.com">khindol.madraimov@gmail.com</a>.</p>
+</body>
+</html>`;
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", ...SECURITY_HEADERS });
+    res.end(html);
+    return true;
+  }
+
+  // ── Dashboard (browser-facing, key via ?key= query param) ───────────────
+  if (method === "GET" && (path === "/dashboard" || path === "/dashboard/data")) {
+    const key = url.searchParams.get("key") ?? "";
+    if (config.authToken && key !== config.authToken) {
+      res.writeHead(401, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(`<!DOCTYPE html><html><body style="font:1rem system-ui;padding:2rem;background:#111;color:#f55">
+        <h2>🔒 Unauthorized</h2>
+        <p>Add <code>?key=YOUR_AUTH_TOKEN</code> to the URL.</p></body></html>`);
+      return true;
+    }
+
+    const data = snapshot(500);
+
+    if (path === "/dashboard/data") {
+      jsonResponse(res, 200, data);
+      return true;
+    }
+
+    const badge = (status: number) => {
+      const c = status >= 500 ? "#ef4444" : status >= 400 ? "#f97316" : status >= 300 ? "#a78bfa" : "#22c55e";
+      return `<span style="background:${c};color:#fff;padding:1px 6px;border-radius:4px;font-size:.75rem">${status}</span>`;
+    };
+    const mBadge = (m: string) => {
+      const c: Record<string, string> = { GET:"#3b82f6", POST:"#22c55e", PUT:"#f59e0b", DELETE:"#ef4444" };
+      return `<span style="background:${c[m] ?? "#6b7280"};color:#fff;padding:1px 6px;border-radius:4px;font-size:.75rem">${m}</span>`;
+    };
+    const rows = data.entries.map(e =>
+      `<tr>
+        <td style="color:#9ca3af;white-space:nowrap">${e.ts.replace("T"," ").slice(0,19)}</td>
+        <td style="font-family:monospace">${e.ip}</td>
+        <td>${mBadge(e.method)}</td>
+        <td style="font-family:monospace;color:#e2e8f0">${e.path}</td>
+        <td>${badge(e.status)}</td>
+        <td style="text-align:right;color:#9ca3af">${e.ms}ms</td>
+      </tr>`
+    ).join("");
+
+    const topPathRows = data.topPaths.map(p =>
+      `<tr><td style="font-family:monospace">${p.path}</td><td style="text-align:right;color:#60a5fa">${p.count}</td></tr>`
+    ).join("");
+    const topIPRows = data.topIPs.map(p =>
+      `<tr><td style="font-family:monospace">${p.ip}</td><td style="text-align:right;color:#60a5fa">${p.count}</td></tr>`
+    ).join("");
+
+    const keyParam = config.authToken ? `?key=${encodeURIComponent(config.authToken)}` : "";
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OpenEMIS MCP — Dashboard</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0f172a;color:#e2e8f0;font-family:system-ui,sans-serif;padding:24px}
+    h1{font-size:1.25rem;margin-bottom:4px;color:#f8fafc}
+    .sub{color:#64748b;font-size:.85rem;margin-bottom:24px}
+    .cards{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+    .card{background:#1e293b;border-radius:10px;padding:20px 28px;flex:1;min-width:140px}
+    .card-val{font-size:2rem;font-weight:700;color:#f8fafc;line-height:1}
+    .card-label{font-size:.78rem;color:#64748b;margin-top:6px;text-transform:uppercase;letter-spacing:.05em}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+    .panel{background:#1e293b;border-radius:10px;padding:16px}
+    .panel h2{font-size:.85rem;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+    table{width:100%;border-collapse:collapse;font-size:.82rem}
+    td,th{padding:6px 10px;border-bottom:1px solid #1e293b;text-align:left}
+    .main-table td,th{border-bottom:1px solid #1e293b}
+    .main-table{background:#1e293b;border-radius:10px;overflow:hidden}
+    .main-table th{background:#0f172a;color:#64748b;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;padding:10px}
+    .main-table tr:hover td{background:#162032}
+    .refresh{color:#64748b;font-size:.78rem;margin-bottom:16px}
+    a{color:#60a5fa;text-decoration:none}
+  </style>
+</head>
+<body>
+  <h1>⚡ OpenEMIS MCP — Request Dashboard</h1>
+  <div class="sub">Live usage · resets on container restart · <a href="/dashboard${keyParam}">refresh</a></div>
+
+  <div class="cards">
+    <div class="card"><div class="card-val">${data.total}</div><div class="card-label">Total Requests</div></div>
+    <div class="card"><div class="card-val">${data.uniqueIPs}</div><div class="card-label">Unique IPs</div></div>
+    <div class="card"><div class="card-val">${data.avgMs}ms</div><div class="card-label">Avg Response</div></div>
+    <div class="card"><div class="card-val" style="color:${data.errorRate > 10 ? "#ef4444" : "#22c55e"}">${data.errorRate}%</div><div class="card-label">Error Rate</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Top Paths</h2>
+      <table><tbody>${topPathRows}</tbody></table>
+    </div>
+    <div class="panel">
+      <h2>Top IPs</h2>
+      <table><tbody>${topIPRows}</tbody></table>
+    </div>
+  </div>
+
+  <div class="main-table">
+    <table>
+      <thead><tr>
+        <th>Time</th><th>IP</th><th>Method</th><th>Path</th><th>Status</th><th style="text-align:right">Time</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>
+
+  <script>
+    // Auto-refresh every 30s with countdown
+    let t = 30;
+    const sub = document.querySelector('.sub');
+    const orig = sub.innerHTML;
+    setInterval(() => {
+      t--;
+      if (t <= 0) location.reload();
+      else sub.innerHTML = orig.replace('resets on container restart', 'resets on container restart') + ' · refreshing in ' + t + 's';
+    }, 1000);
+  </script>
 </body>
 </html>`;
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", ...SECURITY_HEADERS });

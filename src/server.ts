@@ -9,6 +9,7 @@ import { z } from "zod";
 import { loadConfig, loadManifest } from "./config.js";
 import { OpenemisClientImpl } from "./openemis.js";
 import { handleRestRequest } from "./rest.js";
+import { record } from "./logger.js";
 import type { ManifestRow } from "./types.js";
 import {
   OPENEMIS_GET_TOOL,
@@ -210,11 +211,35 @@ async function startHttpTransport(): Promise<void> {
   await server.connect(transport);
 
   const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse) => {
+    // ── Request timing + logging ──────────────────────────────────────────────
+    const t0 = Date.now();
+    let capturedStatus = 200;
+    const origWriteHead = res.writeHead.bind(res) as typeof res.writeHead;
+    (res as unknown as Record<string, unknown>).writeHead = (code: number, ...args: unknown[]) => {
+      capturedStatus = code;
+      return (origWriteHead as (...a: unknown[]) => ServerResponse)(code, ...args);
+    };
+    res.on("finish", () => {
+      const rawIp = (req.headers["x-forwarded-for"] as string | undefined)
+        ?.split(",")[0].trim() ?? req.socket.remoteAddress ?? "unknown";
+      const url = new URL(req.url ?? "/", "http://localhost");
+      record({
+        ts:     new Date().toISOString(),
+        ip:     rawIp,
+        method: req.method ?? "?",
+        path:   url.pathname,
+        status: capturedStatus,
+        ms:     Date.now() - t0,
+      });
+    });
+
     try {
       // ── Bearer token auth ─────────────────────────────────────────────────
       // Applied to every route EXCEPT the OpenAPI schema (so ChatGPT can import it
       // without credentials — the schema itself contains no sensitive data).
-      const isPublicRoute = req.url === "/openapi.json" || req.url === "/" || req.url === "/health" || req.url === "/privacy";
+      // /dashboard is also public but does its own key check via ?key= query param.
+      const isPublicRoute = req.url === "/openapi.json" || req.url === "/" || req.url === "/health"
+        || req.url === "/privacy" || (req.url?.startsWith("/dashboard") ?? false);
       if (config.authToken && !isPublicRoute) {
         const authHeader = (req.headers["authorization"] ?? "") as string;
         if (authHeader !== `Bearer ${config.authToken}`) {
