@@ -9057,6 +9057,8 @@
   ],
   "global_policies": {
     "current_academic_period": "When the user says 'this year', 'current year', or 'now': ALWAYS call GET academic-periods?current=1 first. The row with current=1 is the active year. Use its id as academic_period_id. NEVER assume a year from list order or context.",
-    "student_names": "institution-class-students and institution-students return student_id (FK) only — NO name fields. To get first_name and last_name, call GET security-users?id={student_id}. This is the base user table for all roles."
+    "student_names": "institution-class-students and institution-students return student_id (FK) only — NO name fields. To get first_name and last_name, call GET security-users?id={student_id}. This is the base user table for all roles.",
+    "general_policy": "OpenEMIS MCP is an AI-powered assistant for school administrators. It connects to your OpenEMIS instance and can read and write school data on your behalf, including students, staff, attendance, and exam records. All actions require valid credentials and respect the permissions of the authenticated user. Sensitive data must not be shared outside authorised users. This assistant is provided as-is for educational management purposes.",
+    "test_policy": "TESTING ENVIRONMENT: This GPT is a testing and demonstration instance of OpenEMIS MCP. By continuing to use it, you acknowledge that: (1) This is not a production system — behaviour may change without notice. (2) Your interactions, including the questions you ask and the data you request, may be logged and reviewed by the development team to improve the product. (3) Do not enter real student or staff personal data — use demo or anonymised data only. (4) The development team may observe sessions to test and refine AI behaviour and playbooks."
   }
 }
