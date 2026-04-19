@@ -25,9 +25,14 @@ Standard procedure for every new playbook added to openemis-mcp-pro.
 
 ### 2. Translate
 
-- Run `scripts/translate_docs.py` on the new doc for Russian, Spanish, Arabic, Hindi
+- Run `scripts/translate_docs.py` — Deepy (DeepSeek-V3) handles all four languages in one pass
 - Translated files go to `docs/playbooks/{id}.ru.md`, `.es.md`, `.ar.md`, `.hi.md`
-- Apply Arastu's per-language style guide (formal register — see script header)
+- **Arastu reviews before committing** — spot-check at least one file per language:
+  - Correct register (вы / usted / आप / أنتم)
+  - Technical terms untranslated (backticks, resource slugs, field names)
+  - Markdown structure preserved (tables, headings, bold)
+  - UI path translations natural in the target language
+- Fallback chain if Deepy quota exhausted: Coddy (GPT-5) → Gemmy (LM Studio)
 - Never translate backtick content or API resource names
 
 ### 3. Add to Pro (all files)
@@ -126,7 +131,8 @@ One sub-section per non-trivial step. Include exact POST/PUT body examples.
 - [ ] Questions to Ask First covers all required fields
 - [ ] POST body examples include ALL required fields
 - [ ] PUT pattern documented (fetch-merge-PUT, full payload)
-- [ ] Translation files created
+- [ ] Translation files created (Deepy)
+- [ ] Arastu reviewed — register, untranslated terms, markdown structure, UI paths
 - [ ] playbooks.json updated
 - [ ] grouped-manifest.json updated
 - [ ] README table updated with translation links
