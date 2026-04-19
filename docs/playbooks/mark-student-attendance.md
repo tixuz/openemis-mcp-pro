@@ -4,8 +4,6 @@
 
 Daily or period-based roll call. The teacher speaks naturally ("mark Alex excused, Sam unexcused, Jordan late, all others present") and the agent resolves the class roster, fuzzy-matches names, maps phrases to absence type ids, and posts only the exception students. Every student without a row is considered PRESENT by omission — the "absence-by-omission invariant". Supports three attendance modes: DAY (whole-day roll), SUBJECT (per-subject), and DAY_AND_SUBJECT (both). The month-level aggregate updates automatically after each post — you should not write to the aggregate table directly.
 
-> ⚠️ **Workflow gate:** This playbook only works when `Administration → System Configuration → Student → Bypass Enrolment Workflow` is enabled in system configuration. If disabled, attendance marking must be done through the OpenEMIS application.
-
 ---
 
 ## Resources
