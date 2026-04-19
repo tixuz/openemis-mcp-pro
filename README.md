@@ -190,7 +190,7 @@ Design principles, from the first line of code:
 ## Documentation
 
 - [Resource Reference](docs/resources.md) — all 645 resources with HTTP method availability and write status
-- [Playbooks](docs/playbooks/) — 16 curated workflow guides
+- [Playbooks](docs/playbooks/) — 20 curated workflow guides
 
 ### Playbooks
 
@@ -212,6 +212,37 @@ Design principles, from the first line of code:
 | 14 | [View Student Marks](docs/playbooks/view-student-marks.md) | Assessment | teacher, admin, parent |
 | 15 | [View Class Report](docs/playbooks/view-class-report.md) | Report | teacher, admin |
 | 16 | [View Timetable](docs/playbooks/view-timetable.md) | Schedule | teacher, admin, student |
+| 17 | [View Full Institution Profile](docs/playbooks/view-institution-profile.md) | Institution | admin, parent, public |
+| 18 | [View Full Class Profile](docs/playbooks/view-class-profile.md) | Student | teacher, admin |
+| 19 | [View a Staff Member's Full Profile](docs/playbooks/view-staff-profile.md) | Staff | admin, hr |
+| 20 | [Enhance Student Profile](docs/playbooks/enhance-student-profile.md) | Student | teacher, admin, counsellor |
+
+---
+
+## Roadmap
+
+### v0.4.0 — Browser Auth (planned)
+
+Today, credentials require a manually-issued `api_key` from the OpenEMIS admin. v0.4.0 will add an optional `openemis_browser_auth` tool that lets users authenticate through a real browser session instead:
+
+1. The tool launches a local Playwright browser pointed at the configured OpenEMIS instance.
+2. The user logs in normally (username + password in their own browser).
+3. The MCP intercepts the response from **either** `POST /api/v5/login` **or** `POST /api/v4/login` — both endpoints return an identical JWT.
+4. The token is extracted, cached in memory, and used for all subsequent CRUD calls — exactly as if it had been supplied via `.env`.
+
+This removes the `OPENEMIS_API_KEY` requirement entirely and works on any OpenEMIS v5 (or v4-compatible) instance, including those using SSO or non-standard auth flows that still resolve to the same JWT endpoint.
+
+**API_KEY remains supported** — existing `.env`-based setups are unchanged. Browser auth is opt-in via the new tool.
+
+### v0.5.0 — Infrastructure & Meals (planned)
+
+Step 2 of the playbook roadmap: `view-institution-infrastructure` and `view-institution-meals` playbooks covering physical infrastructure records and school feeding programs.
+
+### v0.6.0 — Risk Dashboards (planned)
+
+Step 3: `view-student-risks` and `view-institution-risks` — early-warning and risk-flag resources for learner welfare and institutional compliance.
+
+---
 
 ## License
 
