@@ -12,9 +12,15 @@ export const OPENEMIS_GET_TOOL = {
   name: "openemis_get",
   description:
     "Fetch data from an OpenEMIS v5 resource. If `id` is provided, fetches that single record. " +
-    "Pass `ids` (comma-separated string, e.g. '13678,14671,13665') in params to batch-fetch " +
-    "multiple records by primary key in ONE call — the handler fans out parallel lookups internally. " +
-    "NEVER loop with individual calls when you have a list of IDs — use ids= instead (max 100). " +
+    "Pass `ids` (comma-separated integers, e.g. '13678,14671,13665') in params to batch-fetch " +
+    "multiple records by primary key in ONE call — the handler fans out parallel " +
+    "path-based lookups (GET /resource/{id}) internally, max 100. " +
+    "NEVER loop with individual calls when you have a list of IDs — use ids= instead. " +
+    "LIMITATION: ids= only works for resources with a single integer primary key. " +
+    "It does NOT work for: (a) composite-PK resources — junction tables, attendance records, " +
+    "survey cells, assessment results (87 models in OpenEMIS v5 have composite PKs); " +
+    "(b) summary/view resources (data-dictionary, summary-* resources have no PK at all). " +
+    "Use _conditions filtering for those. " +
     "Otherwise lists records, optionally filtered via `params`. " +
     "`resource` is kebab-case like 'absence-types' or 'institution-students'. " +
     "IMPORTANT: Never use direct field params (e.g. name='Avory') for filtering unless the exact " +
@@ -67,6 +73,9 @@ export function createOpenemisGetHandler(client: OpenemisClient) {
       const path = args.id ? `${basePath}/${args.id}` : basePath;
 
       // ids= batch lookup: OpenEMIS has no IN operator, so we fan out parallel calls.
+      // All OpenEMIS v5 single-field PKs are integers (audit of 671 models confirmed zero UUIDs).
+      // Uses path-based lookup (GET /resource/{id}) matching how single-record fetches work.
+      // NOTE: composite-PK resources (attendance, junction tables, etc.) are NOT supported here.
       const idsParam = args.params?.ids;
       if (!args.id && typeof idsParam === "string" && idsParam.trim()) {
         const idList = idsParam.split(",")
@@ -76,7 +85,7 @@ export function createOpenemisGetHandler(client: OpenemisClient) {
         const rest = { ...args.params };
         delete rest.ids;
         const settled = await Promise.allSettled(
-          idList.map(id => client.get(basePath, { ...rest, id }))
+          idList.map(id => client.get(`${basePath}/${id}`, rest))
         );
         const records: unknown[] = [];
         const failedIds: number[] = [];

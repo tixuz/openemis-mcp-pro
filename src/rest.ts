@@ -578,9 +578,10 @@ export async function handleRestRequest(
       }
 
       if (idList) {
-        // Parallel fan-out: one GET per id, merge into a flat array
+        // Parallel fan-out: one GET /resource/{id} per id, merge into a flat array.
+        // Path-based (not ?id= query param) to match single-record REST convention.
         const settled = await Promise.allSettled(
-          idList.map(id => client.get(resource, { ...query, id }))
+          idList.map(id => client.get(`${resource}/${id}`, query))
         );
         const records: unknown[] = [];
         const failedIds: number[] = [];
