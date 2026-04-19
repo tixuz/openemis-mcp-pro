@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { loadConfig, loadManifest } from "./config.js";
 import { OpenemisClientImpl } from "./openemis.js";
+import { handleRestRequest } from "./rest.js";
 import type { ManifestRow } from "./types.js";
 import {
   OPENEMIS_GET_TOOL,
@@ -210,38 +211,43 @@ async function startHttpTransport(): Promise<void> {
 
   const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse) => {
     try {
-      // ── Health / readiness probe ──────────────────────────────────────────
-      if (req.method === "GET" && (req.url === "/health" || req.url === "/")) {
+      // ── Bearer token auth ─────────────────────────────────────────────────
+      // Applied to every route EXCEPT the OpenAPI schema (so ChatGPT can import it
+      // without credentials — the schema itself contains no sensitive data).
+      const isPublicRoute = req.url === "/openapi.json" || req.url === "/" || req.url === "/health";
+      if (config.authToken && !isPublicRoute) {
+        const authHeader = (req.headers["authorization"] ?? "") as string;
+        if (authHeader !== `Bearer ${config.authToken}`) {
+          res.writeHead(401, { "Content-Type": "application/json" });
+          res.end(JSON.stringify({ error: "Unauthorized — set Authorization: Bearer <OPENEMIS_AUTH_TOKEN>" }));
+          return;
+        }
+      }
+
+      // ── Root health probe (unauthenticated — for Oracle / uptime monitors) ─
+      if (req.method === "GET" && (req.url === "/" || req.url === "/health")) {
         res.writeHead(200, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ ok: true, transport: "http", baseUrl: config.baseUrl }));
         return;
       }
 
+      // ── REST API + OpenAPI schema ─────────────────────────────────────────
+      const handled = await handleRestRequest(req, res, client, config);
+      if (handled) return;
+
       // ── MCP endpoint ─────────────────────────────────────────────────────
       if (req.url === "/mcp") {
-        // Bearer token auth — enforced when OPENEMIS_AUTH_TOKEN is set
-        if (config.authToken) {
-          const authHeader = (req.headers["authorization"] ?? "") as string;
-          if (authHeader !== `Bearer ${config.authToken}`) {
-            res.writeHead(401, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ error: "Unauthorized — set Authorization: Bearer <OPENEMIS_AUTH_TOKEN>" }));
-            return;
-          }
-        }
-
-        // Parse request body for POST requests (MCP tool calls arrive as POST JSON-RPC)
         let parsedBody: unknown;
         if (req.method === "POST") {
           const raw = await readBody(req);
           try { parsedBody = raw ? JSON.parse(raw) : undefined; } catch { parsedBody = undefined; }
         }
-
         await transport.handleRequest(req, res, parsedBody);
         return;
       }
 
       res.writeHead(404, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Not found. MCP endpoint is /mcp" }));
+      res.end(JSON.stringify({ error: "Not found. MCP endpoint: /mcp  REST API: /api/*  Schema: /openapi.json" }));
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error("[openemis-mcp-pro] HTTP handler error:", msg);
@@ -254,13 +260,16 @@ async function startHttpTransport(): Promise<void> {
 
   await new Promise<void>((resolve) => httpServer.listen(config.port, resolve));
 
-  console.error(`[openemis-mcp-pro] HTTP transport listening on port ${config.port}`);
-  console.error(`[openemis-mcp-pro] MCP endpoint : http://0.0.0.0:${config.port}/mcp`);
-  console.error(`[openemis-mcp-pro] Health probe  : http://0.0.0.0:${config.port}/health`);
+  const base = `http://0.0.0.0:${config.port}`;
+  console.error(`[openemis-mcp-pro] HTTP server listening on port ${config.port}`);
+  console.error(`[openemis-mcp-pro] MCP endpoint  : ${base}/mcp        ← Claude Code / Cursor / Cline`);
+  console.error(`[openemis-mcp-pro] REST API       : ${base}/api/*      ← ChatGPT / any HTTP client`);
+  console.error(`[openemis-mcp-pro] OpenAPI schema : ${base}/openapi.json`);
+  console.error(`[openemis-mcp-pro] Health probe   : ${base}/health`);
   if (config.authToken) {
-    console.error(`[openemis-mcp-pro] Auth          : Bearer token required`);
+    console.error(`[openemis-mcp-pro] Auth           : Bearer token required on all routes except /openapi.json and /health`);
   } else {
-    console.error(`[openemis-mcp-pro] ⚠️  No OPENEMIS_AUTH_TOKEN set — endpoint is open`);
+    console.error(`[openemis-mcp-pro] ⚠️  No OPENEMIS_AUTH_TOKEN set — all routes are open`);
   }
 }
 

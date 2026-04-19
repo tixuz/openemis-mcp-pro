@@ -67,6 +67,8 @@ The sample `scripts/smoke-login.mjs` shipped with this repo performs the login t
 
 openemis-mcp speaks the **Model Context Protocol** over stdio — any MCP-compatible client works:
 
+**Stdio mode (local machine)** — connects as a subprocess:
+
 | Agent | How to connect |
 |---|---|
 | **Claude Code** (`claude` CLI) | `claude mcp add` — primary tested client, all 9 tools available |
@@ -74,6 +76,15 @@ openemis-mcp speaks the **Model Context Protocol** over stdio — any MCP-compat
 | **Cline / Continue** (VS Code) | Add server in MCP settings |
 | **Codex** | Via [gemmy-and-qwenny](https://github.com/tixuz/gemmy-and-qwenny) bridge |
 | **Any MCP client** | Point at `node dist/server.js` with env vars set |
+
+**HTTP server mode** (`OPENEMIS_TRANSPORT=http`, install once on Oracle/VPS) — connects by URL:
+
+| Client | How to connect |
+|---|---|
+| **Claude Code** (remote) | `claude mcp add --transport http --url http://your-server:3000/mcp --header "Authorization: Bearer <token>"` |
+| **Cursor / Cline** | Add remote MCP URL in settings |
+| **ChatGPT** (Custom GPT) | Import schema from `http://your-server:3000/openapi.json` → Actions → Bearer token |
+| **Any HTTP client** | REST API at `/api/*` — see [Teacher Guide](docs/CHATGPT-TEACHER-GUIDE.md) |
 
 ---
 
@@ -241,6 +252,8 @@ Design principles, from the first line of code:
 
 - [Resource Reference](docs/resources.md) — all 645 resources with HTTP method availability and write status
 - [Playbooks](docs/playbooks/) — 27 curated workflow guides (24 read · 3 write)
+- [ChatGPT Teacher Guide](docs/CHATGPT-TEACHER-GUIDE.md) — how to let teachers mark attendance via ChatGPT Custom GPT
+- [Playbook Authoring Routine](docs/PLAYBOOK-ROUTINE.md) — 4-step process for adding new playbooks
 
 ### Playbooks
 
@@ -326,6 +339,9 @@ Workflow routes are gated above Individual Pro because bulk AI writes at institu
 | **Licence** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
 | Read tools (all 645 resources) | ✅ | ✅ | ✅ | ✅ |
 | 24 curated playbooks + translations | ✅ | ✅ | ✅ | ✅ |
+| stdio mode (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
+| **HTTP server mode** (Oracle / VPS install) | — | ✅ | ✅ | ✅ |
+| **OpenAPI adapter** (ChatGPT Custom GPT, any REST client) | — | ✅ | ✅ | ✅ |
 | Direct write — single record | — | ✅ | ✅ | ✅ |
 | Institution audit trail | — | — | ✅ | ✅ |
 | Workflow route execution | — | — | ✅ | ✅ |
