@@ -2,7 +2,7 @@
 
 **Domain:** Attendance · **Audience:** teacher, admin
 
-Daily or period-based roll call. The teacher speaks naturally ("mark Sherman excused, Divya unexcused, Ehteram late, all others present") and the agent resolves the class roster, fuzzy-matches names, maps phrases to absence type ids, and posts only the exception students. Every student without a row is considered PRESENT by omission — the "absence-by-omission invariant". Supports three attendance modes: DAY (whole-day roll), SUBJECT (per-subject), and DAY_AND_SUBJECT (both). The month-level aggregate updates automatically after each post — you should not write to the aggregate table directly.
+Daily or period-based roll call. The teacher speaks naturally ("mark Alex excused, Sam unexcused, Jordan late, all others present") and the agent resolves the class roster, fuzzy-matches names, maps phrases to absence type ids, and posts only the exception students. Every student without a row is considered PRESENT by omission — the "absence-by-omission invariant". Supports three attendance modes: DAY (whole-day roll), SUBJECT (per-subject), and DAY_AND_SUBJECT (both). The month-level aggregate updates automatically after each post — you should not write to the aggregate table directly.
 
 > ⚠️ **Workflow gate:** This playbook only works when `Administration → System Configuration → Student → Bypass Enrolment Workflow` is enabled in system configuration. If disabled, attendance marking must be done through the OpenEMIS application.
 
@@ -55,7 +55,7 @@ Daily or period-based roll call. The teacher speaks naturally ("mark Sherman exc
 
 ## Example query
 
-> "Mark everyone present in 7A today except Divya who is unexcused absent and Ehteram who is late."
+> "Mark everyone present in 7A today except Sam who is unexcused absent and Jordan who is late."
 
 The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook

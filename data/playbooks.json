@@ -53,7 +53,7 @@
       "title": "Mark student attendance for a class (period roll call)",
       "audience": ["teacher", "admin"],
       "domain": "Attendance",
-      "description": "Daily/period roll call. Teacher speaks naturally ('mark Sherman excused, Divya unexcused, Ehteram late, all others present') — agent resolves the roster, fuzzy-matches names, maps phrases to absence_type_ids, and POSTs ONLY the exception students. Everyone without a row is PRESENT by omission (absence-by-omission invariant). Supports three modes: DAY (subject_id=0), SUBJECT (period=1), DAY_AND_SUBJECT. Always POST /api/v5/student-attendance-marked-records. Month aggregate updates automatically — do NOT write institution-class-attendance-records yourself. Composite PK supports upsert.",
+      "description": "Daily/period roll call. Teacher speaks naturally ('mark Alex excused, Sam unexcused, Jordan late, all others present') — agent resolves the roster, fuzzy-matches names, maps phrases to absence_type_ids, and POSTs ONLY the exception students. Everyone without a row is PRESENT by omission (absence-by-omission invariant). Supports three modes: DAY (subject_id=0), SUBJECT (period=1), DAY_AND_SUBJECT. Always POST /api/v5/student-attendance-marked-records. Month aggregate updates automatically — do NOT write institution-class-attendance-records yourself. Composite PK supports upsert.",
       "resources": [
         "institution-classes",
         "institution-students",
@@ -100,11 +100,11 @@
           }
         },
         "examples": [
-          "\"mark everyone present except Sherman who is excused\" → POST 1 main row: Sherman absence_type_id=1. No details row needed.",
-          "\"Divya unexcused, Ehteram late, all others present\" → POST 2 main rows. No reason given → no details rows.",
-          "\"Sherman excused absent because his mother is ill\" → POST main row: absence_type_id=1. POST details row: comment='mother is ill', student_absence_reason_id=1 (Illness).",
+          "\"mark everyone present except Alex who is excused\" → POST 1 main row: Alex absence_type_id=1. No details row needed.",
+          "\"Sam unexcused, Jordan late, all others present\" → POST 2 main rows. No reason given → no details rows.",
+          "\"Alex excused absent because his mother is ill\" → POST main row: absence_type_id=1. POST details row: comment='mother is ill', student_absence_reason_id=1 (Illness).",
           "\"Khindol excused absent — dentist appointment\" → POST main row: absence_type_id=1. POST details row: comment='dentist appointment', student_absence_reason_id=10 (Medical Appointment).",
-          "\"Divya unexcused absent, Ehteram late, everyone else present\" → POST 2 main rows. No reasons given → no details rows."
+          "\"Sam unexcused absent, Jordan late, everyone else present\" → POST 2 main rows. No reasons given → no details rows."
         ],
         "edge_case_all_present": "If the teacher says 'everyone present' or 'all present', the day will remain NOT_MARKED (no rows exist). To mark the day as taken, POST one row for any student with absence_type_id=null/0 OR confirm with the teacher whether any student was absent."
       },
