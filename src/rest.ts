@@ -300,6 +300,60 @@ export async function handleRestRequest(
     return true;
   }
 
+  // ── Privacy policy ────────────────────────────────────────────────────────
+  if (method === "GET" && path === "/privacy") {
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — OpenEMIS MCP</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 48px auto;
+           padding: 0 24px; color: #222; line-height: 1.7; }
+    h1 { font-size: 1.6rem; } h2 { font-size: 1.1rem; margin-top: 2rem; }
+    a { color: #0066cc; }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy</h1>
+  <p><strong>Service:</strong> OpenEMIS MCP — AI bridge for the OpenEMIS school management platform.<br>
+     <strong>Last updated:</strong> ${new Date().toISOString().slice(0, 10)}</p>
+
+  <h2>What this service does</h2>
+  <p>OpenEMIS MCP provides an API bridge that allows AI assistants (such as ChatGPT Custom Actions)
+     to read and write data in an OpenEMIS instance on behalf of an authorised user.
+     All requests are authenticated with a bearer token supplied by the operator.</p>
+
+  <h2>Data we process</h2>
+  <p>This service acts as a pass-through proxy. It does not store, log persistently, or share any
+     personal data. Requests are forwarded to the configured OpenEMIS instance and responses are
+     returned directly to the caller. Transient request logs (method, path, HTTP status) are written
+     to stderr for operational diagnostics only and are not retained beyond container lifetime.</p>
+
+  <h2>Data stored</h2>
+  <p>No personal data is stored by this service. The underlying OpenEMIS platform stores school
+     records according to its own data retention and privacy policies, which are the responsibility
+     of the institution operating that platform.</p>
+
+  <h2>Third parties</h2>
+  <p>This service does not send data to any third party. It connects only to the OpenEMIS instance
+     configured by the operator.</p>
+
+  <h2>Security</h2>
+  <p>All traffic is encrypted in transit via TLS (HTTPS). Access requires a bearer token.
+     Rate limiting and request size caps are enforced to protect the service.</p>
+
+  <h2>Contact</h2>
+  <p>For questions about this deployment, contact the operator at
+     <a href="mailto:khindol.madraimov@gmail.com">khindol.madraimov@gmail.com</a>.</p>
+</body>
+</html>`;
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", ...SECURITY_HEADERS });
+    res.end(html);
+    return true;
+  }
+
   // ── Discover ──────────────────────────────────────────────────────────────
   if (method === "GET" && path === "/api/discover") {
     const topic  = (url.searchParams.get("topic") ?? "").slice(0, 200);
