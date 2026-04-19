@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """
-Translate openemis-mcp docs into ru/ar/hi/es using Gemma 4e4b via LM Studio.
+Translate openemis-mcp docs into ru/ar/hi/es using DeepSeek (deepseek-chat).
 Skips files that already exist. Safe to re-run.
+
+Requires: DEEPSEEK_API_KEY in environment (set in ~/.zshrc)
+Model:    deepseek-chat  (DeepSeek-V3, large context, fast, cheap)
 """
-import json, subprocess, sys, time
+import json, os, sys, urllib.request, urllib.error
 from pathlib import Path
 
-MODEL    = "google/gemma-4-e4b"
+API_URL  = "https://api.deepseek.com/chat/completions"
+MODEL    = "deepseek-chat"
 BASE     = Path(__file__).resolve().parent.parent
 LANGS    = [
     ("ru", "Russian"),
@@ -14,6 +18,8 @@ LANGS    = [
     ("hi", "Hindi"),
     ("ar", "Arabic"),
 ]
+
+# ── Prompt templates ──────────────────────────────────────────────────────────
 
 SYSTEM_BASE = (
     "You are a professional technical translator for an education management system (OpenEMIS). "
@@ -59,39 +65,53 @@ LANG_RULES = {
     ),
 }
 
-FILES = (
-    [BASE / "README.md"] +
-    sorted((BASE / "docs/playbooks").glob("*.md")) +
-    [BASE / "docs/resources.md"]
-)
-# skip already-translated files
-FILES = [f for f in FILES if not any(f.name.endswith(f".{lc}.md") for lc,_ in LANGS)]
+# ── API call ──────────────────────────────────────────────────────────────────
 
-def call_gemma(text: str, lang_name: str) -> str:
+def call_deepy(text: str, lang_name: str) -> str:
+    """
+    Primary translator: DeepSeek-V3 (fast, cheap).
+    Fallback chain if quota exhausted (HTTP 402/429):
+      1. Coddy subagent (GPT-5 via ChatGPT subscription)
+      2. Gemmy via LM Studio — run old Gemma version at localhost:1234
+    """
+    api_key = os.environ.get("DEEPSEEK_API_KEY", "")
+    if not api_key:
+        raise EnvironmentError("DEEPSEEK_API_KEY not set. Run: source ~/.zshrc")
+
     system_prompt = SYSTEM_BASE.format(
         lang_name=lang_name,
         lang_rules=LANG_RULES[lang_name],
     )
-    payload = {
+    payload = json.dumps({
         "model": MODEL,
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user",   "content": text},
         ],
         "temperature": 0.1,
-        "max_tokens":  3000,
-    }
-    r = subprocess.run(
-        ["curl", "-s", "http://localhost:1234/v1/chat/completions",
-         "-H", "Content-Type: application/json",
-         "-d", json.dumps(payload)],
-        capture_output=True, text=True, timeout=300,
+        "max_tokens":  8192,
+    }).encode("utf-8")
+
+    req = urllib.request.Request(
+        API_URL,
+        data=payload,
+        headers={
+            "Content-Type":  "application/json",
+            "Authorization": f"Bearer {api_key}",
+        },
     )
-    data = json.loads(r.stdout)
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"HTTP {e.code}: {body}") from e
+
     return data["choices"][0]["message"]["content"]
 
+# ── File translation ──────────────────────────────────────────────────────────
+
 def translate_file(src: Path, lang_code: str, lang_name: str) -> Path:
-    # For README and resources.md → same dir; for playbooks → same dir
     dst = src.with_suffix(f".{lang_code}.md")
     if dst.exists():
         print(f"  skip (exists): {dst.name}")
@@ -99,25 +119,38 @@ def translate_file(src: Path, lang_code: str, lang_name: str) -> Path:
 
     content = src.read_text(encoding="utf-8")
 
-    # Chunk if very large (>6000 chars) to stay in Gemma's context
-    MAX_CHARS = 6000
+    # DeepSeek-V3 supports 64k context — no chunking needed for normal docs.
+    # Chunk only for very large files (resources.md, README) over 24k chars.
+    MAX_CHARS = 24_000
     if len(content) > MAX_CHARS:
         chunks = [content[i:i+MAX_CHARS] for i in range(0, len(content), MAX_CHARS)]
         translated_parts = []
         for idx, chunk in enumerate(chunks):
             print(f"    chunk {idx+1}/{len(chunks)}...", end=" ", flush=True)
-            translated_parts.append(call_gemma(chunk, lang_name))
+            translated_parts.append(call_deepy(chunk, lang_name))
             print("done")
         translated = "\n".join(translated_parts)
     else:
-        translated = call_gemma(content, lang_name)
+        translated = call_deepy(content, lang_name)
 
     dst.write_text(translated, encoding="utf-8")
     return dst
 
-total = len(FILES) * len(LANGS)
-done  = 0
+# ── Main ──────────────────────────────────────────────────────────────────────
+
+FILES = (
+    [BASE / "README.md"] +
+    sorted((BASE / "docs/playbooks").glob("*.md")) +
+    [BASE / "docs/resources.md"]
+)
+# skip already-translated files
+FILES = [f for f in FILES if not any(f.name.endswith(f".{lc}.md") for lc, _ in LANGS)]
+
+total  = len(FILES) * len(LANGS)
+done   = 0
 errors = []
+
+print(f"DeepSeek translator — {len(FILES)} source files × {len(LANGS)} languages = {total} jobs")
 
 for lang_code, lang_name in LANGS:
     print(f"\n{'='*60}")
@@ -135,6 +168,6 @@ for lang_code, lang_name in LANGS:
             errors.append((src.name, lang_code, str(e)))
 
 print(f"\n{'='*60}")
-print(f"Done: {done}/{total}  Errors: {len(errors)}")
+print(f"Done: {done}/{total}   Errors: {len(errors)}")
 for f, lc, err in errors:
     print(f"  ERROR {f} [{lc}]: {err}")
