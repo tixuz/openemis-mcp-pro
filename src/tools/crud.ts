@@ -11,7 +11,19 @@ import { normalizeResponse } from "../utils.js";
 export const OPENEMIS_GET_TOOL = {
   name: "openemis_get",
   description:
-    "Fetch data from an OpenEMIS v5 resource. If `id` is provided, fetches that single record. Otherwise lists records, optionally filtered via `params`. `resource` is kebab-case like 'absence-types' or 'institution-students'. IMPORTANT: Never use direct field params (e.g. name='Avory') for filtering unless the exact param key is known from code or docs — use `_conditions` instead. `_conditions` is a semicolon-separated string: exact match '_conditions=name:Avory', wildcard '_conditions=name:*avory*' (uses SQL LIKE), comparison '_conditions=age:>=10', multiple '_conditions=name:*avory*;status:1'. Direct params are for pagination only (page, limit, orderby, order, fields). Use _scope when the model has a named scope. _contain is rarely supported.",
+    "Fetch data from an OpenEMIS v5 resource. If `id` is provided, fetches that single record. " +
+    "Pass `ids` (comma-separated string, e.g. '13678,14671,13665') in params to batch-fetch " +
+    "multiple records by primary key in ONE call — the handler fans out parallel lookups internally. " +
+    "NEVER loop with individual calls when you have a list of IDs — use ids= instead (max 100). " +
+    "Otherwise lists records, optionally filtered via `params`. " +
+    "`resource` is kebab-case like 'absence-types' or 'institution-students'. " +
+    "IMPORTANT: Never use direct field params (e.g. name='Avory') for filtering unless the exact " +
+    "param key is known from code or docs — use `_conditions` instead. " +
+    "`_conditions` is a semicolon-separated string: exact match '_conditions=name:Avory', " +
+    "wildcard '_conditions=name:*avory*' (uses SQL LIKE), comparison '_conditions=age:>=10', " +
+    "multiple '_conditions=name:*avory*;status:1'. " +
+    "Direct params are for pagination only (page, limit, orderby, order, fields). " +
+    "Use _scope when the model has a named scope. _contain is rarely supported.",
 };
 
 // Tool input schema
@@ -53,6 +65,43 @@ export function createOpenemisGetHandler(client: OpenemisClient) {
       // OpenEMIS v5 routes are kebab-case; pass the resource name through as-is.
       const basePath = `/api/v5/${args.resource}`;
       const path = args.id ? `${basePath}/${args.id}` : basePath;
+
+      // ids= batch lookup: OpenEMIS has no IN operator, so we fan out parallel calls.
+      const idsParam = args.params?.ids;
+      if (!args.id && typeof idsParam === "string" && idsParam.trim()) {
+        const idList = idsParam.split(",")
+          .map(s => Number(s.trim()))
+          .filter(n => Number.isInteger(n) && n > 0)
+          .slice(0, 100);
+        const rest = { ...args.params };
+        delete rest.ids;
+        const settled = await Promise.allSettled(
+          idList.map(id => client.get(basePath, { ...rest, id }))
+        );
+        const records: unknown[] = [];
+        const failedIds: number[] = [];
+        idList.forEach((id, i) => {
+          const r = settled[i];
+          if (r.status === "rejected") { failedIds.push(id); return; }
+          const val = r.value as Record<string, unknown>;
+          if (val && typeof val === "object" && "data" in val) {
+            const d = val.data;
+            if (Array.isArray(d)) records.push(...d);
+            else if (d != null) records.push(d);
+          } else if (Array.isArray(val)) {
+            records.push(...val);
+          } else if (val != null) {
+            records.push(val);
+          }
+        });
+        const result: Record<string, unknown> = {
+          data: records,
+          requested: idList.length,
+          returned: records.length,
+        };
+        if (failedIds.length > 0) result["failed_ids"] = failedIds;
+        return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+      }
 
       // Call API and normalize the envelope shape
       const raw = await client.get(path, args.params);

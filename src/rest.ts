@@ -569,7 +569,7 @@ export async function handleRestRequest(
           // IN operator — fan out parallel individual lookups (OpenEMIS has no native IN)
           const parsed = v.split(",")
             .map(s => Number(s.trim()))
-            .filter(n => Number.isFinite(n) && n > 0);
+            .filter(n => Number.isInteger(n) && n > 0);
           if (parsed.length > 0) idList = parsed.slice(0, 100); // cap at 100
         } else {
           const num = Number(v);
@@ -583,8 +583,10 @@ export async function handleRestRequest(
           idList.map(id => client.get(resource, { ...query, id }))
         );
         const records: unknown[] = [];
-        for (const r of settled) {
-          if (r.status === "rejected") continue;
+        const failedIds: number[] = [];
+        idList.forEach((id, i) => {
+          const r = settled[i];
+          if (r.status === "rejected") { failedIds.push(id); return; }
           const val = r.value as Record<string, unknown>;
           // OpenEMIS returns either { data: {...} } for single-record or paginated envelope
           if (val && typeof val === "object" && "data" in val) {
@@ -596,9 +598,15 @@ export async function handleRestRequest(
           } else if (val !== null && val !== undefined) {
             records.push(val);
           }
-        }
-        console.error(ts, method, path, 200, `ids fan-out: ${idList.length} → ${records.length} records`);
-        jsonResponse(res, 200, records);
+        });
+        const result: Record<string, unknown> = {
+          data: records,
+          requested: idList.length,
+          returned: records.length,
+        };
+        if (failedIds.length > 0) result["failed_ids"] = failedIds;
+        console.error(ts, method, path, 200, `ids fan-out: ${idList.length} → ${records.length} records${failedIds.length > 0 ? ` (${failedIds.length} failed)` : ""}`);
+        jsonResponse(res, 200, result);
         return true;
       }
 
