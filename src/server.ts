@@ -56,20 +56,18 @@ server.tool(
   async () => {
     try {
       // Real signal: can we log in? If yes, the server is up AND creds are correct.
-      const token = await client.getToken();
-      const tokenPreview = token.slice(0, 20) + "..." + token.slice(-6);
+      await client.getToken();
       return {
         content: [
           {
             type: "text",
-            text: `OpenEMIS is reachable at ${config.baseUrl} and login succeeded (JWT ${tokenPreview}).`,
+            text: `OpenEMIS is reachable at ${config.baseUrl} — login succeeded.`,
           },
         ],
         structuredContent: {
           ok: true,
           baseUrl: config.baseUrl,
           login: "ok",
-          tokenPreview,
         },
       };
     } catch (err) {

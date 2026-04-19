@@ -42,7 +42,7 @@ Un administrador solicita un PDF resumen para una institución que cubra estadí
 El agente hará lo siguiente:
 1. Llamar a `openemis_discover` o `openemis_list_playbooks` para encontrar este manual de procedimientos.
 2. Seguir los pasos anteriores.
-3. Devolver la respuesta en inglés sencillo.
+3. Devolver la respuesta en lenguaje sencillo.
 
 ---
 

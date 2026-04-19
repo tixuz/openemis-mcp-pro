@@ -30,10 +30,12 @@ export interface AppConfig {
   /** Request timeout in milliseconds (default 30000) */
   timeoutMs: number;
 
-  /** Path to vault directory for storing cached data (default /Users/khindol/Documents/Vaults/Openemis/claude) */
+  /** Path to vault directory containing Domain-*.md notes used by openemis_discover.
+   *  Set via OPENEMIS_VAULT_PATH. If absent, discovery degrades to keyword matching only. */
   vaultPath: string;
 
-  /** Path to manifest.jsonl describing available endpoints (default /Users/khindol/webstore/utils/mcp-openemis-gen/manifest.jsonl) */
+  /** Path to manifest.jsonl describing available endpoints.
+   *  Defaults to the bundled data/manifest.jsonl inside the package. */
   manifestPath: string;
 
   /** Path to grouped-manifest.json with pre-computed hierarchical index (default data/grouped-manifest.json) */
@@ -69,9 +71,9 @@ export function loadConfig(): AppConfig {
 
   const timeoutMs = readTimeoutMs(process.env.OPENEMIS_TIMEOUT_MS);
 
-  const vaultPath =
-    process.env.OPENEMIS_VAULT_PATH ??
-    resolve("/Users/khindol/Documents/Vaults/Openemis/claude");
+  // No hardcoded personal default — vault is optional; if absent, discovery
+  // degrades gracefully to keyword matching against the manifest alone.
+  const vaultPath = process.env.OPENEMIS_VAULT_PATH ?? "";
 
   // Default to package-bundled data files (resolved from dist/config.js location),
   // NOT process.cwd() — the server may be launched from anywhere.

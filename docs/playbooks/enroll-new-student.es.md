@@ -56,4 +56,4 @@ MODO DEBYPASS SOLAMENTE: la matrícula directa solo funciona cuando la configura
 El agente hará lo siguiente:
 1. Llamar a `openemis_discover` o `openemis_list_playbooks` para encontrar este playbook
 2. Seguir los pasos anteriores
-3. Devolver la respuesta en inglés sencillo
+3. Devolver la respuesta en lenguaje sencillo
