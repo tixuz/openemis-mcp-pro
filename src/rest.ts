@@ -16,6 +16,8 @@
  *   DELETE /api/resources/{resource}/{id} — delete a record
  */
 
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { OpenemisClient } from "./types.js";
 import type { AppConfig } from "./config.js";
@@ -301,53 +303,69 @@ export async function handleRestRequest(
     return true;
   }
 
-  // ── Privacy policy ────────────────────────────────────────────────────────
+  // ── Privacy policy (dynamic — reads global_policies from manifest) ──────
   if (method === "GET" && path === "/privacy") {
+    let policies: Record<string, string> = {};
+    try {
+      const raw = readFileSync(resolve(config.groupedPath), "utf-8");
+      const manifest = JSON.parse(raw) as { global_policies?: Record<string, string> };
+      policies = manifest.global_policies ?? {};
+    } catch { /* serve page without policies if manifest unreadable */ }
+
+    const policyKey = (key: string) =>
+      key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+    const policySections = Object.entries(policies)
+      .map(([key, text]) => `
+  <h2>${policyKey(key)}</h2>
+  <p>${text.replace(/\n/g, "<br>")}</p>`)
+      .join("");
+
+    const hasTestPolicy = "test_policy" in policies;
+
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy — OpenEMIS MCP</title>
+  <title>Privacy &amp; Usage Policy — OpenEMIS MCP</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 720px; margin: 48px auto;
            padding: 0 24px; color: #222; line-height: 1.7; }
-    h1 { font-size: 1.6rem; } h2 { font-size: 1.1rem; margin-top: 2rem; }
+    h1 { font-size: 1.6rem; } h2 { font-size: 1.1rem; margin-top: 2rem; color: #333; }
     a { color: #0066cc; }
+    .notice { background: #fff8e1; border-left: 4px solid #f59e0b;
+              padding: 12px 16px; border-radius: 4px; margin: 16px 0; font-size: .95rem; }
   </style>
 </head>
 <body>
-  <h1>Privacy Policy</h1>
+  <h1>Privacy &amp; Usage Policy</h1>
   <p><strong>Service:</strong> OpenEMIS MCP — AI bridge for the OpenEMIS school management platform.<br>
      <strong>Last updated:</strong> ${new Date().toISOString().slice(0, 10)}</p>
 
-  <h2>What this service does</h2>
-  <p>OpenEMIS MCP provides an API bridge that allows AI assistants (such as ChatGPT Custom Actions)
-     to read and write data in an OpenEMIS instance on behalf of an authorised user.
-     All requests are authenticated with a bearer token supplied by the operator.</p>
+  ${hasTestPolicy ? `<div class="notice">⚠️ <strong>Testing Environment:</strong> ${policies["test_policy"]}</div>` : ""}
+  ${policySections}
 
-  <h2>Data we process</h2>
-  <p>This service acts as a pass-through proxy. It does not store, log persistently, or share any
-     personal data. Requests are forwarded to the configured OpenEMIS instance and responses are
-     returned directly to the caller. Transient request logs (method, path, HTTP status) are written
-     to stderr for operational diagnostics only and are not retained beyond container lifetime.</p>
+  <h2>Request Logging</h2>
+  <p>This service maintains an in-memory log of recent API requests (IP address, endpoint path,
+     HTTP status code, and response time). This log resets when the server restarts and is used
+     solely for operational monitoring and product improvement. No query content or personal data
+     values are stored in this log.</p>
 
-  <h2>Data stored</h2>
-  <p>No personal data is stored by this service. The underlying OpenEMIS platform stores school
-     records according to its own data retention and privacy policies, which are the responsibility
-     of the institution operating that platform.</p>
-
-  <h2>Third parties</h2>
-  <p>This service does not send data to any third party. It connects only to the OpenEMIS instance
-     configured by the operator.</p>
+  <h2>Data in Transit</h2>
+  <p>All traffic is encrypted via TLS (HTTPS). This service acts as a pass-through proxy —
+     it forwards authenticated requests to the configured OpenEMIS instance and returns responses
+     directly to the caller. The underlying OpenEMIS platform governs data retention and access
+     control for school records.</p>
 
   <h2>Security</h2>
-  <p>All traffic is encrypted in transit via TLS (HTTPS). Access requires a bearer token.
-     Rate limiting and request size caps are enforced to protect the service.</p>
+  <p>Access requires a bearer token. Rate limiting (60 req/min) and a 1 MB request size cap
+     are enforced. Security headers (CSP, X-Frame-Options, X-Content-Type-Options) are set
+     on all responses.</p>
 
   <h2>Contact</h2>
-  <p>For questions about this deployment, contact the operator at
-     <a href="mailto:khindol.madraimov@gmail.com">khindol.madraimov@gmail.com</a>.</p>
+  <p>For questions about this deployment:
+     <a href="mailto:khindol.madraimov@gmail.com">khindol.madraimov@gmail.com</a></p>
 </body>
 </html>`;
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", ...SECURITY_HEADERS });
