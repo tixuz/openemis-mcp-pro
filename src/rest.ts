@@ -191,6 +191,13 @@ function buildOpenApiSchema(serverUrl: string): object {
               name: "id", in: "query", schema: { type: "integer" },
               description: "Fetch a single record by its primary key",
             },
+            {
+              name: "ids", in: "query", schema: { type: "string" },
+              description:
+                "Fetch multiple records by primary key in one call — comma-separated list of integer ids " +
+                "(e.g. ids=13678,14671,13665). The server fans out parallel lookups internally and returns " +
+                "a merged array. Use this instead of calling the endpoint once per id. Max 100 ids.",
+            },
             { name: "limit", in: "query", schema: { type: "integer" }, description: "Max records (default 20)" },
             { name: "page",  in: "query", schema: { type: "integer" } },
           ],
@@ -555,10 +562,46 @@ export async function handleRestRequest(
 
     if (method === "GET") {
       const query: Record<string, unknown> = {};
+      let idList: number[] | null = null;
+
       for (const [k, v] of url.searchParams.entries()) {
-        const num = Number(v);
-        query[k] = v !== "" && Number.isFinite(num) ? num : v;
+        if (k === "ids") {
+          // IN operator — fan out parallel individual lookups (OpenEMIS has no native IN)
+          const parsed = v.split(",")
+            .map(s => Number(s.trim()))
+            .filter(n => Number.isFinite(n) && n > 0);
+          if (parsed.length > 0) idList = parsed.slice(0, 100); // cap at 100
+        } else {
+          const num = Number(v);
+          query[k] = v !== "" && Number.isFinite(num) ? num : v;
+        }
       }
+
+      if (idList) {
+        // Parallel fan-out: one GET per id, merge into a flat array
+        const settled = await Promise.allSettled(
+          idList.map(id => client.get(resource, { ...query, id }))
+        );
+        const records: unknown[] = [];
+        for (const r of settled) {
+          if (r.status === "rejected") continue;
+          const val = r.value as Record<string, unknown>;
+          // OpenEMIS returns either { data: {...} } for single-record or paginated envelope
+          if (val && typeof val === "object" && "data" in val) {
+            const d = val.data;
+            if (Array.isArray(d)) records.push(...d);
+            else if (d !== null && d !== undefined) records.push(d);
+          } else if (Array.isArray(val)) {
+            records.push(...val);
+          } else if (val !== null && val !== undefined) {
+            records.push(val);
+          }
+        }
+        console.error(ts, method, path, 200, `ids fan-out: ${idList.length} → ${records.length} records`);
+        jsonResponse(res, 200, records);
+        return true;
+      }
+
       const result = await client.get(resource, query);
       console.error(ts, method, path, 200);
       jsonResponse(res, 200, result);
