@@ -5,45 +5,7 @@
 
 import { z } from "zod";
 import type { OpenemisClient, QueryParams } from "../types.js";
-
-/**
- * Normalize the raw OpenEMIS API response into a consistent shape:
- *   { data: [...], total, current_page, message }
- *
- * The v5 API returns two different envelope shapes:
- *   - Paginated list: { message, data: { current_page, data: [...], total, ... } }
- *   - Single record:  { message, data: { id, ... } }
- *   - Flat list:      { message, data: [...] }
- *
- * This function unwraps whichever shape it receives so callers always see
- * a predictable object with a top-level `data` array (or the record itself).
- */
-function normalizeResponse(raw: unknown): unknown {
-  if (raw === null || typeof raw !== "object") return raw;
-
-  const obj = raw as Record<string, unknown>;
-
-  // Paginated envelope: data is an object containing a nested data array
-  if (
-    obj.data !== null &&
-    typeof obj.data === "object" &&
-    !Array.isArray(obj.data)
-  ) {
-    const inner = obj.data as Record<string, unknown>;
-    if (Array.isArray(inner.data)) {
-      return {
-        message: obj.message,
-        data: inner.data,
-        total: inner.total,
-        current_page: inner.current_page,
-        last_page: inner.last_page,
-      };
-    }
-  }
-
-  // Flat array or single record — return as-is
-  return raw;
-}
+import { normalizeResponse } from "../utils.js";
 
 // Tool name and description for server registration
 export const OPENEMIS_GET_TOOL = {

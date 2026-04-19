@@ -35,7 +35,9 @@
     "start": "node dist/server.js",
     "dev": "tsx src/server.ts",
     "smoke": "node scripts/smoke-login.mjs",
-    "prepublishOnly": "npm run check && npm run build"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run check && npm run build && npm test"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
@@ -44,6 +46,7 @@
   "devDependencies": {
     "@types/node": "^22.15.21",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.4"
   }
 }

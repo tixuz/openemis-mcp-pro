@@ -4,14 +4,12 @@
  * Workflow-controlled resources (attendance, absence) are blocked here and
  * redirected to playbooks. All other resources supported by the v5 manifest
  * can be mutated through these tools.
- *
- * normalizeResponse is copied verbatim from crud.ts to avoid a circular
- * import between write.ts and crud.ts.
  */
 
 import { z } from "zod";
 import type { ManifestRow, OpenemisClient } from "../types.js";
 import { isWorkflowBlocked, buildWorkflowBlockMessage } from "../policies.js";
+import { normalizeResponse } from "../utils.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -53,42 +51,6 @@ export function manifestHasMethod(
       row.resource === pascal &&
       row.method.toUpperCase() === upperMethod
   );
-}
-
-/**
- * Normalize the raw OpenEMIS API response into a consistent shape.
- * Copied verbatim from crud.ts to avoid a circular import.
- *
- * The v5 API returns two different envelope shapes:
- *   - Paginated list: { message, data: { current_page, data: [...], total, ... } }
- *   - Single record:  { message, data: { id, ... } }
- *   - Flat list:      { message, data: [...] }
- */
-function normalizeResponse(raw: unknown): unknown {
-  if (raw === null || typeof raw !== "object") return raw;
-
-  const obj = raw as Record<string, unknown>;
-
-  // Paginated envelope: data is an object containing a nested data array
-  if (
-    obj.data !== null &&
-    typeof obj.data === "object" &&
-    !Array.isArray(obj.data)
-  ) {
-    const inner = obj.data as Record<string, unknown>;
-    if (Array.isArray(inner.data)) {
-      return {
-        message: obj.message,
-        data: inner.data,
-        total: inner.total,
-        current_page: inner.current_page,
-        last_page: inner.last_page,
-      };
-    }
-  }
-
-  // Flat array or single record — return as-is
-  return raw;
 }
 
 // ---------------------------------------------------------------------------
