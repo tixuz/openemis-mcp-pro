@@ -25,6 +25,7 @@ export interface GroupedManifest {
   orphans: Orphan[];
   playbooks: Playbook[];
   summary: SummaryStats;
+  global_policies?: Record<string, string>;
 }
 
 interface Domain {
@@ -414,10 +415,16 @@ export async function openemisGetPlaybookHandler(args: {
       ];
     }
 
+    // Prepend global policies so every playbook read includes the standing rules
+    const policies = grouped.global_policies ?? {};
+    const preamble = Object.keys(policies).length > 0
+      ? { _global_policies: policies, ...playbook }
+      : playbook;
+
     return [
       {
         type: "text",
-        text: JSON.stringify(playbook, null, 2),
+        text: JSON.stringify(preamble, null, 2),
       },
     ];
   } catch (error) {
