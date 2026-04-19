@@ -109,6 +109,7 @@ function buildOpenApiSchema(serverUrl: string): object {
       securitySchemes: {
         bearerAuth: { type: "http", scheme: "bearer" },
       },
+      schemas: {},
     },
     paths: {
 
@@ -204,7 +205,7 @@ function buildOpenApiSchema(serverUrl: string): object {
           }],
           requestBody: {
             required: true,
-            content: { "application/json": { schema: { type: "object" } } },
+            content: { "application/json": { schema: { type: "object", additionalProperties: true } } },
           },
           responses: {
             "200": { description: "Created record" },
@@ -226,7 +227,7 @@ function buildOpenApiSchema(serverUrl: string): object {
           ],
           requestBody: {
             required: true,
-            content: { "application/json": { schema: { type: "object" } } },
+            content: { "application/json": { schema: { type: "object", additionalProperties: true } } },
           },
           responses: { "200": { description: "Updated record" } },
         },
