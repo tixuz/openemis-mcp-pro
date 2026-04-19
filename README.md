@@ -155,6 +155,56 @@ Any new Claude Code session in this project will see all nine tools automaticall
 
 ---
 
+### Server mode (Oracle Always Free / any VPS)
+
+Set `OPENEMIS_TRANSPORT=http` to run as a persistent HTTP server instead of a local subprocess. Install once on your server; every MCP-compatible client (Claude Code, Cursor, Cline, Windsurf) connects by URL.
+
+**On your server:**
+
+```bash
+git clone https://github.com/tixuz/openemis-mcp-pro.git
+cd openemis-mcp-pro
+npm install && npm run build
+cp .env.example .env
+$EDITOR .env          # set credentials + OPENEMIS_TRANSPORT=http + OPENEMIS_AUTH_TOKEN
+node dist/server.js
+```
+
+**.env for server mode:**
+
+```env
+OPENEMIS_BASE_URL=https://your-openemis/core
+OPENEMIS_USERNAME=admin
+OPENEMIS_PASSWORD=your_password
+OPENEMIS_API_KEY=your_api_key
+
+OPENEMIS_TRANSPORT=http
+OPENEMIS_PORT=3000
+
+# Generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+OPENEMIS_AUTH_TOKEN=your-secret-token-here
+```
+
+**Connect from Claude Code (remote):**
+
+```bash
+claude mcp add openemis-remote \
+  --transport http \
+  --url "http://your-server:3000/mcp" \
+  --header "Authorization: Bearer your-secret-token-here"
+```
+
+**Health probe** (monitoring / uptime checks):
+
+```bash
+curl http://your-server:3000/health
+# {"ok":true,"transport":"http","baseUrl":"https://your-openemis/core"}
+```
+
+> ⚠️ **Always set `OPENEMIS_AUTH_TOKEN`** before exposing the port publicly. Without it the endpoint is open to anyone who can reach your IP.
+
+---
+
 ## Architecture
 
 ```

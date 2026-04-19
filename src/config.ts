@@ -40,6 +40,19 @@ export interface AppConfig {
 
   /** Path to grouped-manifest.json with pre-computed hierarchical index (default data/grouped-manifest.json) */
   groupedPath: string;
+
+  // ── Transport ──────────────────────────────────────────────────────────────
+
+  /** "stdio" (default) — local subprocess for Claude Code / Cursor / Cline.
+   *  "http" — StreamableHTTP server; install once on Oracle / VPS, connect by URL. */
+  transport: "stdio" | "http";
+
+  /** Port to listen on in HTTP mode (default 3000). Ignored in stdio mode. */
+  port: number;
+
+  /** Bearer token clients must send as `Authorization: Bearer <token>` in HTTP mode.
+   *  Empty string means no auth — only use that on localhost. */
+  authToken: string;
 }
 
 /**
@@ -85,6 +98,17 @@ export function loadConfig(): AppConfig {
     process.env.OPENEMIS_GROUPED_PATH ??
     resolve(PKG_ROOT, "data/grouped-manifest.json");
 
+  const rawTransport = process.env.OPENEMIS_TRANSPORT ?? "stdio";
+  const transport: "stdio" | "http" =
+    rawTransport === "http" ? "http" : "stdio";
+
+  const rawPort = process.env.OPENEMIS_PORT;
+  const port = rawPort && Number.isFinite(Number.parseInt(rawPort, 10))
+    ? Number.parseInt(rawPort, 10)
+    : 3000;
+
+  const authToken = process.env.OPENEMIS_AUTH_TOKEN ?? "";
+
   return {
     baseUrl,
     username,
@@ -94,6 +118,9 @@ export function loadConfig(): AppConfig {
     vaultPath,
     manifestPath,
     groupedPath,
+    transport,
+    port,
+    authToken,
   };
 }
 

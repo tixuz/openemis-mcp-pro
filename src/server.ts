@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
+import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { z } from "zod";
 
 import { loadConfig, loadManifest } from "./config.js";
@@ -170,12 +172,99 @@ async function main(): Promise<void> {
     }
   );
 
-  // Connect stdio transport for MCP communication
-  const transport = new StdioServerTransport();
+  // ── Transport selection ──────────────────────────────────────────────────
+  if (config.transport === "http") {
+    await startHttpTransport();
+  } else {
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+  }
+}
+
+// ─── HTTP Transport (Oracle / remote hosting) ─────────────────────────────────
+//
+// Set OPENEMIS_TRANSPORT=http to run as a persistent HTTP server instead of a
+// local stdio subprocess. Any MCP client that supports remote servers can then
+// connect by URL:  http://<host>:<port>/mcp
+//
+// Security: set OPENEMIS_AUTH_TOKEN to require  Authorization: Bearer <token>
+// on every request. Without it the endpoint is open — fine for localhost tests,
+// not for a public Oracle IP.
+
+async function readBody(req: IncomingMessage): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    req.on("data", (chunk: Buffer) => chunks.push(chunk));
+    req.on("end",  () => resolve(Buffer.concat(chunks).toString("utf-8")));
+    req.on("error", reject);
+  });
+}
+
+async function startHttpTransport(): Promise<void> {
+  // Stateless mode — no in-memory session state; safe for multi-client Oracle hosting.
+  const transport = new StreamableHTTPServerTransport({
+    sessionIdGenerator: undefined,
+  });
+
   await server.connect(transport);
+
+  const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse) => {
+    try {
+      // ── Health / readiness probe ──────────────────────────────────────────
+      if (req.method === "GET" && (req.url === "/health" || req.url === "/")) {
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ ok: true, transport: "http", baseUrl: config.baseUrl }));
+        return;
+      }
+
+      // ── MCP endpoint ─────────────────────────────────────────────────────
+      if (req.url === "/mcp") {
+        // Bearer token auth — enforced when OPENEMIS_AUTH_TOKEN is set
+        if (config.authToken) {
+          const authHeader = (req.headers["authorization"] ?? "") as string;
+          if (authHeader !== `Bearer ${config.authToken}`) {
+            res.writeHead(401, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: "Unauthorized — set Authorization: Bearer <OPENEMIS_AUTH_TOKEN>" }));
+            return;
+          }
+        }
+
+        // Parse request body for POST requests (MCP tool calls arrive as POST JSON-RPC)
+        let parsedBody: unknown;
+        if (req.method === "POST") {
+          const raw = await readBody(req);
+          try { parsedBody = raw ? JSON.parse(raw) : undefined; } catch { parsedBody = undefined; }
+        }
+
+        await transport.handleRequest(req, res, parsedBody);
+        return;
+      }
+
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found. MCP endpoint is /mcp" }));
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("[openemis-mcp-pro] HTTP handler error:", msg);
+      if (!res.headersSent) {
+        res.writeHead(500, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Internal server error" }));
+      }
+    }
+  });
+
+  await new Promise<void>((resolve) => httpServer.listen(config.port, resolve));
+
+  console.error(`[openemis-mcp-pro] HTTP transport listening on port ${config.port}`);
+  console.error(`[openemis-mcp-pro] MCP endpoint : http://0.0.0.0:${config.port}/mcp`);
+  console.error(`[openemis-mcp-pro] Health probe  : http://0.0.0.0:${config.port}/health`);
+  if (config.authToken) {
+    console.error(`[openemis-mcp-pro] Auth          : Bearer token required`);
+  } else {
+    console.error(`[openemis-mcp-pro] ⚠️  No OPENEMIS_AUTH_TOKEN set — endpoint is open`);
+  }
 }
 
 main().catch((err) => {
-  console.error("[openemis-mcp] Fatal error:", err);
+  console.error("[openemis-mcp-pro] Fatal error:", err);
   process.exit(1);
 });
