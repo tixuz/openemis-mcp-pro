@@ -785,7 +785,7 @@
           "action": "openemis_get",
           "resource": "institutions",
           "purpose": "Retrieve the institution's base record: name, code, address, contact_person (free-text), telephone, locality_id, and institution type.",
-          "guidance": "Filter by id, name, or code. Always add ?is_deleted=0 to exclude soft-deleted records — DELETE on the institutions endpoint sets is_deleted=1; the row stays in the DB. The response's locality_id integer will be resolved in step 3. GET /api/v5/institutions/{id} returns more detail than the list endpoint; prefer the single-record fetch once you have the id."
+          "guidance": "Filter by id, name, or code. Always add ?is_deleted=0 to exclude soft-deleted records \u2014 DELETE on the institutions endpoint sets is_deleted=1; the row stays in the DB. The response's locality_id integer will be resolved in step 3. GET /api/v5/institutions/{id} returns more detail than the list endpoint; prefer the single-record fetch once you have the id."
         },
         {
           "step": 2,
@@ -793,7 +793,7 @@
           "action": "openemis_get",
           "resource": "institution-grades",
           "purpose": "List the education grade levels the institution currently offers for the active academic period.",
-          "guidance": "Filter by institution_id (from step 1) and academic_period_id. Without both filters the endpoint returns a global dump. Returns an empty array if no grades are configured — that is valid for new institutions. Use ?_fields=id,education_grade_id,start_date,end_date to trim the payload."
+          "guidance": "Filter by institution_id (from step 1) and academic_period_id. Without both filters the endpoint returns a global dump. Returns an empty array if no grades are configured \u2014 that is valid for new institutions. Use ?_fields=id,education_grade_id,start_date,end_date to trim the payload."
         },
         {
           "step": 3,
@@ -801,7 +801,7 @@
           "action": "openemis_get",
           "resource": "institution-localities",
           "purpose": "Resolve the locality_id from the institution record to a human-readable locality name (e.g. 'Selangor', 'Kuala Lumpur').",
-          "guidance": "institution-localities is a GLOBAL master reference list — it has NO institution_id filter parameter. Fetch all entries (or cache once per session), then match the institution's locality_id to the correct row. Do NOT attempt ?institution_id=... — that parameter is not supported on this resource and will return an empty or unfiltered result."
+          "guidance": "institution-localities is a GLOBAL master reference list \u2014 it has NO institution_id filter parameter. Fetch all entries (or cache once per session), then match the institution's locality_id to the correct row. Do NOT attempt ?institution_id=... \u2014 that parameter is not supported on this resource and will return an empty or unfiltered result."
         },
         {
           "step": 4,
@@ -809,12 +809,12 @@
           "action": "openemis_get",
           "resource": "institution-contact-persons",
           "purpose": "Retrieve the named contact persons for the institution, including designation, phone, mobile, and email.",
-          "guidance": "Filter by institution_id. A record with preferred=1 is the primary contact; preferred is stored as tinyint 0/1, cast to boolean for display. An empty result is valid — some institutions have no separate contacts beyond the contact_person field on the institutions record itself."
+          "guidance": "Filter by institution_id. A record with preferred=1 is the primary contact; preferred is stored as tinyint 0/1, cast to boolean for display. An empty result is valid \u2014 some institutions have no separate contacts beyond the contact_person field on the institutions record itself."
         }
       ],
       "notes": [
         "Step order is intentional: core record first (provides locality_id and institution_id for subsequent steps), then grades (depends on institution_id), then locality (global lookup needing only locality_id from step 1), then contacts (depends on institution_id).",
-        "is_deleted=0 is essential on the institutions fetch — soft-deleted schools remain in the DB and will appear in list results without this filter.",
+        "is_deleted=0 is essential on the institutions fetch \u2014 soft-deleted schools remain in the DB and will appear in list results without this filter.",
         "institution-localities has NO institution-specific filter. It is a standalone reference table. To find which locality an institution belongs to, read locality_id from the institutions record and look it up in this table.",
         "contact_person on the institutions record is a free-text string, NOT a FK to security_users. Separate, richer contact records live in institution-contact-persons filtered by institution_id."
       ]
@@ -827,7 +827,7 @@
         "admin"
       ],
       "domain": "Student",
-      "description": "View a class profile: grade level assignment, enrolled student roster, active subjects, and monthly attendance summary. The attendance resource uses a composite primary key — there is no integer id field; always use list-style filters to fetch it.",
+      "description": "View a class profile: grade level assignment, enrolled student roster, active subjects, and monthly attendance summary. The attendance resource uses a composite primary key \u2014 there is no integer id field; always use list-style filters to fetch it.",
       "resources": [
         "institution-class-grades",
         "institution-class-students",
@@ -841,7 +841,7 @@
           "action": "openemis_get",
           "resource": "institution-class-grades",
           "purpose": "Resolve which education grade level this class belongs to. Required before fetching the student roster.",
-          "guidance": "Filter by institution_class_id. Returns the education_grade_id — a mapping table (class ↔ grade). Typically one row per class, but multi-grade configurations are valid."
+          "guidance": "Filter by institution_class_id. Returns the education_grade_id \u2014 a mapping table (class \u2194 grade). Typically one row per class, but multi-grade configurations are valid."
         },
         {
           "step": 2,
@@ -849,7 +849,7 @@
           "action": "openemis_get",
           "resource": "institution-class-students",
           "purpose": "List all currently enrolled students in the class.",
-          "guidance": "Filter by institution_class_id and academic_period_id. Set student_status_id=1 to return only currently enrolled students. This is a join table — the id field here is the enrollment record id, not the student id. student_id is the FK to security_users."
+          "guidance": "Filter by institution_class_id and academic_period_id. Set student_status_id=1 to return only currently enrolled students. This is a join table \u2014 the id field here is the enrollment record id, not the student id. student_id is the FK to security_users."
         },
         {
           "step": 3,
@@ -857,7 +857,7 @@
           "action": "openemis_get",
           "resource": "institution-class-subjects",
           "purpose": "List the subjects taught in this class.",
-          "guidance": "Filter by institution_class_id and status=1 to return only active subjects. Subject names are not included — only institution_subject_id FK. Resolve names separately via institution-subjects if needed."
+          "guidance": "Filter by institution_class_id and status=1 to return only active subjects. Subject names are not included \u2014 only institution_subject_id FK. Resolve names separately via institution-subjects if needed."
         },
         {
           "step": 4,
@@ -865,13 +865,13 @@
           "action": "openemis_get",
           "resource": "institution-class-attendance-records",
           "purpose": "Retrieve the monthly attendance summary for the class showing daily present-student counts.",
-          "guidance": "CRITICAL: institution-class-attendance-records has NO integer id field. Its primary key is composite: (institution_class_id, academic_period_id, year, month). NEVER pass an id= param — it will return empty or error. Use list filters only: ?institution_class_id={id}&academic_period_id={period}&year={year}&month={month}. Alternatively use the composite-key path: GET /institution-class-attendance-records/institution_class_id/{X}/academic_period_id/{Y}/year/{Z}/month/{M}. day_1 through day_31 fields hold the daily present count; null means attendance was not yet submitted for that day."
+          "guidance": "CRITICAL: institution-class-attendance-records has NO integer id field. Its primary key is composite: (institution_class_id, academic_period_id, year, month). NEVER pass an id= param \u2014 it will return empty or error. Use list filters only: ?institution_class_id={id}&academic_period_id={period}&year={year}&month={month}. Alternatively use the composite-key path: GET /institution-class-attendance-records/institution_class_id/{X}/academic_period_id/{Y}/year/{Z}/month/{M}. day_1 through day_31 fields hold the daily present count; null means attendance was not yet submitted for that day."
         }
       ],
       "notes": [
         "institution-class-attendance-records composite PK: (institution_class_id, academic_period_id, year, month). There is NO integer id column. Any call using a bare numeric id= filter will fail silently or return wrong data.",
-        "This resource holds monthly aggregates (present-count per day). It is NOT the per-student absence log — for individual absences use student-attendance-marked-records.",
-        "day_X fields return null for days attendance was not submitted — treat as 'Pending', not as 0 absent."
+        "This resource holds monthly aggregates (present-count per day). It is NOT the per-student absence log \u2014 for individual absences use student-attendance-marked-records.",
+        "day_X fields return null for days attendance was not submitted \u2014 treat as 'Pending', not as 0 absent."
       ]
     },
     {
@@ -896,7 +896,7 @@
           "action": "openemis_get",
           "resource": "institution-staff-position-profiles",
           "purpose": "Retrieve the staff member's FTE, status, and assignment history at the institution.",
-          "guidance": "Filter by institution_staff_id (the school-specific assignment ID, NOT the global staff_id). To find the active record, also filter status_id=1 and look for end_date=null. Order by start_date desc. The FTE field is uppercase in the API response (FTE, not fte) — parse as float: parseFloat(row.FTE). end_date=null means currently active; treat null as 'ongoing', not as empty string."
+          "guidance": "Filter by institution_staff_id (the school-specific assignment ID, NOT the global staff_id). To find the active record, also filter status_id=1 and look for end_date=null. Order by start_date desc. The FTE field is uppercase in the API response (FTE, not fte) \u2014 parse as float: parseFloat(row.FTE). end_date=null means currently active; treat null as 'ongoing', not as empty string."
         },
         {
           "step": 2,
@@ -904,7 +904,7 @@
           "action": "openemis_get",
           "resource": "institution-staff-leave",
           "purpose": "Retrieve the staff member's leave records (approved or pending) ordered most-recent first.",
-          "guidance": "Filter by staff_id — this is the global person ID (FK to security_users), NOT institution_staff_id. Using institution_staff_id here will return empty results. Add ?orderby=date_from&order=desc. institution-staff-leave is workflow-controlled (status_id → WorkflowSteps) — GET is safe; CREATE/UPDATE/DELETE must go through the official application."
+          "guidance": "Filter by staff_id \u2014 this is the global person ID (FK to security_users), NOT institution_staff_id. Using institution_staff_id here will return empty results. Add ?orderby=date_from&order=desc. institution-staff-leave is workflow-controlled (status_id \u2192 WorkflowSteps) \u2014 GET is safe; CREATE/UPDATE/DELETE must go through the official application."
         },
         {
           "step": 3,
@@ -912,7 +912,7 @@
           "action": "openemis_get",
           "resource": "historical-staff-positions",
           "purpose": "Retrieve the staff member's archived position title history at past institutions.",
-          "guidance": "Filter by institution_id to scope to the current institution's history. historical-staff-positions tracks positional titles at past institutions; it is distinct from institution-staff-position-profiles which tracks FTE/status changes. Note: the documented response fields do not include a direct staff_id FK — filtering by institution_id plus date range is the recommended approach."
+          "guidance": "Filter by institution_id to scope to the current institution's history. historical-staff-positions tracks positional titles at past institutions; it is distinct from institution-staff-position-profiles which tracks FTE/status changes. Note: the documented response fields do not include a direct staff_id FK \u2014 filtering by institution_id plus date range is the recommended approach."
         },
         {
           "step": 4,
@@ -920,7 +920,7 @@
           "action": "openemis_get",
           "resource": "user-contacts",
           "purpose": "Retrieve the staff member's phone numbers and email addresses.",
-          "guidance": "Filter by security_user_id — this is the staff member's global user ID (same FK used in step 2 as staff_id). Do NOT filter by institution_staff_id — user-contacts is a global user table not scoped by institution. Resolve contact_type_id against /api/v5/contact-types to display human-readable labels (e.g. 'Mobile', 'Email')."
+          "guidance": "Filter by security_user_id \u2014 this is the staff member's global user ID (same FK used in step 2 as staff_id). Do NOT filter by institution_staff_id \u2014 user-contacts is a global user table not scoped by institution. Resolve contact_type_id against /api/v5/contact-types to display human-readable labels (e.g. 'Mobile', 'Email')."
         }
       ],
       "notes": [
@@ -939,7 +939,7 @@
         "counsellor"
       ],
       "domain": "Student",
-      "description": "Augment an existing student profile view by fetching direct contact details, nationality assignments, special-needs assessments, and special-needs plans. All four resources filter by security_user_id (the student's global user ID from security_users), NOT by student_id (the enrollment FK). Empty results for special-needs are valid — most students have no records.",
+      "description": "Augment an existing student profile view by fetching direct contact details, nationality assignments, special-needs assessments, and special-needs plans. All four resources filter by security_user_id (the student's global user ID from security_users), NOT by student_id (the enrollment FK). Empty results for special-needs are valid \u2014 most students have no records.",
       "resources": [
         "institution-students",
         "user-contacts",
@@ -954,7 +954,7 @@
           "action": "openemis_get",
           "resource": "institution-students",
           "purpose": "Verify the student's active enrollment and capture the security_user_id needed to filter all subsequent resources.",
-          "guidance": "Filter by student_id and student_status_id=1. The student_id field on institution-students IS the security_user_id (FK to security_users). Capture it — steps 2 through 5 all filter by security_user_id."
+          "guidance": "Filter by student_id and student_status_id=1. The student_id field on institution-students IS the security_user_id (FK to security_users). Capture it \u2014 steps 2 through 5 all filter by security_user_id."
         },
         {
           "step": 2,
@@ -962,7 +962,7 @@
           "action": "openemis_get",
           "resource": "user-contacts",
           "purpose": "Retrieve the student's phone numbers and email addresses.",
-          "guidance": "Filter by security_user_id — the global user ID from step 1. Do NOT filter by student_id alone — user-contacts is a global user table and the FK is security_user_id. Resolve contact_type_id via /api/v5/contact-types for human-readable labels (e.g. 'Mobile', 'Email'). preferred=true/1 marks the primary contact of each type."
+          "guidance": "Filter by security_user_id \u2014 the global user ID from step 1. Do NOT filter by student_id alone \u2014 user-contacts is a global user table and the FK is security_user_id. Resolve contact_type_id via /api/v5/contact-types for human-readable labels (e.g. 'Mobile', 'Email'). preferred=true/1 marks the primary contact of each type."
         },
         {
           "step": 3,
@@ -978,7 +978,7 @@
           "action": "openemis_get",
           "resource": "user-special-needs-assessments",
           "purpose": "Retrieve any special educational needs (SEN) assessments recorded for the student.",
-          "guidance": "Filter by security_user_id. An empty result is valid and common — most students have no SEN assessments. Resolve special_need_type_id via /api/v5/special-need-types and special_need_difficulty_id via /api/v5/special-need-difficulties for human-readable labels. file_content is always null in list responses — call GET /{id} if the file is needed."
+          "guidance": "Filter by security_user_id. An empty result is valid and common \u2014 most students have no SEN assessments. Resolve special_need_type_id via /api/v5/special-need-types and special_need_difficulty_id via /api/v5/special-need-difficulties for human-readable labels. file_content is always null in list responses \u2014 call GET /{id} if the file is needed."
         },
         {
           "step": 5,
@@ -986,23 +986,26 @@
           "action": "openemis_get",
           "resource": "user-special-needs-plans",
           "purpose": "Retrieve any Individual Education Plans (IEPs) or similar plans created for the student.",
-          "guidance": "Filter by security_user_id and optionally academic_period_id. SPELLING WARNING: the FK field on this resource is special_needs_plan_types_id (plural 'needs') — NOT special_need_plan_type_id (singular). Using the wrong spelling will silently fail. An empty result is valid — most students have no plans. file_content is always null in list responses."
+          "guidance": "Filter by security_user_id and optionally academic_period_id. SPELLING WARNING: the FK field on this resource is special_needs_plan_types_id (plural 'needs') \u2014 NOT special_need_plan_type_id (singular). Using the wrong spelling will silently fail. An empty result is valid \u2014 most students have no plans. file_content is always null in list responses."
         }
       ],
       "notes": [
-        "All four enhancement resources (user-contacts, user-nationalities, user-special-needs-assessments, user-special-needs-plans) use security_user_id as the filter key — the student's global FK to security_users. The institution-students student_id column IS that same security_user_id.",
-        "Empty results for special-needs resources are expected and valid — do NOT treat an empty array as an error. Most students have no SEN assessments or plans.",
+        "All four enhancement resources (user-contacts, user-nationalities, user-special-needs-assessments, user-special-needs-plans) use security_user_id as the filter key \u2014 the student's global FK to security_users. The institution-students student_id column IS that same security_user_id.",
+        "Empty results for special-needs resources are expected and valid \u2014 do NOT treat an empty array as an error. Most students have no SEN assessments or plans.",
         "user-special-needs-plans FK spelling: special_needs_plan_types_id (plural). Resolve via /api/v5/special-needs-plan-types.",
         "file_content on both user-special-needs-assessments and user-special-needs-plans is always null in list responses to save bandwidth. Call GET /{id} on a specific record to retrieve the base64 file.",
-        "Steps 2–5 can be fetched in parallel once security_user_id is known from step 1."
+        "Steps 2\u20135 can be fetched in parallel once security_user_id is known from step 1."
       ]
     },
     {
       "id": "view-institution-infrastructure",
       "title": "View Institution Infrastructure (Land, Buildings, Utilities, WASH)",
-      "audience": ["admin", "facilities"],
+      "audience": [
+        "admin",
+        "facilities"
+      ],
       "domain": "Institution",
-      "description": "View the physical infrastructure of an institution: land parcels, buildings per land, utilities (electricity), and WASH records (water and sanitation). Land and buildings are NOT scoped by academic_period_id — that field was removed in POCOR-8037. Utilities and WASH ARE scoped by academic_period_id.",
+      "description": "View the physical infrastructure of an institution: land parcels, buildings per land, utilities (electricity), and WASH records (water and sanitation). Land and buildings are NOT scoped by academic_period_id \u2014 that field was removed in POCOR-8037. Utilities and WASH ARE scoped by academic_period_id.",
       "resources": [
         "institution-lands",
         "institution-buildings",
@@ -1021,7 +1024,7 @@
           "action": "openemis_get",
           "resource": "institution-lands",
           "purpose": "List all land parcels registered to the institution, filtered to in-use records.",
-          "guidance": "Filter by institution_id. Do NOT pass academic_period_id — it was removed from this resource in POCOR-8037 and will be ignored or cause errors. To get only active parcels, also filter by land_status_id matching the IN_USE code from infrastructure-statuses. Each record's land_type_id and infrastructure_condition_id can be resolved in step 3."
+          "guidance": "Filter by institution_id. Do NOT pass academic_period_id \u2014 it was removed from this resource in POCOR-8037 and will be ignored or cause errors. To get only active parcels, also filter by land_status_id matching the IN_USE code from infrastructure-statuses. Each record's land_type_id and infrastructure_condition_id can be resolved in step 3."
         },
         {
           "step": 2,
@@ -1029,7 +1032,7 @@
           "action": "openemis_get",
           "resource": "institution-buildings",
           "purpose": "List buildings nested under each land parcel, filtered to in-use records.",
-          "guidance": "Filter by institution_id (for all buildings) or institution_land_id (for one land parcel's buildings). Do NOT pass academic_period_id — also removed in POCOR-8037. Filter by building_status_id for IN_USE records. Each building's building_type_id and infrastructure_condition_id can be resolved in step 3."
+          "guidance": "Filter by institution_id (for all buildings) or institution_land_id (for one land parcel's buildings). Do NOT pass academic_period_id \u2014 also removed in POCOR-8037. Filter by building_status_id for IN_USE records. Each building's building_type_id and infrastructure_condition_id can be resolved in step 3."
         },
         {
           "step": 3,
@@ -1037,19 +1040,19 @@
           "action": "openemis_get",
           "resource": "infrastructure-statuses",
           "purpose": "Resolve condition, status, land-type, and building-type IDs to human-readable labels.",
-          "guidance": "Fetch infrastructure-statuses, infrastructure-conditions, land-types, and building-types in parallel — all are global reference lists with no institution_id or academic_period_id filter. Key status codes: IN_USE, END_OF_USAGE, CHANGE_IN_TYPE. The same infrastructure_statuses table serves lands (land_status_id), buildings (building_status_id), floors and rooms — same table, different FK column names per level."
+          "guidance": "Fetch infrastructure-statuses, infrastructure-conditions, land-types, and building-types in parallel \u2014 all are global reference lists with no institution_id or academic_period_id filter. Key status codes: IN_USE, END_OF_USAGE, CHANGE_IN_TYPE. The same infrastructure_statuses table serves lands (land_status_id), buildings (building_status_id), floors and rooms \u2014 same table, different FK column names per level."
         },
         {
           "step": 4,
-          "title": "Fetch Utility — Electricity",
+          "title": "Fetch Utility \u2014 Electricity",
           "action": "openemis_get",
           "resource": "infrastructure-utility-electricities",
           "purpose": "View the institution's electricity utility records for the current academic period.",
-          "guidance": "Filter by institution_id AND academic_period_id (both required — unlike lands/buildings, utilities ARE scoped by period). Also filter is_current=1 to exclude soft-deleted records (is_current was added in POCOR-9475). Resolve utility_electricity_type_id via /api/v5/utility-electricity-types and utility_electricity_condition_id via /api/v5/utility-electricity-conditions."
+          "guidance": "Filter by institution_id AND academic_period_id (both required \u2014 unlike lands/buildings, utilities ARE scoped by period). Also filter is_current=1 to exclude soft-deleted records (is_current was added in POCOR-9475). Resolve utility_electricity_type_id via /api/v5/utility-electricity-types and utility_electricity_condition_id via /api/v5/utility-electricity-conditions."
         },
         {
           "step": 5,
-          "title": "Fetch WASH — Water Records",
+          "title": "Fetch WASH \u2014 Water Records",
           "action": "openemis_get",
           "resource": "infrastructure-wash-waters",
           "purpose": "View water supply and quality records for the institution.",
@@ -1057,25 +1060,29 @@
         },
         {
           "step": 6,
-          "title": "Fetch WASH — Sanitation Records",
+          "title": "Fetch WASH \u2014 Sanitation Records",
           "action": "openemis_get",
           "resource": "infrastructure-wash-sanitations",
           "purpose": "View toilet/sanitation facility counts split by gender and functionality.",
-          "guidance": "Filter by institution_id AND academic_period_id. The count fields follow the pattern infrastructure_wash_sanitation_{gender}_{status}: male_functional, male_nonfunctional, female_functional, female_nonfunctional, mixed_functional, mixed_nonfunctional. The total_male, total_female, total_mixed columns are auto-calculated by the backend in beforeSave — do NOT write to them directly. Resolve type, use, quality, and accessibility FKs via matching reference endpoints."
+          "guidance": "Filter by institution_id AND academic_period_id. The count fields follow the pattern infrastructure_wash_sanitation_{gender}_{status}: male_functional, male_nonfunctional, female_functional, female_nonfunctional, mixed_functional, mixed_nonfunctional. The total_male, total_female, total_mixed columns are auto-calculated by the backend in beforeSave \u2014 do NOT write to them directly. Resolve type, use, quality, and accessibility FKs via matching reference endpoints."
         }
       ],
       "notes": [
-        "CRITICAL: institution-lands and institution-buildings have NO academic_period_id filter — it was deliberately removed in POCOR-8037. Passing it will silently do nothing or break. Use land_status_id / building_status_id instead.",
-        "Status FK naming is level-specific: land_status_id for lands, building_status_id for buildings — both reference the same infrastructure_statuses table. The status code IN_USE is the filter for active records.",
+        "CRITICAL: institution-lands and institution-buildings have NO academic_period_id filter \u2014 it was deliberately removed in POCOR-8037. Passing it will silently do nothing or break. Use land_status_id / building_status_id instead.",
+        "Status FK naming is level-specific: land_status_id for lands, building_status_id for buildings \u2014 both reference the same infrastructure_statuses table. The status code IN_USE is the filter for active records.",
         "Utilities (electricity, internet, telephone) and WASH resources DO use academic_period_id. Always pass it for those resources.",
-        "WASH sanitation total_* columns are auto-calculated — display only, never write directly.",
-        "Steps 4–6 can run in parallel once institution_id and academic_period_id are known."
+        "WASH sanitation total_* columns are auto-calculated \u2014 display only, never write directly.",
+        "Steps 4\u20136 can run in parallel once institution_id and academic_period_id are known."
       ]
     },
     {
       "id": "view-institution-meals",
       "title": "View Institution Meal Programmes and Student Participation",
-      "audience": ["admin", "nutritionist", "parent"],
+      "audience": [
+        "admin",
+        "nutritionist",
+        "parent"
+      ],
       "domain": "Institution",
       "description": "View the meal programmes an institution runs, their nutritional content, and which students are enrolled. Scoped by institution_id and academic_period_id. Key gotcha: in meal-nutritional-records the FK to meal_nutritions is nutritional_content_id (not meal_nutrition_id).",
       "resources": [
@@ -1093,7 +1100,7 @@
           "action": "openemis_get",
           "resource": "institution-meal-programmes",
           "purpose": "List all meal programmes the institution runs for the current academic period.",
-          "guidance": "Filter by institution_id AND academic_period_id (both required). The API table is MealInstitutionProgrammesTable and the actual DB table is meal_institution_programmes. Each record links to a meal_programme_id (the master programme definition) and has non-standard FK aliases: the programme type FK may be named 'type' rather than meal_programme_type_id in some API responses — check the actual response key names. Capture meal_programme_id values for step 3."
+          "guidance": "Filter by institution_id AND academic_period_id (both required). The API table is MealInstitutionProgrammesTable and the actual DB table is meal_institution_programmes. Each record links to a meal_programme_id (the master programme definition) and has non-standard FK aliases: the programme type FK may be named 'type' rather than meal_programme_type_id in some API responses \u2014 check the actual response key names. Capture meal_programme_id values for step 3."
         },
         {
           "step": 2,
@@ -1101,7 +1108,7 @@
           "action": "openemis_get",
           "resource": "meal-programme-types",
           "purpose": "Resolve type, implementer, and benefit IDs to human-readable labels.",
-          "guidance": "Fetch meal-programme-types, meal-implementers, and meal-benefits in parallel — all are global reference lists with no institution_id or academic_period_id filter. meal-implementers does NOT use the FieldOption behavior (unlike most lookup tables) — it has only id and name. The FK in meal-implementers records is meal_implementer_id in meal_programmes, but may appear as 'implementer' in institution-meal-programmes API responses."
+          "guidance": "Fetch meal-programme-types, meal-implementers, and meal-benefits in parallel \u2014 all are global reference lists with no institution_id or academic_period_id filter. meal-implementers does NOT use the FieldOption behavior (unlike most lookup tables) \u2014 it has only id and name. The FK in meal-implementers records is meal_implementer_id in meal_programmes, but may appear as 'implementer' in institution-meal-programmes API responses."
         },
         {
           "step": 3,
@@ -1109,7 +1116,7 @@
           "action": "openemis_get",
           "resource": "meal-nutritional-records",
           "purpose": "Retrieve the nutritional content records linked to each meal programme.",
-          "guidance": "Filter by meal_programme_id (from step 1). CRITICAL FK TRAP: the FK to the meal_nutritions lookup table is nutritional_content_id — NOT meal_nutrition_id. Using the wrong key will silently fail. meal-nutritional-records acts as a join table between meal_programmes and meal_nutritions (belongsToMany). Resolve nutritional_content_id via /api/v5/meal-nutritions for the nutrient name (e.g. Protein, Carbohydrates, Calories)."
+          "guidance": "Filter by meal_programme_id (from step 1). CRITICAL FK TRAP: the FK to the meal_nutritions lookup table is nutritional_content_id \u2014 NOT meal_nutrition_id. Using the wrong key will silently fail. meal-nutritional-records acts as a join table between meal_programmes and meal_nutritions (belongsToMany). Resolve nutritional_content_id via /api/v5/meal-nutritions for the nutrient name (e.g. Protein, Carbohydrates, Calories)."
         },
         {
           "step": 4,
@@ -1117,22 +1124,26 @@
           "action": "openemis_get",
           "resource": "institution-meal-students",
           "purpose": "List students enrolled in the meal programme, optionally filtered by class.",
-          "guidance": "The API resource institution-meal-students maps to the StudentMealMarkedRecordsTable (DB table: student_meal_marked_records). Filter by institution_id, academic_period_id, and optionally institution_class_id or meal_programme_id. meal_benefit_id indicates which type of benefit the student receives — resolve via meal-benefits from step 2. The date field records the specific attendance/marking date."
+          "guidance": "The API resource institution-meal-students maps to the StudentMealMarkedRecordsTable (DB table: student_meal_marked_records). Filter by institution_id, academic_period_id, and optionally institution_class_id or meal_programme_id. meal_benefit_id indicates which type of benefit the student receives \u2014 resolve via meal-benefits from step 2. The date field records the specific attendance/marking date."
         }
       ],
       "notes": [
         "CRITICAL FK: in meal-nutritional-records the FK to meal_nutritions is nutritional_content_id (NOT meal_nutrition_id). Using the wrong name will silently return empty or wrong results.",
-        "institution-meal-programmes maps to DB table meal_institution_programmes. The FK alias issue: the association for programme type, target, and implementer may use short aliases ('type', 'targeting', 'implementer') rather than _type_id suffixes in API responses — inspect the actual response keys before building filters.",
-        "institution-meal-students maps to student_meal_marked_records — per-day attendance/participation records, not a static enrollment list. Filter by date if you want a specific day's participation.",
-        "meal-implementers does NOT use FieldOption behavior — it only has id and name, no visible/order/default fields."
+        "institution-meal-programmes maps to DB table meal_institution_programmes. The FK alias issue: the association for programme type, target, and implementer may use short aliases ('type', 'targeting', 'implementer') rather than _type_id suffixes in API responses \u2014 inspect the actual response keys before building filters.",
+        "institution-meal-students maps to student_meal_marked_records \u2014 per-day attendance/participation records, not a static enrollment list. Filter by date if you want a specific day's participation.",
+        "meal-implementers does NOT use FieldOption behavior \u2014 it only has id and name, no visible/order/default fields."
       ]
     },
     {
       "id": "view-student-risks",
       "title": "View a Student's Risk Profile and Welfare Cases",
-      "audience": ["admin", "counsellor", "teacher"],
+      "audience": [
+        "admin",
+        "counsellor",
+        "teacher"
+      ],
       "domain": "Student",
-      "description": "View a student's calculated risk score, the individual risk criteria that contributed to it, and any welfare cases opened for that student. institution-risks has a composite PK (no integer id). institution-cases is workflow-controlled — GET is safe, writes must go through the application.",
+      "description": "View a student's calculated risk score, the individual risk criteria that contributed to it, and any welfare cases opened for that student. institution-risks has a composite PK (no integer id). institution-cases is workflow-controlled \u2014 GET is safe, writes must go through the application.",
       "resources": [
         "institution-student-risks",
         "risks",
@@ -1149,7 +1160,7 @@
           "action": "openemis_get",
           "resource": "institution-student-risks",
           "purpose": "Retrieve the student's overall risk score for the current academic period.",
-          "guidance": "Filter by institution_id AND academic_period_id AND student_id (student's security_user_id). The total_risk field is the calculated aggregate score. Both institution_id and academic_period_id are required for meaningful filtering — without them the endpoint returns all risk records across all institutions and periods. Capture the id field for use in step 3."
+          "guidance": "Filter by institution_id AND academic_period_id AND student_id (student's security_user_id). The total_risk field is the calculated aggregate score. Both institution_id and academic_period_id are required for meaningful filtering \u2014 without them the endpoint returns all risk records across all institutions and periods. Capture the id field for use in step 3."
         },
         {
           "step": 2,
@@ -1157,7 +1168,7 @@
           "action": "openemis_get",
           "resource": "risks",
           "purpose": "Resolve risk_id to a human-readable risk name and understand what each risk measures.",
-          "guidance": "Filter by academic_period_id — it is required on this resource (cannot be empty). risks is the master definition table; each row defines one risk type for an academic period. Resolve risk_id from step 1 here."
+          "guidance": "Filter by academic_period_id \u2014 it is required on this resource (cannot be empty). risks is the master definition table; each row defines one risk type for an academic period. Resolve risk_id from step 1 here."
         },
         {
           "step": 3,
@@ -1165,7 +1176,7 @@
           "action": "openemis_get",
           "resource": "student-risks-criterias",
           "purpose": "Break down the total risk score into individual criterion scores.",
-          "guidance": "Filter by institution_student_risk_id (from step 1 id field). This is a join table — likely a composite PK (institution_student_risk_id + risk_criteria_id) with no standalone integer id. The value field holds each criterion's evaluated score. Resolve risk_criteria_id via risk-criterias (risk_value range 1–99, threshold field) to show which criteria contributed most."
+          "guidance": "Filter by institution_student_risk_id (from step 1 id field). This is a join table \u2014 likely a composite PK (institution_student_risk_id + risk_criteria_id) with no standalone integer id. The value field holds each criterion's evaluated score. Resolve risk_criteria_id via risk-criterias (risk_value range 1\u201399, threshold field) to show which criteria contributed most."
         },
         {
           "step": 4,
@@ -1173,23 +1184,26 @@
           "action": "openemis_get",
           "resource": "institution-cases",
           "purpose": "List any welfare or safeguarding cases opened for this student at this institution.",
-          "guidance": "Filter by institution_id. institution-cases is WORKFLOW-CONTROLLED — status_id references workflow_steps, not a simple status enum. GET is always safe. case_number is auto-generated as {institution_code}-{date}-{id}. Resolve case_type_id via case-types and case_priority_id via case-priorities (both FieldOption lookups, no institution/period filter needed)."
+          "guidance": "Filter by institution_id. institution-cases is WORKFLOW-CONTROLLED \u2014 status_id references workflow_steps, not a simple status enum. GET is always safe. case_number is auto-generated as {institution_code}-{date}-{id}. Resolve case_type_id via case-types and case_priority_id via case-priorities (both FieldOption lookups, no institution/period filter needed)."
         }
       ],
       "notes": [
-        "institution-student-risks requires both institution_id AND academic_period_id — omitting either returns unscoped global results.",
+        "institution-student-risks requires both institution_id AND academic_period_id \u2014 omitting either returns unscoped global results.",
         "risks master table also requires academic_period_id as a mandatory field.",
-        "student-risks-criterias is a composite-PK join table — do NOT filter by a bare integer id. Use institution_student_risk_id.",
-        "institution-cases is WORKFLOW-CONTROLLED. GET is safe. For creating or updating cases, use the OpenEMIS application — direct API writes bypass the approval chain.",
-        "case_priority_id FK name — not priority_id. case_type_id — not type_id."
+        "student-risks-criterias is a composite-PK join table \u2014 do NOT filter by a bare integer id. Use institution_student_risk_id.",
+        "institution-cases is WORKFLOW-CONTROLLED. GET is safe. For creating or updating cases, use the OpenEMIS application \u2014 direct API writes bypass the approval chain.",
+        "case_priority_id FK name \u2014 not priority_id. case_type_id \u2014 not type_id."
       ]
     },
     {
       "id": "view-institution-risks",
       "title": "View Institution Risk Summary and Alert Rules",
-      "audience": ["admin", "ministry"],
+      "audience": [
+        "admin",
+        "ministry"
+      ],
       "domain": "Institution",
-      "description": "View which risks are configured for an institution, the alert rules that fire when thresholds are crossed, and recent alert delivery logs. institution-risks has a composite PK (risk_id + institution_id) — no integer id field. Alerts link to AlertRules via a string name↔feature binding, not an integer FK.",
+      "description": "View which risks are configured for an institution, the alert rules that fire when thresholds are crossed, and recent alert delivery logs. institution-risks has a composite PK (risk_id + institution_id) \u2014 no integer id field. Alerts link to AlertRules via a string name\u2194feature binding, not an integer FK.",
       "resources": [
         "institution-risks",
         "risks",
@@ -1205,7 +1219,7 @@
           "action": "openemis_get",
           "resource": "institution-risks",
           "purpose": "List which risk types are configured for this institution.",
-          "guidance": "Filter by institution_id. CRITICAL: institution-risks has NO integer id column — its primary key is composite (risk_id + institution_id). Never query by a bare id= parameter. academic_period_id is not stored on this table — period scoping is done via the risks master table. Resolve risk_id via the risks resource."
+          "guidance": "Filter by institution_id. CRITICAL: institution-risks has NO integer id column \u2014 its primary key is composite (risk_id + institution_id). Never query by a bare id= parameter. academic_period_id is not stored on this table \u2014 period scoping is done via the risks master table. Resolve risk_id via the risks resource."
         },
         {
           "step": 2,
@@ -1213,39 +1227,140 @@
           "action": "openemis_get",
           "resource": "risks",
           "purpose": "Resolve risk names and fetch the criteria thresholds for each configured risk.",
-          "guidance": "Filter by academic_period_id (required — cannot be empty). Then fetch risk-criterias filtered by risk_id to get the threshold values. risk_value on risk-criterias must be 1–99 (validated). The threshold field uses a custom range validator."
+          "guidance": "Filter by academic_period_id (required \u2014 cannot be empty). Then fetch risk-criterias filtered by risk_id to get the threshold values. risk_value on risk-criterias must be 1\u201399 (validated). The threshold field uses a custom range validator."
         },
         {
           "step": 3,
           "title": "Fetch Alert Definitions",
           "action": "openemis_get",
           "resource": "alerts",
-          "purpose": "List the alerts configured in the system — these fire when risk thresholds are crossed.",
-          "guidance": "No institution_id or academic_period_id filter on this resource. CRITICAL non-standard binding: alerts links to alert-rules via alerts.name ↔ alert_rules.feature (string match), NOT via an integer FK. Do not attempt ?alert_rule_id=... on the alerts endpoint. Fetch alert-rules separately and match by feature string."
+          "purpose": "List the alerts configured in the system \u2014 these fire when risk thresholds are crossed.",
+          "guidance": "No institution_id or academic_period_id filter on this resource. CRITICAL non-standard binding: alerts links to alert-rules via alerts.name \u2194 alert_rules.feature (string match), NOT via an integer FK. Do not attempt ?alert_rule_id=... on the alerts endpoint. Fetch alert-rules separately and match by feature string."
         },
         {
           "step": 4,
           "title": "Fetch Alert Rules",
           "action": "openemis_get",
           "resource": "alert-rules",
-          "purpose": "View the configured notification rules — enabled/disabled, method (Email), threshold, and which roles receive them.",
-          "guidance": "No institution_id or academic_period_id filter. The feature field is the join key back to alerts.name. enabled flag (0/1) shows whether the rule is active. security_roles is populated via alerts-roles join table — a composite PK table (alert_rule_id + security_role_id) with no integer id."
+          "purpose": "View the configured notification rules \u2014 enabled/disabled, method (Email), threshold, and which roles receive them.",
+          "guidance": "No institution_id or academic_period_id filter. The feature field is the join key back to alerts.name. enabled flag (0/1) shows whether the rule is active. security_roles is populated via alerts-roles join table \u2014 a composite PK table (alert_rule_id + security_role_id) with no integer id."
         },
         {
           "step": 5,
           "title": "Fetch Recent Alert Logs",
           "action": "openemis_get",
           "resource": "alert-logs",
-          "purpose": "View recent alert delivery history — whether notifications were sent successfully.",
+          "purpose": "View recent alert delivery history \u2014 whether notifications were sent successfully.",
           "guidance": "No institution_id or academic_period_id filter. The feature field classifies which alert type fired. status field: 0=Pending, 1=Success, -1=Failed. The checksum field is used for deduplication. Filter by feature to scope to a specific alert type, or by status=-1 to find failed deliveries."
         }
       ],
       "notes": [
         "institution-risks composite PK: (risk_id + institution_id). No integer id. Never filter by bare id=.",
-        "alerts-roles is also a composite PK table (alert_rule_id + security_role_id) — no integer id.",
-        "alerts↔alert-rules join is by STRING (alerts.name = alert_rules.feature), not by integer FK. This is the most non-obvious join in this domain.",
-        "risks.academic_period_id is mandatory — the resource validates it cannot be empty.",
+        "alerts-roles is also a composite PK table (alert_rule_id + security_role_id) \u2014 no integer id.",
+        "alerts\u2194alert-rules join is by STRING (alerts.name = alert_rules.feature), not by integer FK. This is the most non-obvious join in this domain.",
+        "risks.academic_period_id is mandatory \u2014 the resource validates it cannot be empty.",
         "alert-logs.status values: 0=Pending, 1=Success, -1=Failed."
+      ]
+    },
+    {
+      "id": "add-institution-asset",
+      "title": "Add Equipment or Assets to an Institution",
+      "audience": [
+        "admin",
+        "accountant",
+        "facilities"
+      ],
+      "domain": "Infrastructure",
+      "description": "Record newly acquired equipment or assets \u2014 computers, desks, projectors, furniture. One row per physical unit; for multiple identical items post one record each with distinct code and serial_number.",
+      "resources": [
+        "asset-makes",
+        "asset-models",
+        "institution-assets"
+      ],
+      "steps": [
+        {
+          "action": "openemis_get",
+          "resource": "asset-makes"
+        },
+        {
+          "action": "openemis_get",
+          "resource": "asset-models"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "institution-assets"
+        }
+      ]
+    },
+    {
+      "id": "record-infrastructure-repair",
+      "title": "Record an Infrastructure Repair or Restoration",
+      "audience": [
+        "admin",
+        "accountant",
+        "facilities"
+      ],
+      "domain": "Infrastructure",
+      "description": "Log a completed or in-progress repair at an institution \u2014 toilets restored, roof fixed, classroom repainted. Tracks when the issue was identified, when work started, and when completed.",
+      "resources": [
+        "institution-buildings",
+        "infrastructure-needs"
+      ],
+      "steps": [
+        {
+          "action": "openemis_get",
+          "resource": "institution-buildings"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "infrastructure-needs"
+        }
+      ]
+    },
+    {
+      "id": "add-meal-programme",
+      "title": "Add a New Meal Programme to an Institution",
+      "audience": [
+        "admin",
+        "accountant",
+        "nutritionist"
+      ],
+      "domain": "Meals",
+      "description": "Create a new meal programme definition and assign it to an institution. Two-step: create the global meal-programmes record, then post the institution-meal-programmes delivery assignment. No workflow plugin.",
+      "resources": [
+        "academic-periods",
+        "meal-programme-types",
+        "meal-target-types",
+        "meal-implementers",
+        "meal-programmes",
+        "institution-meal-programmes",
+        "meal-nutritional-records"
+      ],
+      "steps": [
+        {
+          "action": "openemis_get",
+          "resource": "academic-periods"
+        },
+        {
+          "action": "openemis_get",
+          "resource": "meal-programme-types"
+        },
+        {
+          "action": "openemis_get",
+          "resource": "meal-target-types"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "meal-programmes"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "institution-meal-programmes"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "meal-nutritional-records"
+        }
       ]
     }
   ]

@@ -38,7 +38,7 @@ The net effect: agents answer natural-language questions in 2–4 tool calls, no
 | `openemis_health` | v0.1 | Pings the configured instance and reports reachability. Performs a real login round-trip — if this passes, CRUD will work. |
 | `openemis_list_domains` | v0.1 | Lists the curated OpenEMIS domains — Attendance, Assessment, Staff, Student, Institution, Schedule, Examination, Report — each with a one-line summary. The agent uses this to figure out *where* a question lives. |
 | `openemis_discover` | v0.1 | Input: a topic string. Output: up to 30 endpoints relevant to that topic, drawn from the domain knowledge pack and the per-instance manifest. Keeps conversations small regardless of how large the underlying API is. |
-| `openemis_list_playbooks` | v0.2 | Lists all 16 curated workflow playbooks with id, title, domain, and audience. The agent uses this to find the right step-by-step guide for a user-level task. |
+| `openemis_list_playbooks` | v0.2 | Lists all 27 curated workflow playbooks with id, title, domain, and audience. The agent uses this to find the right step-by-step guide for a user-level task. |
 | `openemis_get_playbook` | v0.2 | Input: a playbook id. Output: the full playbook — resources, ordered steps, guidance notes, and example queries. |
 | `openemis_get` | v0.1 | Unified read tool. `{ resource, id?, params? }` — if `id` is present, fetches the singleton; otherwise lists with any combination of `_fields`, `_conditions`, `orderby`, `order`, `page`, `limit`, plus any ad-hoc filter key. |
 | `openemis_create` | v0.3.0 | Create a new record. `{ resource, body }` — non-workflow resources only. Workflow-controlled resources (e.g. institution-staff-leave) are blocked and will redirect to the appropriate playbook. |
@@ -190,7 +190,7 @@ Design principles, from the first line of code:
 ## Documentation
 
 - [Resource Reference](docs/resources.md) — all 645 resources with HTTP method availability and write status
-- [Playbooks](docs/playbooks/) — 24 curated workflow guides
+- [Playbooks](docs/playbooks/) — 27 curated workflow guides (24 read · 3 write)
 
 ### Playbooks
 
@@ -220,6 +220,9 @@ Design principles, from the first line of code:
 | 22 | [View Institution Meals](docs/playbooks/view-institution-meals.md) | Institution | admin, nutritionist, parent | |
 | 23 | [View Student Risk Profile](docs/playbooks/view-student-risks.md) | Student | admin, counsellor, teacher | |
 | 24 | [View Institution Risk Summary](docs/playbooks/view-institution-risks.md) | Institution | admin, ministry | |
+| 25 | [Add Equipment or Assets](docs/playbooks/add-institution-asset.md) ✏️ | Infrastructure | admin, accountant, facilities | |
+| 26 | [Record an Infrastructure Repair](docs/playbooks/record-infrastructure-repair.md) ✏️ | Infrastructure | admin, accountant, facilities | |
+| 27 | [Add a New Meal Programme](docs/playbooks/add-meal-programme.md) ✏️ | Meals | admin, accountant, nutritionist | |
 
 ---
 

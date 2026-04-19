@@ -7427,7 +7427,7 @@
     "domain_endpoint_total": 0,
     "family_endpoint_total": 2931,
     "orphan_endpoint_total": 275,
-    "playbook_count": 24
+    "playbook_count": 27
   },
   "playbooks": [
     {
@@ -8939,6 +8939,110 @@
         "missing": [],
         "pct": 100
       }
+    },
+    {
+      "id": "add-institution-asset",
+      "title": "Add Equipment or Assets to an Institution",
+      "audience": [
+        "admin",
+        "accountant",
+        "facilities"
+      ],
+      "domain": "Infrastructure",
+      "description": "Record newly acquired equipment or assets \u2014 computers, desks, projectors, furniture. One row per physical unit; for multiple identical items post one record each with distinct code and serial_number.",
+      "resources": [
+        "asset-makes",
+        "asset-models",
+        "institution-assets"
+      ],
+      "steps": [
+        {
+          "action": "openemis_get",
+          "resource": "asset-makes"
+        },
+        {
+          "action": "openemis_get",
+          "resource": "asset-models"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "institution-assets"
+        }
+      ],
+      "coverage": 100
+    },
+    {
+      "id": "record-infrastructure-repair",
+      "title": "Record an Infrastructure Repair or Restoration",
+      "audience": [
+        "admin",
+        "accountant",
+        "facilities"
+      ],
+      "domain": "Infrastructure",
+      "description": "Log a completed or in-progress repair at an institution \u2014 toilets restored, roof fixed, classroom repainted. Tracks when the issue was identified, when work started, and when completed.",
+      "resources": [
+        "institution-buildings",
+        "infrastructure-needs"
+      ],
+      "steps": [
+        {
+          "action": "openemis_get",
+          "resource": "institution-buildings"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "infrastructure-needs"
+        }
+      ],
+      "coverage": 100
+    },
+    {
+      "id": "add-meal-programme",
+      "title": "Add a New Meal Programme to an Institution",
+      "audience": [
+        "admin",
+        "accountant",
+        "nutritionist"
+      ],
+      "domain": "Meals",
+      "description": "Create a new meal programme definition and assign it to an institution. Two-step: create the global meal-programmes record, then post the institution-meal-programmes delivery assignment. No workflow plugin.",
+      "resources": [
+        "academic-periods",
+        "meal-programme-types",
+        "meal-target-types",
+        "meal-implementers",
+        "meal-programmes",
+        "institution-meal-programmes",
+        "meal-nutritional-records"
+      ],
+      "steps": [
+        {
+          "action": "openemis_get",
+          "resource": "academic-periods"
+        },
+        {
+          "action": "openemis_get",
+          "resource": "meal-programme-types"
+        },
+        {
+          "action": "openemis_get",
+          "resource": "meal-target-types"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "meal-programmes"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "institution-meal-programmes"
+        },
+        {
+          "action": "openemis_create",
+          "resource": "meal-nutritional-records"
+        }
+      ],
+      "coverage": 100
     }
   ]
 }
