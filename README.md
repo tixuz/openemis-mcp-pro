@@ -190,7 +190,7 @@ Design principles, from the first line of code:
 ## Documentation
 
 - [Resource Reference](docs/resources.md) — all 645 resources with HTTP method availability and write status
-- [Playbooks](docs/playbooks/) — 20 curated workflow guides
+- [Playbooks](docs/playbooks/) — 22 curated workflow guides
 
 ### Playbooks
 
@@ -216,6 +216,8 @@ Design principles, from the first line of code:
 | 18 | [View Full Class Profile](docs/playbooks/view-class-profile.md) | Student | teacher, admin |
 | 19 | [View a Staff Member's Full Profile](docs/playbooks/view-staff-profile.md) | Staff | admin, hr |
 | 20 | [Enhance Student Profile](docs/playbooks/enhance-student-profile.md) | Student | teacher, admin, counsellor |
+| 21 | [View Institution Infrastructure](docs/playbooks/view-institution-infrastructure.md) | Institution | admin, facilities |
+| 22 | [View Institution Meals](docs/playbooks/view-institution-meals.md) | Institution | admin, nutritionist, parent |
 
 ---
 
@@ -223,24 +225,22 @@ Design principles, from the first line of code:
 
 ### v0.4.0 — Browser Auth (planned)
 
-Today, credentials require a manually-issued `api_key` from the OpenEMIS admin. v0.4.0 will add an optional `openemis_browser_auth` tool that lets users authenticate through a real browser session instead:
+Today, credentials require a manually-issued `api_key` from the OpenEMIS admin. v0.4.0 will add an optional `openemis_browser_auth` tool that eliminates all manual credential configuration:
 
-1. The tool launches a local Playwright browser pointed at the configured OpenEMIS instance.
-2. The user logs in normally (username + password in their own browser).
-3. The MCP intercepts the response from **either** `POST /api/v5/login` **or** `POST /api/v4/login` — both endpoints return an identical JWT.
-4. The token is extracted, cached in memory, and used for all subsequent CRUD calls — exactly as if it had been supplied via `.env`.
+1. The tool launches a local Playwright browser — **no target URL required upfront**.
+2. The user navigates to their OpenEMIS instance and logs in normally.
+3. Playwright watches all network traffic. When it sees a response to **`POST */api/v5/login`** or **`POST */api/v4/login`** (both return identical JWTs):
+   - The **base URL** is extracted from the request URL automatically (e.g. `https://dev-demo.openemis.org/core/api/v5/login` → base `https://dev-demo.openemis.org/core`) — no need to pre-configure `OPENEMIS_BASE_URL`.
+   - The **JWT** is extracted from the response body.
+4. Both are cached in memory and used for all subsequent CRUD calls.
 
-This removes the `OPENEMIS_API_KEY` requirement entirely and works on any OpenEMIS v5 (or v4-compatible) instance, including those using SSO or non-standard auth flows that still resolve to the same JWT endpoint.
+This removes `OPENEMIS_BASE_URL`, `OPENEMIS_USERNAME`, `OPENEMIS_PASSWORD`, and `OPENEMIS_API_KEY` as requirements — the user just opens a browser and logs in. Works with any OpenEMIS instance, any domain, any subdomain, including dev, staging, and production environments without any reconfiguration.
 
-**API_KEY remains supported** — existing `.env`-based setups are unchanged. Browser auth is opt-in via the new tool.
+**`.env`-based credentials remain fully supported** — existing setups are unchanged. Browser auth is opt-in via the new tool.
 
-### v0.5.0 — Infrastructure & Meals (planned)
+### v0.5.0 — Risk Dashboards (planned)
 
-Step 2 of the playbook roadmap: `view-institution-infrastructure` and `view-institution-meals` playbooks covering physical infrastructure records and school feeding programs.
-
-### v0.6.0 — Risk Dashboards (planned)
-
-Step 3: `view-student-risks` and `view-institution-risks` — early-warning and risk-flag resources for learner welfare and institutional compliance.
+`view-student-risks` and `view-institution-risks` — early-warning and risk-flag resources for learner welfare and institutional compliance.
 
 ---
 
