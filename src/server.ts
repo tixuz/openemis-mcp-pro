@@ -214,7 +214,7 @@ async function startHttpTransport(): Promise<void> {
       // ── Bearer token auth ─────────────────────────────────────────────────
       // Applied to every route EXCEPT the OpenAPI schema (so ChatGPT can import it
       // without credentials — the schema itself contains no sensitive data).
-      const isPublicRoute = req.url === "/openapi.json" || req.url === "/" || req.url === "/health";
+      const isPublicRoute = req.url === "/openapi.json" || req.url === "/" || req.url === "/health" || req.url === "/privacy";
       if (config.authToken && !isPublicRoute) {
         const authHeader = (req.headers["authorization"] ?? "") as string;
         if (authHeader !== `Bearer ${config.authToken}`) {
