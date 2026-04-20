@@ -10,6 +10,9 @@ import { z } from "zod";
 import type { ManifestRow, OpenemisClient } from "../types.js";
 import { isWorkflowBlocked, buildWorkflowBlockMessage } from "../policies.js";
 import { normalizeResponse } from "../utils.js";
+import { stringifyUntrusted } from "../auth/envelope.js";
+import { scrubSecrets } from "../auth/redact.js";
+import { CRUD_UNTRUSTED_OUTPUT_NOTE } from "./crud.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -74,7 +77,8 @@ export const OPENEMIS_CREATE_TOOL = {
   description:
     "Create a record via POST /api/v5/{resource}. " +
     "Workflow-controlled resources (attendance etc.) are blocked — use playbooks for those. " +
-    "Only resources that appear with method POST in the OpenEMIS v5 manifest are accepted.",
+    "Only resources that appear with method POST in the OpenEMIS v5 manifest are accepted." +
+    CRUD_UNTRUSTED_OUTPUT_NOTE,
 };
 
 /**
@@ -124,17 +128,20 @@ export function createOpenemisCreateHandler(
       // Step d: normalise envelope
       const normalized = normalizeResponse(raw);
 
-      // Step e: return
+      // Step e: return, wrapping the upstream record in the untrusted-data
+      // envelope so a hostile record field can't pose as a system instruction.
       return {
         content: [
           {
             type: "text" as const,
-            text: JSON.stringify(normalized, null, 2),
+            text: stringifyUntrusted(normalized),
           },
         ],
       };
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
+      const rawMessage = error instanceof Error ? error.message : String(error);
+      // Scrub upstream error body — may echo Authorization header.
+      const message = scrubSecrets(rawMessage);
       return {
         content: [
           {
@@ -178,7 +185,8 @@ export const OPENEMIS_UPDATE_TOOL = {
   description:
     "Update a record via PUT /api/v5/{resource}/{id}. " +
     "Workflow-controlled resources (attendance etc.) are blocked — use playbooks for those. " +
-    "Only resources that appear with method PUT in the OpenEMIS v5 manifest are accepted.",
+    "Only resources that appear with method PUT in the OpenEMIS v5 manifest are accepted." +
+    CRUD_UNTRUSTED_OUTPUT_NOTE,
 };
 
 /**
@@ -229,17 +237,20 @@ export function createOpenemisUpdateHandler(
       // Step d: normalise
       const normalized = normalizeResponse(raw);
 
-      // Step e: return
+      // Step e: return, wrapping the upstream record in the untrusted-data
+      // envelope so a hostile record field can't pose as a system instruction.
       return {
         content: [
           {
             type: "text" as const,
-            text: JSON.stringify(normalized, null, 2),
+            text: stringifyUntrusted(normalized),
           },
         ],
       };
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
+      const rawMessage = error instanceof Error ? error.message : String(error);
+      // Scrub upstream error body — may echo Authorization header.
+      const message = scrubSecrets(rawMessage);
       return {
         content: [
           {
@@ -281,7 +292,8 @@ export const OPENEMIS_DELETE_TOOL = {
     "Delete a record via DELETE /api/v5/{resource}/{id}. " +
     "Permanent. Cannot be undone. " +
     "Workflow-controlled resources (attendance etc.) are blocked — use playbooks for those. " +
-    "Only resources that appear with method DELETE in the OpenEMIS v5 manifest are accepted.",
+    "Only resources that appear with method DELETE in the OpenEMIS v5 manifest are accepted." +
+    CRUD_UNTRUSTED_OUTPUT_NOTE,
 };
 
 /**
@@ -328,17 +340,20 @@ export function createOpenemisDeleteHandler(
       // Step d: normalise
       const normalized = normalizeResponse(raw);
 
-      // Step e: return
+      // Step e: return, wrapping the upstream record in the untrusted-data
+      // envelope so a hostile record field can't pose as a system instruction.
       return {
         content: [
           {
             type: "text" as const,
-            text: JSON.stringify(normalized, null, 2),
+            text: stringifyUntrusted(normalized),
           },
         ],
       };
     } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
+      const rawMessage = error instanceof Error ? error.message : String(error);
+      // Scrub upstream error body — may echo Authorization header.
+      const message = scrubSecrets(rawMessage);
       return {
         content: [
           {

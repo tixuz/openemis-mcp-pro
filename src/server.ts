@@ -10,6 +10,9 @@ import { loadConfig, loadManifest } from "./config.js";
 import { OpenemisClientImpl } from "./openemis.js";
 import { handleRestRequest } from "./rest.js";
 import { record } from "./logger.js";
+import { AuthStore } from "./auth/store.js";
+import { getCurrentUser } from "./auth/session.js";
+import { wrapHandler } from "./auth/wrap.js";
 import type { ManifestRow } from "./types.js";
 import {
   OPENEMIS_GET_TOOL,
@@ -41,9 +44,29 @@ import {
   openemisGetPlaybookInputSchema,
   openemisGetPlaybookHandler,
 } from "./tools/describe.js";
+import {
+  OPENEMIS_LOGIN_TOOL,
+  openemisLoginInputSchema,
+  createOpenemisLoginHandler,
+  OPENEMIS_LOGOUT_TOOL,
+  openemisLogoutInputSchema,
+  createOpenemisLogoutHandler,
+  OPENEMIS_WHOAMI_TOOL,
+  openemisWhoamiInputSchema,
+  createOpenemisWhoamiHandler,
+} from "./tools/auth.js";
 
 const config = loadConfig();
-const client = new OpenemisClientImpl(config);
+
+// Per-user auth store + session are stdio-only. In HTTP mode the server
+// stays stateless (multi-tenant semantics don't match a single-user SQLite).
+const authStore: AuthStore | null =
+  config.transport === "stdio" ? new AuthStore({ dbPath: config.authDbPath }) : null;
+
+const client = new OpenemisClientImpl(config, {
+  store: authStore,
+  getCurrentUser,
+});
 
 const server = new McpServer({
   name: "openemis-mcp",
@@ -52,127 +75,223 @@ const server = new McpServer({
 
 /**
  * Health check tool: verify OpenEMIS API reachability.
+ * Wrapped below after the full manifest + tools are registered, so the
+ * audit logger captures it too.
  */
+const healthHandler = async () => {
+  try {
+    // Real signal: can we log in? If yes, the server is up AND creds are correct.
+    await client.getToken();
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: `OpenEMIS is reachable at ${config.baseUrl} — login succeeded.`,
+        },
+      ],
+      structuredContent: {
+        ok: true,
+        baseUrl: config.baseUrl,
+        login: "ok",
+      },
+    };
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Unknown error";
+    return {
+      content: [
+        {
+          type: "text" as const,
+          text: `OpenEMIS health check failed at ${config.baseUrl}: ${message}. NOTE: health does a real login. If the error is 'Missing credentials', set OPENEMIS_USERNAME / OPENEMIS_PASSWORD / OPENEMIS_API_KEY. If the error is network/cert, check NODE_TLS_REJECT_UNAUTHORIZED=0 for self-signed localhost certs.`,
+        },
+      ],
+      structuredContent: {
+        ok: false,
+        baseUrl: config.baseUrl,
+        error: message,
+      },
+    };
+  }
+};
+
 server.tool(
   "openemis_health",
   "Check whether the configured OpenEMIS API endpoint is reachable and credentials are valid. Does a real login round-trip — if this passes, CRUD will work.",
   {},
-  async () => {
-    try {
-      // Real signal: can we log in? If yes, the server is up AND creds are correct.
-      await client.getToken();
-      return {
-        content: [
-          {
-            type: "text",
-            text: `OpenEMIS is reachable at ${config.baseUrl} — login succeeded.`,
-          },
-        ],
-        structuredContent: {
-          ok: true,
-          baseUrl: config.baseUrl,
-          login: "ok",
-        },
-      };
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Unknown error";
-      return {
-        content: [
-          {
-            type: "text",
-            text: `OpenEMIS health check failed at ${config.baseUrl}: ${message}. NOTE: health does a real login. If the error is 'Missing credentials', set OPENEMIS_USERNAME / OPENEMIS_PASSWORD / OPENEMIS_API_KEY. If the error is network/cert, check NODE_TLS_REJECT_UNAUTHORIZED=0 for self-signed localhost certs.`,
-          },
-        ],
-        structuredContent: {
-          ok: false,
-          baseUrl: config.baseUrl,
-          error: message,
-        },
-      };
-    }
-  }
+  wrapHandler("openemis_health", healthHandler, authStore, getCurrentUser)
 );
 
 /**
  * Initialize server: register all tools and connect stdio transport.
  */
 async function main(): Promise<void> {
+  // Rotate yesterday's audit rows to JSONL before we start serving. Zero
+  // work when there's nothing old to flush.
+  if (authStore) {
+    try {
+      const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      const flushed = authStore.rotateOlderThan(today, config.authLogDir);
+      if (flushed > 0) {
+        console.error(
+          `[openemis-mcp-pro] Rotated ${flushed} tool-call rows to ${config.authLogDir}`
+        );
+      }
+    } catch (err) {
+      console.error(
+        `[openemis-mcp-pro] Log rotation failed (continuing):`,
+        err instanceof Error ? err.message : err
+      );
+    }
+  }
+
   // Load manifest for write-tool validation
   const manifest = loadManifest(config.manifestPath) as unknown as ManifestRow[];
   // MCP SDK expects a ZodRawShape (plain object of zod types), not a wrapped z.object().
   // The ZodObject `.shape` getter gives us the raw shape.
+  //
+  // Every tool handler is wrapped with `wrapHandler` so calls land in the
+  // SQLite audit log with ts / username / tool / args / ok / duration_ms.
+  // In HTTP mode `authStore` is null and the wrapper is a pass-through.
   server.tool(
     OPENEMIS_GET_TOOL.name,
     OPENEMIS_GET_TOOL.description,
     openemisGetInputSchema.shape,
-    createOpenemisGetHandler(client)
+    wrapHandler(
+      OPENEMIS_GET_TOOL.name,
+      createOpenemisGetHandler(client),
+      authStore,
+      getCurrentUser
+    )
   );
 
   server.tool(
     OPENEMIS_CREATE_TOOL.name,
     OPENEMIS_CREATE_TOOL.description,
     openemisCreateInputSchema.shape,
-    createOpenemisCreateHandler(client, manifest, config.baseUrl)
+    wrapHandler(
+      OPENEMIS_CREATE_TOOL.name,
+      createOpenemisCreateHandler(client, manifest, config.baseUrl),
+      authStore,
+      getCurrentUser
+    )
   );
 
   server.tool(
     OPENEMIS_UPDATE_TOOL.name,
     OPENEMIS_UPDATE_TOOL.description,
     openemisUpdateInputSchema.shape,
-    createOpenemisUpdateHandler(client, manifest, config.baseUrl)
+    wrapHandler(
+      OPENEMIS_UPDATE_TOOL.name,
+      createOpenemisUpdateHandler(client, manifest, config.baseUrl),
+      authStore,
+      getCurrentUser
+    )
   );
 
   server.tool(
     OPENEMIS_DELETE_TOOL.name,
     OPENEMIS_DELETE_TOOL.description,
     openemisDeleteInputSchema.shape,
-    createOpenemisDeleteHandler(client, manifest, config.baseUrl)
+    wrapHandler(
+      OPENEMIS_DELETE_TOOL.name,
+      createOpenemisDeleteHandler(client, manifest, config.baseUrl),
+      authStore,
+      getCurrentUser
+    )
   );
 
   server.tool(
     openemisListDomainsSpec.name,
     openemisListDomainsSpec.description,
     openemisListDomainsInputSchema.shape,
-    async () => {
-      return {
-        content: await openemisListDomainsHandler(),
-      };
-    }
+    wrapHandler(
+      openemisListDomainsSpec.name,
+      async () => ({ content: await openemisListDomainsHandler() }),
+      authStore,
+      getCurrentUser
+    )
   );
 
   server.tool(
     openemisDiscoverSpec.name,
     openemisDiscoverSpec.description,
     openemisDiscoverInputSchema.shape,
-    async (args: { topic: string }) => {
-      return {
+    wrapHandler(
+      openemisDiscoverSpec.name,
+      async (args: { topic: string }) => ({
         content: await openemisDiscoverHandler(args),
-      };
-    }
+      }),
+      authStore,
+      getCurrentUser
+    )
   );
 
   server.tool(
     openemisListPlaybooksSpec.name,
     openemisListPlaybooksSpec.description,
     openemisListPlaybooksInputSchema.shape,
-    async () => {
-      return {
-        content: await openemisListPlaybooksHandler(),
-      };
-    }
+    wrapHandler(
+      openemisListPlaybooksSpec.name,
+      async () => ({ content: await openemisListPlaybooksHandler() }),
+      authStore,
+      getCurrentUser
+    )
   );
 
   server.tool(
     openemisGetPlaybookSpec.name,
     openemisGetPlaybookSpec.description,
     openemisGetPlaybookInputSchema.shape,
-    async (args: { id: string }) => {
-      return {
+    wrapHandler(
+      openemisGetPlaybookSpec.name,
+      async (args: { id: string }) => ({
         content: await openemisGetPlaybookHandler(args),
-      };
-    }
+      }),
+      authStore,
+      getCurrentUser
+    )
   );
+
+  // ── Per-user auth tools (stdio only) ─────────────────────────────────────
+  // In HTTP mode the server is stateless, so these would be meaningless —
+  // skip registration entirely rather than return confusing errors.
+  if (authStore) {
+    server.tool(
+      OPENEMIS_LOGIN_TOOL.name,
+      OPENEMIS_LOGIN_TOOL.description,
+      openemisLoginInputSchema.shape,
+      wrapHandler(
+        OPENEMIS_LOGIN_TOOL.name,
+        createOpenemisLoginHandler(client),
+        authStore,
+        getCurrentUser
+      )
+    );
+
+    server.tool(
+      OPENEMIS_LOGOUT_TOOL.name,
+      OPENEMIS_LOGOUT_TOOL.description,
+      openemisLogoutInputSchema.shape,
+      wrapHandler(
+        OPENEMIS_LOGOUT_TOOL.name,
+        createOpenemisLogoutHandler(),
+        authStore,
+        getCurrentUser
+      )
+    );
+
+    server.tool(
+      OPENEMIS_WHOAMI_TOOL.name,
+      OPENEMIS_WHOAMI_TOOL.description,
+      openemisWhoamiInputSchema.shape,
+      wrapHandler(
+        OPENEMIS_WHOAMI_TOOL.name,
+        createOpenemisWhoamiHandler(config, authStore),
+        authStore,
+        getCurrentUser
+      )
+    );
+  }
 
   // ── Transport selection ──────────────────────────────────────────────────
   if (config.transport === "http") {
@@ -180,6 +299,9 @@ async function main(): Promise<void> {
   } else {
     const transport = new StdioServerTransport();
     await server.connect(transport);
+    console.error(
+      `[openemis-mcp-pro] stdio transport ready. Auth DB: ${authStore?.path ?? "(disabled)"}`
+    );
   }
 }
 

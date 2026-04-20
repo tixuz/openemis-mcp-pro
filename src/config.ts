@@ -1,5 +1,6 @@
 import { readFileSync } from "fs";
 import { dirname, resolve } from "path";
+import { homedir } from "os";
 import { fileURLToPath } from "url";
 
 /**
@@ -53,6 +54,16 @@ export interface AppConfig {
   /** Bearer token clients must send as `Authorization: Bearer <token>` in HTTP mode.
    *  Empty string means no auth — only use that on localhost. */
   authToken: string;
+
+  // ── Per-user login (stdio only) ─────────────────────────────────────────────
+
+  /** SQLite database file for per-user JWTs + tool-call audit log.
+   *  Defaults to ~/.openemis-mcp/auth.db. Ignored in HTTP mode. */
+  authDbPath: string;
+
+  /** Directory where rotated tool-call audit logs are written as JSONL.
+   *  Defaults to ~/.openemis-mcp/logs. Ignored in HTTP mode. */
+  authLogDir: string;
 }
 
 /**
@@ -109,6 +120,14 @@ export function loadConfig(): AppConfig {
 
   const authToken = process.env.OPENEMIS_AUTH_TOKEN ?? "";
 
+  // Per-user auth storage: default under the user's home so a pristine install
+  // needs no extra env vars. These are only honoured in stdio mode.
+  const authHome = resolve(homedir(), ".openemis-mcp");
+  const authDbPath =
+    process.env.OPENEMIS_AUTH_DB_PATH ?? resolve(authHome, "auth.db");
+  const authLogDir =
+    process.env.OPENEMIS_AUTH_LOG_DIR ?? resolve(authHome, "logs");
+
   return {
     baseUrl,
     username,
@@ -121,6 +140,8 @@ export function loadConfig(): AppConfig {
     transport,
     port,
     authToken,
+    authDbPath,
+    authLogDir,
   };
 }
 
