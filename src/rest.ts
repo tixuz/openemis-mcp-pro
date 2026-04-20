@@ -1059,6 +1059,10 @@ export async function handleRestRequest(
       let idList: number[] | null = null;
 
       for (const [k, v] of url.searchParams.entries()) {
+        // Skip our own auth threading parameter — it is consumed by the middleware
+        // upstream (see server.ts) and must NOT be forwarded to OpenEMIS, which
+        // would interpret it as a `WHERE session_token = ?` filter and 404.
+        if (k === "session_token") continue;
         if (k === "ids") {
           // IN operator — fan out parallel individual lookups (OpenEMIS has no native IN)
           const parsed = v.split(",")

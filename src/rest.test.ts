@@ -762,6 +762,30 @@ describe("MVP testing mode — session_token query parameter flow", () => {
     }
   });
 
+  it("GET /api/resources/* strips session_token from the upstream OpenEMIS query", async () => {
+    // Regression — on 2026-04-21 the GET handler blindly forwarded every
+    // URL search param to OpenEMIS, so `?session_token=<64-hex>` was
+    // interpreted as `WHERE session_token = ?` and produced a SQL 1054
+    // "Unknown column" 404. session_token is our own auth-threading
+    // parameter consumed by the middleware, not a filter.
+    const getStub = vi.fn(() => Promise.resolve({ data: [{ id: 6, name: "Avory Primary" }] }));
+    const client = makeClient({ get: getStub });
+    const { token } = mintHttpSession("teacheramanda");
+    const out = await drive(
+      "GET",
+      `/api/resources/institutions?session_token=${token}&_limit=10`,
+      client,
+    );
+    expect(out.status).toBe(200);
+    // Verify the upstream call did NOT include session_token as a filter.
+    expect(getStub).toHaveBeenCalledTimes(1);
+    const callArgs = getStub.mock.calls[0] as unknown as [string, Record<string, unknown>];
+    const passedQuery = callArgs[1];
+    expect(passedQuery).not.toHaveProperty("session_token");
+    // But legitimate filters pass through.
+    expect(passedQuery["_limit"]).toBe(10);
+  });
+
   it("OpenAPI description makes the two-credential separation explicit", async () => {
     const client = makeClient();
     const out = await drive("GET", "/openapi.json", client);
