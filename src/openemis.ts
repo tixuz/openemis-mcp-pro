@@ -79,7 +79,7 @@ export class OpenemisClientImpl implements OpenemisClient {
       // Message branches on restLoginEnabled so a gated-mode caller is never
       // pointed at POST /api/auth/login (which returns 410 in that mode).
       const perUserHint = this.cfg.restLoginEnabled
-        ? "Call openemis_login (MCP) or POST /api/auth/login (REST) to authenticate as a specific OpenEMIS user."
+        ? "Ask the user for their OpenEMIS username and password (their school-system login, NOT the server API key), call loginUser with those credentials, and then thread the returned session_token as ?session_token=... on every data call. On MCP clients, call openemis_login instead."
         : "Connect via the MCP channel at /mcp and call the openemis_login tool — REST per-user login is disabled on this deployment. GET /api/auth/whoami confirms the current auth posture.";
       throw new Error(
         `Not authenticated [401]: this server requires per-user login. ${perUserHint}`

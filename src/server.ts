@@ -409,16 +409,37 @@ async function startHttpTransport(): Promise<void> {
         const prefix = "Bearer ";
         const bearer = authHeader.startsWith(prefix) ? authHeader.slice(prefix.length) : "";
         const isGateway = bearer === config.authToken;
-        // Session tokens are 64 hex chars. Only look them up in the store
-        // when REST per-user login is enabled — with the default gated
-        // posture, no session tokens can exist, so the lookup is pure cost.
-        const session =
-          config.restLoginEnabled && !isGateway && bearer.length === 64
-            ? getHttpSession(bearer)
-            : null;
-        if (!isGateway && !session) {
+
+        // MVP testing mode: ChatGPT Custom Actions cannot swap the
+        // Authorization bearer per-request, so the session_token comes in
+        // as a URL query parameter. We also honour the Authorization-bearer
+        // path for curl/backend callers that CAN swap their header.
+        //
+        // Precedence:
+        //   (1) Authorization: Bearer <64-hex> session   — curl/backend path
+        //   (2) ?session_token=<64-hex> in URL           — GPT path
+        //   (3) Authorization: Bearer <gateway>          — anonymous/gateway
+        let resolvedSession = null;
+        if (config.restLoginEnabled) {
+          if (!isGateway && bearer.length === 64) {
+            resolvedSession = getHttpSession(bearer);
+          }
+          if (!resolvedSession) {
+            // Parse the URL to look for ?session_token=... The Host header
+            // lets us build an absolute URL; the hostname itself is ignored.
+            const queryToken = new URL(
+              req.url ?? "/",
+              `http://${req.headers["host"] ?? "localhost"}`,
+            ).searchParams.get("session_token") ?? "";
+            if (queryToken.length === 64) {
+              resolvedSession = getHttpSession(queryToken);
+            }
+          }
+        }
+
+        if (!isGateway && !resolvedSession) {
           const perUserHint = config.restLoginEnabled
-            ? "or a session token from POST /api/auth/login"
+            ? "or a session_token from loginUser (attach as ?session_token=... OR as Authorization: Bearer <session_token>)"
             : "(per-user identity is only available via the MCP channel at /mcp + openemis_login)";
           res.writeHead(401, { "Content-Type": "application/json" });
           res.end(JSON.stringify({
@@ -426,7 +447,7 @@ async function startHttpTransport(): Promise<void> {
           }));
           return;
         }
-        if (session) httpSessionUser = session.username;
+        if (resolvedSession) httpSessionUser = resolvedSession.username;
       }
 
       // ── Root health probe (unauthenticated — for Oracle / uptime monitors) ─

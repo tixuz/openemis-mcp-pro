@@ -504,15 +504,21 @@ describe("GET /api/auth/whoami — report effective identity", () => {
     expect(parsed.base_url).toBe(cfg.baseUrl);
   });
 
-  it("never returns a JWT, password, or raw bearer token", async () => {
+  it("never returns a JWT, session token, or specific password", async () => {
     const client = makeClient();
     const { token } = mintHttpSession("teacher1");
     const out = await drive("GET", "/api/auth/whoami", client);
-    // whoami doesn't receive the Authorization header directly (the middleware
-    // handles it) — but we still want to ensure the body is minimal.
+    // The response body must not carry the session_token VALUE back out —
+    // even though the note may TALK about session_token, the actual 64-hex
+    // value minted above must not appear.
     expect(out.body).not.toContain(token);
-    expect(out.body).not.toContain("jwt");
-    expect(out.body).not.toContain("password");
+    // No JWT-shaped string. (The word "JWT" can appear in a banner; the
+    // regex targets the actual encoded shape.)
+    expect(out.body).not.toMatch(/eyJ[a-zA-Z0-9_-]{10,}/);
+    // The phrase "password: <something>" must never appear — the note may
+    // legitimately reference "username and password" as a hint, but no key:
+    // value pair ever ships.
+    expect(out.body).not.toMatch(/password"?\s*[:=]\s*["']?\S{3,}/i);
   });
 });
 
@@ -619,6 +625,158 @@ describe("REST per-user login gate — default OFF", () => {
   });
 });
 
+// ── MVP testing mode — session_token threaded via ?session_token=... ────────
+//
+// These tests lock in the two-credential contract that lets ChatGPT Custom
+// Actions do per-user OpenEMIS login without being able to swap their
+// Authorization bearer per-request. The GPT calls loginUser once, captures
+// `session_token` from the response, and passes it as a query parameter on
+// every subsequent call. The server.ts middleware handles the actual
+// Authorization-vs-session resolution at request boundary — here we focus on
+// the REST adapter surface the GPT sees.
+
+describe("MVP testing mode — session_token query parameter flow", () => {
+  beforeEach(() => _clearAllSessions());
+
+  it("login response carries session_token AND the legacy token alias", async () => {
+    const client = makeClient({
+      loginAs: vi.fn(() => Promise.resolve("jwt")) as unknown as OpenemisClient["loginAs"],
+    });
+    const out = await drive(
+      "POST", "/api/auth/login", client,
+      JSON.stringify({ username: "teacher1", password: "correct-horse" }),
+    );
+    expect(out.status).toBe(200);
+    const parsed = JSON.parse(out.body) as {
+      session_token: string;
+      token: string;
+      testing_mode: boolean;
+      note: string;
+    };
+    // session_token is the GPT-facing name — 64 hex chars.
+    expect(parsed.session_token).toMatch(/^[0-9a-f]{64}$/);
+    // token is kept as a backward-compat alias for curl/backend callers.
+    expect(parsed.token).toBe(parsed.session_token);
+    expect(parsed.testing_mode).toBe(true);
+    // Note must steer the GPT to use ?session_token=..., not Authorization.
+    expect(parsed.note).toMatch(/session_token=/);
+    expect(parsed.note).not.toContain("correct-horse");
+  });
+
+  it("login response note warns the GPT not to echo session_token or the password", async () => {
+    const client = makeClient({
+      loginAs: vi.fn(() => Promise.resolve("jwt")) as unknown as OpenemisClient["loginAs"],
+    });
+    const out = await drive(
+      "POST", "/api/auth/login", client,
+      JSON.stringify({ username: "teacher1", password: "correct-horse" }),
+    );
+    const parsed = JSON.parse(out.body) as { note: string };
+    expect(parsed.note).toMatch(/never echo/i);
+    expect(parsed.note).toMatch(/session_token/);
+    expect(parsed.note).toMatch(/password/i);
+  });
+
+  it("POST /api/auth/logout?session_token=<token> revokes the named session", async () => {
+    const { token } = mintHttpSession("teacher1");
+    expect(_sessionCount()).toBe(1);
+    const client = makeClient();
+    // No Authorization header at all — the GPT can't set one beyond the
+    // fixed gateway bearer. The query param must be enough on its own.
+    const out = await drive(
+      "POST", `/api/auth/logout?session_token=${token}`, client,
+    );
+    expect(out.status).toBe(200);
+    const parsed = JSON.parse(out.body) as { revoked: boolean };
+    expect(parsed.revoked).toBe(true);
+    expect(_sessionCount()).toBe(0);
+  });
+
+  it("GET /api/auth/whoami?session_token=<valid> reports mode=session with the username", async () => {
+    const { token } = mintHttpSession("teacher1");
+    const client = makeClient();
+    const out = await drive("GET", `/api/auth/whoami?session_token=${token}`, client);
+    expect(out.status).toBe(200);
+    const parsed = JSON.parse(out.body) as {
+      mode: string; username: string; testing_mode: boolean; note: string;
+    };
+    expect(parsed.mode).toBe("session");
+    expect(parsed.username).toBe("teacher1");
+    expect(parsed.testing_mode).toBe(true);
+    // Guidance tells the GPT to keep threading the token.
+    expect(parsed.note).toMatch(/session_token/);
+  });
+
+  it("GET /api/auth/whoami?session_token=<expired-or-unknown> falls back to gateway mode", async () => {
+    const client = makeClient();
+    const bogus = "f".repeat(64);
+    const out = await drive("GET", `/api/auth/whoami?session_token=${bogus}`, client);
+    const parsed = JSON.parse(out.body) as { mode: string; note: string };
+    expect(parsed.mode).toBe("gateway");
+    // The note must guide the GPT back to loginUser rather than looping.
+    expect(parsed.note).toMatch(/loginUser|openemis_login/i);
+  });
+
+  it("whoami with no session AND no env-default tells the GPT to ask the user for creds", async () => {
+    const client = makeClient();
+    const cfgNoEnv = { ...cfg, username: "" } as unknown as AppConfig;
+    const out = await driveWith("GET", "/api/auth/whoami", client, cfgNoEnv);
+    const parsed = JSON.parse(out.body) as {
+      mode: string; username: string | null; testing_mode: boolean; note: string;
+    };
+    expect(parsed.mode).toBe("gateway");
+    expect(parsed.username).toBeNull();
+    expect(parsed.testing_mode).toBe(true);
+    // Must make the two-credential distinction explicit so the GPT doesn't
+    // confuse the OpenEMIS password with its preconfigured API key.
+    expect(parsed.note).toMatch(/OpenEMIS username/i);
+    expect(parsed.note).toMatch(/NOT the server API key/i);
+    expect(parsed.note).toMatch(/loginUser/);
+  });
+
+  it("each resource operation declares session_token as a query parameter in OpenAPI", async () => {
+    const client = makeClient();
+    const out = await drive("GET", "/openapi.json", client);
+    const schema = JSON.parse(out.body) as {
+      paths: Record<string, Record<string, {
+        parameters?: Array<{ name?: string; in?: string }>;
+      }>>;
+    };
+    const ops: Array<[string, string]> = [
+      ["/api/resources/{resource}", "get"],
+      ["/api/resources/{resource}", "post"],
+      ["/api/resources/{resource}/{id}", "put"],
+      ["/api/resources/{resource}/{id}", "delete"],
+      ["/api/auth/logout", "post"],
+      ["/api/auth/whoami", "get"],
+    ];
+    for (const [p, m] of ops) {
+      const op = schema.paths[p]?.[m];
+      expect(op, `${m.toUpperCase()} ${p} missing from OpenAPI`).toBeDefined();
+      const params = op.parameters ?? [];
+      const found = params.find(x => x.name === "session_token" && x.in === "query");
+      expect(
+        found,
+        `${m.toUpperCase()} ${p} must declare session_token query param in testing mode`,
+      ).toBeDefined();
+    }
+  });
+
+  it("OpenAPI description makes the two-credential separation explicit", async () => {
+    const client = makeClient();
+    const out = await drive("GET", "/openapi.json", client);
+    const schema = JSON.parse(out.body) as { info: { description: string } };
+    const d = schema.info.description;
+    // Key phrases that teach the model the testing-mode workflow.
+    expect(d).toMatch(/MVP TESTING MODE/i);
+    expect(d).toMatch(/SERVER API KEY/i);
+    expect(d).toMatch(/OPENEMIS USER SESSION/i);
+    expect(d).toMatch(/session_token/);
+    expect(d).toMatch(/QUERY PARAMETER/);
+    expect(d).toMatch(/DO NOT CONFUSE THEM/i);
+  });
+});
+
 describe("REST / OpenAPI — auth endpoints documented for importers", () => {
   it("lists /api/auth/login, /logout, /whoami with the bearerAuth security scheme", async () => {
     const client = makeClient();
@@ -634,10 +792,12 @@ describe("REST / OpenAPI — auth endpoints documented for importers", () => {
     expect(schema.paths["/api/auth/logout"]).toBeDefined();
     expect(schema.paths["/api/auth/whoami"]).toBeDefined();
     // The description should teach the importing model the flow — so it knows
-    // to POST login before trying resource endpoints as a specific user.
-    expect(schema.info.description).toMatch(/auth\/login/i);
+    // to log the user in before trying resource endpoints as a specific user.
+    // Matches either the REST path (/auth/login) or the operation id
+    // (loginUser) — both are valid references to the same login flow.
+    expect(schema.info.description).toMatch(/auth\/login|loginUser/i);
     expect(schema.info.description).toMatch(/Bearer/);
-    expect(schema.info.description).toMatch(/NEVER.*echo.*token/i);
+    expect(schema.info.description).toMatch(/Never echo/i);
   });
 
   // Regression guard: ChatGPT Custom Actions' importer rejects operation
