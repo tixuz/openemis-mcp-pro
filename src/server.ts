@@ -409,13 +409,20 @@ async function startHttpTransport(): Promise<void> {
         const prefix = "Bearer ";
         const bearer = authHeader.startsWith(prefix) ? authHeader.slice(prefix.length) : "";
         const isGateway = bearer === config.authToken;
-        // Session tokens are 64 hex chars; cheap early reject for the
-        // common mismatched-gateway case avoids a Map lookup.
-        const session = !isGateway && bearer.length === 64 ? getHttpSession(bearer) : null;
+        // Session tokens are 64 hex chars. Only look them up in the store
+        // when REST per-user login is enabled — with the default gated
+        // posture, no session tokens can exist, so the lookup is pure cost.
+        const session =
+          config.restLoginEnabled && !isGateway && bearer.length === 64
+            ? getHttpSession(bearer)
+            : null;
         if (!isGateway && !session) {
+          const perUserHint = config.restLoginEnabled
+            ? "or a session token from POST /api/auth/login"
+            : "(per-user identity is only available via the MCP channel at /mcp + openemis_login)";
           res.writeHead(401, { "Content-Type": "application/json" });
           res.end(JSON.stringify({
-            error: "Unauthorized — send Authorization: Bearer <OPENEMIS_AUTH_TOKEN> or a session token from POST /api/auth/login",
+            error: `Unauthorized — send Authorization: Bearer <OPENEMIS_AUTH_TOKEN> ${perUserHint}`,
           }));
           return;
         }

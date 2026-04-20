@@ -98,6 +98,10 @@ function makeClient(overrides: Partial<OpenemisClient> = {}): OpenemisClient {
   } as unknown as OpenemisClient;
 }
 
+// Shared test config — REST per-user login ENABLED so the existing login /
+// logout / whoami suites still exercise the happy path. A parallel `gatedCfg`
+// below drives the default-off posture where login/logout return 410 and
+// /openapi.json omits them entirely.
 const cfg: AppConfig = {
   baseUrl: "https://demo.openemis.example",
   port: 3000,
@@ -105,6 +109,12 @@ const cfg: AppConfig = {
   authToken: "",
   groupedPath: "./data/grouped-manifest.json",
   username: "env-admin",
+  restLoginEnabled: true,
+} as unknown as AppConfig;
+
+const gatedCfg: AppConfig = {
+  ...cfg,
+  restLoginEnabled: false,
 } as unknown as AppConfig;
 
 async function drive(
@@ -116,6 +126,19 @@ async function drive(
   const req = makeReq(method, path, body);
   const { res, captured } = makeRes();
   await handleRestRequest(req, res, client, cfg);
+  return captured;
+}
+
+async function driveWith(
+  method: string,
+  path: string,
+  client: OpenemisClient,
+  appConfig: AppConfig,
+  body?: string,
+): Promise<CapturedResponse> {
+  const req = makeReq(method, path, body);
+  const { res, captured } = makeRes();
+  await handleRestRequest(req, res, client, appConfig);
   return captured;
 }
 
@@ -490,6 +513,109 @@ describe("GET /api/auth/whoami — report effective identity", () => {
     expect(out.body).not.toContain(token);
     expect(out.body).not.toContain("jwt");
     expect(out.body).not.toContain("password");
+  });
+});
+
+// ── REST per-user login gate (default OFF) ───────────────────────────────────
+//
+// On the default posture — OPENEMIS_REST_LOGIN_ENABLED=false — REST is
+// gateway-auth only. POST /api/auth/login and POST /api/auth/logout return
+// HTTP 410 Gone with guidance redirecting the caller to the MCP channel, and
+// /openapi.json omits both paths so ChatGPT Custom Actions importers never
+// see an endpoint they can't safely use. whoami is still available in both
+// modes — it's read-only and never returns a bearer handle.
+
+describe("REST per-user login gate — default OFF", () => {
+  beforeEach(() => _clearAllSessions());
+
+  it("POST /api/auth/login returns 410 Gone when restLoginEnabled=false", async () => {
+    const loginAs = vi.fn(() => Promise.resolve("jwt"));
+    const client = makeClient({
+      loginAs: loginAs as unknown as OpenemisClient["loginAs"],
+    });
+    const out = await driveWith(
+      "POST",
+      "/api/auth/login",
+      client,
+      gatedCfg,
+      JSON.stringify({ username: "teacher1", password: "correct-horse" }),
+    );
+    expect(out.status).toBe(410);
+    // Must NOT call upstream login — gate fires before touching OpenEMIS.
+    expect(loginAs).not.toHaveBeenCalled();
+    const parsed = JSON.parse(out.body) as { error: string; hint: string };
+    expect(parsed.error).toMatch(/REST per-user login is disabled/i);
+    expect(parsed.error).toMatch(/openemis_login/);
+    expect(parsed.error).toMatch(/\/mcp/);
+    // Must NOT return a bearer token under ANY circumstance in gated mode.
+    expect(out.body).not.toMatch(/[0-9a-f]{64}/);
+    expect(_sessionCount()).toBe(0);
+  });
+
+  it("POST /api/auth/logout returns 410 Gone when restLoginEnabled=false", async () => {
+    const client = makeClient();
+    const out = await driveWith("POST", "/api/auth/logout", client, gatedCfg);
+    expect(out.status).toBe(410);
+    const parsed = JSON.parse(out.body) as { error: string };
+    expect(parsed.error).toMatch(/session logout is disabled/i);
+    expect(parsed.error).toMatch(/openemis_logout/);
+  });
+
+  it("GET /api/auth/whoami still works in gated mode and points to MCP", async () => {
+    const client = makeClient();
+    const out = await driveWith("GET", "/api/auth/whoami", client, gatedCfg);
+    expect(out.status).toBe(200);
+    const parsed = JSON.parse(out.body) as {
+      mode: string; username: string | null; note: string;
+    };
+    expect(parsed.mode).toBe("gateway");
+    expect(parsed.username).toBe("env-admin");
+    // Must not instruct the caller to POST /api/auth/login — that endpoint
+    // returns 410 in this mode, so the hint would send them in a loop.
+    expect(parsed.note).not.toMatch(/POST \/api\/auth\/login/);
+    expect(parsed.note).toMatch(/MCP|openemis_login/);
+  });
+
+  it("GET /api/auth/whoami without env-default tells the caller to use MCP", async () => {
+    const client = makeClient();
+    const cfgNoEnv = { ...gatedCfg, username: "" } as unknown as AppConfig;
+    const out = await driveWith(
+      "GET",
+      "/api/auth/whoami",
+      client,
+      cfgNoEnv,
+    );
+    const parsed = JSON.parse(out.body) as {
+      mode: string; username: string | null; note: string;
+    };
+    expect(parsed.mode).toBe("gateway");
+    expect(parsed.username).toBeNull();
+    expect(parsed.note).not.toMatch(/POST \/api\/auth\/login/);
+    expect(parsed.note).toMatch(/openemis_login/);
+  });
+
+  it("GET /openapi.json omits /api/auth/login and /api/auth/logout when gated", async () => {
+    const client = makeClient();
+    const out = await driveWith("GET", "/openapi.json", client, gatedCfg);
+    const schema = JSON.parse(out.body) as {
+      info: { description: string };
+      paths: Record<string, unknown>;
+    };
+    // Gated paths MUST be absent — ChatGPT Custom Action importers should
+    // never see an endpoint that will greet them with 410.
+    expect(schema.paths["/api/auth/login"]).toBeUndefined();
+    expect(schema.paths["/api/auth/logout"]).toBeUndefined();
+    // whoami remains — it's always safe.
+    expect(schema.paths["/api/auth/whoami"]).toBeDefined();
+    // Description steers the importer toward MCP rather than a missing
+    // REST login endpoint.
+    expect(schema.info.description).toMatch(/MCP/);
+    expect(schema.info.description).toMatch(/openemis_login/);
+    expect(schema.info.description).toMatch(/Bearer/);
+    // Must still keep the untrusted-data / prompt-injection banner even in
+    // gated mode — that's orthogonal to the auth surface.
+    expect(schema.info.description).toMatch(/SECURITY/i);
+    expect(schema.info.description).toMatch(/prompt-injection/i);
   });
 });
 

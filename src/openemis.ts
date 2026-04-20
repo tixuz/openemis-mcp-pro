@@ -65,9 +65,21 @@ export class OpenemisClientImpl implements OpenemisClient {
    * (v4 and v5 both answer this endpoint; we use v5 for API-version consistency.)
    */
   async login(): Promise<string> {
-    if (!this.cfg.username || !this.cfg.password || !this.cfg.apiKey) {
+    if (!this.cfg.apiKey) {
+      // api_key is shared infrastructure — server is mis-deployed if this is missing.
       throw new Error(
-        "Missing credentials: OPENEMIS_USERNAME, OPENEMIS_PASSWORD, and OPENEMIS_API_KEY are required"
+        "Server misconfigured: OPENEMIS_API_KEY is not set. Contact the administrator."
+      );
+    }
+    if (!this.cfg.username || !this.cfg.password) {
+      // Fail closed: env-default identity is opt-in. Without it, every caller
+      // MUST authenticate explicitly — the correct posture for a public
+      // deployment. Prefix with [401] so the REST layer's error→status
+      // mapper returns a proper Unauthorized response rather than 500.
+      throw new Error(
+        "Not authenticated [401]: this server requires per-user login. " +
+        "Call POST /api/auth/login with {username, password} (REST) or the " +
+        "openemis_login tool (MCP) to authenticate as a specific OpenEMIS user."
       );
     }
 

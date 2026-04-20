@@ -55,6 +55,18 @@ export interface AppConfig {
    *  Empty string means no auth — only use that on localhost. */
   authToken: string;
 
+  /** When false (default), the REST endpoints POST /api/auth/login and
+   *  POST /api/auth/logout return 410 Gone and are omitted from /openapi.json.
+   *  REST is gateway-auth only — per-user identity is handled exclusively by the
+   *  MCP channel (openemis_login tool, pinned to the caller's MCP session ID),
+   *  which never puts a reusable bearer handle in any response body. Enable
+   *  (OPENEMIS_REST_LOGIN_ENABLED=true) only if you have a legitimate non-
+   *  ChatGPT REST client (e.g. a trusted backend script or curl pipeline) that
+   *  can safely propagate the minted session token per-request. ChatGPT Custom
+   *  Actions CANNOT — they only carry a single preconfigured Bearer — so leaving
+   *  this flag off eliminates the "visible-token-in-the-tool-trace" failure mode. */
+  restLoginEnabled: boolean;
+
   // ── Per-user login (stdio only) ─────────────────────────────────────────────
 
   /** SQLite database file for per-user JWTs + tool-call audit log.
@@ -120,6 +132,12 @@ export function loadConfig(): AppConfig {
 
   const authToken = process.env.OPENEMIS_AUTH_TOKEN ?? "";
 
+  // Default OFF — REST is gateway-only; per-user identity lives on the MCP
+  // channel. Accept "1", "true", "yes", "on" (case-insensitive) to enable.
+  const restLoginEnabled = /^(1|true|yes|on)$/i.test(
+    process.env.OPENEMIS_REST_LOGIN_ENABLED ?? "",
+  );
+
   // Per-user auth storage: default under the user's home so a pristine install
   // needs no extra env vars. These are only honoured in stdio mode.
   const authHome = resolve(homedir(), ".openemis-mcp");
@@ -140,6 +158,7 @@ export function loadConfig(): AppConfig {
     transport,
     port,
     authToken,
+    restLoginEnabled,
     authDbPath,
     authLogDir,
   };

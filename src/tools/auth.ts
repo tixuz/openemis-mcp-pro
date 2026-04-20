@@ -314,7 +314,7 @@ export function createOpenemisWhoamiHandler(
           type: "text" as const,
           text: envUser
             ? `Current session: ${envUser} (env default, no openemis_login yet)\nBase URL: ${config.baseUrl}`
-            : `No user configured (neither openemis_login nor OPENEMIS_USERNAME). API calls will fail until one is set.\nBase URL: ${config.baseUrl}`,
+            : `No user authenticated. Call openemis_login({username, password}) — API calls will fail until you do.\nBase URL: ${config.baseUrl}`,
         },
       ],
       structuredContent: {
