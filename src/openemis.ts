@@ -76,10 +76,13 @@ export class OpenemisClientImpl implements OpenemisClient {
       // MUST authenticate explicitly — the correct posture for a public
       // deployment. Prefix with [401] so the REST layer's error→status
       // mapper returns a proper Unauthorized response rather than 500.
+      // Message branches on restLoginEnabled so a gated-mode caller is never
+      // pointed at POST /api/auth/login (which returns 410 in that mode).
+      const perUserHint = this.cfg.restLoginEnabled
+        ? "Call openemis_login (MCP) or POST /api/auth/login (REST) to authenticate as a specific OpenEMIS user."
+        : "Connect via the MCP channel at /mcp and call the openemis_login tool — REST per-user login is disabled on this deployment. GET /api/auth/whoami confirms the current auth posture.";
       throw new Error(
-        "Not authenticated [401]: this server requires per-user login. " +
-        "Call POST /api/auth/login with {username, password} (REST) or the " +
-        "openemis_login tool (MCP) to authenticate as a specific OpenEMIS user."
+        `Not authenticated [401]: this server requires per-user login. ${perUserHint}`
       );
     }
 
