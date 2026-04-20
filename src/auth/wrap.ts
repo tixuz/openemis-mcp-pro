@@ -29,6 +29,12 @@ export { redact, scrubSecrets };
  * @param store    - SQLite audit store; if null, returns the handler unchanged
  * @param getCurrentUser - fn to read the process-local current user
  *
+ * The returned wrapper preserves MCP's `(args, extra)` calling convention.
+ * `extra` is the `RequestHandlerExtra` object the SDK passes in — it carries
+ * the MCP `sessionId` (HTTP stateful mode), the request signal, and the
+ * per-request `sendNotification` callback. Auth tools need `extra.sessionId`
+ * to pin a user to an MCP session over HTTP; zero-arg tools can ignore it.
+ *
  * Generics preserve BOTH the handler's `Args` and its full return shape so
  * MCP's `ToolCallback` inference keeps working at the registration site. We
  * don't constrain `R` because MCP handlers return structured content objects
@@ -36,13 +42,13 @@ export { redact, scrubSecrets };
  */
 export function wrapHandler<Args, R>(
   toolName: string,
-  handler: (args: Args) => Promise<R>,
+  handler: (args: Args, extra?: unknown) => Promise<R>,
   store: AuthStore | null,
   getCurrentUser: () => string | null
-): (args: Args) => Promise<R> {
+): (args: Args, extra?: unknown) => Promise<R> {
   if (!store) return handler;
 
-  return async (args: Args): Promise<R> => {
+  return async (args: Args, extra?: unknown): Promise<R> => {
     const t0 = Date.now();
     const ts = new Date().toISOString();
     const user = getCurrentUser() ?? "(env)";
@@ -50,7 +56,7 @@ export function wrapHandler<Args, R>(
     let error: string | null = null;
 
     try {
-      const result = await handler(args);
+      const result = await handler(args, extra);
       // MCP tools can succeed at the protocol layer but signal failure via isError
       if (
         result &&

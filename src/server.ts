@@ -1,18 +1,24 @@
 #!/usr/bin/env node
 
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
+import { randomUUID } from "node:crypto";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import { z } from "zod";
+import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 
 import { loadConfig, loadManifest } from "./config.js";
 import { OpenemisClientImpl } from "./openemis.js";
 import { handleRestRequest } from "./rest.js";
 import { record } from "./logger.js";
 import { AuthStore } from "./auth/store.js";
-import { getCurrentUser } from "./auth/session.js";
+import { getCurrentUser, runAs } from "./auth/session.js";
 import { wrapHandler } from "./auth/wrap.js";
+import { getHttpSession } from "./auth/http-sessions.js";
+import {
+  clearMcpSessionUser,
+  getMcpSessionUser,
+} from "./auth/mcp-sessions.js";
 import type { ManifestRow } from "./types.js";
 import {
   OPENEMIS_GET_TOOL,
@@ -58,68 +64,236 @@ import {
 
 const config = loadConfig();
 
-// Per-user auth store + session are stdio-only. In HTTP mode the server
-// stays stateless (multi-tenant semantics don't match a single-user SQLite).
-const authStore: AuthStore | null =
-  config.transport === "stdio" ? new AuthStore({ dbPath: config.authDbPath }) : null;
+// Per-user auth store is enabled in BOTH transports:
+//   - stdio: one process per client, module-global tracks the active user
+//     (session.ts setCurrentUser / clearCurrentUser).
+//   - http:  multi-client, each request is pinned to a user via AsyncLocalStorage
+//     (session.ts runAs). The same AuthStore SQLite caches JWTs in both modes.
+const authStore: AuthStore = new AuthStore({ dbPath: config.authDbPath });
 
 const client = new OpenemisClientImpl(config, {
   store: authStore,
   getCurrentUser,
 });
 
-const server = new McpServer({
-  name: "openemis-mcp",
-  version: "0.3.0",
-});
+// Manifest is shared across every McpServer we build — write tools need
+// it to validate the resource + HTTP-method combination. Loaded once at
+// startup; read-only afterwards.
+const manifest = loadManifest(config.manifestPath) as unknown as ManifestRow[];
 
 /**
- * Health check tool: verify OpenEMIS API reachability.
- * Wrapped below after the full manifest + tools are registered, so the
- * audit logger captures it too.
+ * Build a fresh McpServer with every tool registered.
+ *
+ * A new instance is created:
+ *   - once for stdio (one process per client), and
+ *   - once per HTTP session (MCP SDK's `Protocol.connect` errors if a
+ *     single Server instance is reused across transports).
+ *
+ * Tool handlers close over the shared `client`, `authStore`, and
+ * `manifest` at module scope, so the per-instance cost is just a few
+ * hundred bytes for registration metadata.
  */
-const healthHandler = async () => {
-  try {
-    // Real signal: can we log in? If yes, the server is up AND creds are correct.
-    await client.getToken();
-    return {
-      content: [
-        {
-          type: "text" as const,
-          text: `OpenEMIS is reachable at ${config.baseUrl} — login succeeded.`,
-        },
-      ],
-      structuredContent: {
-        ok: true,
-        baseUrl: config.baseUrl,
-        login: "ok",
-      },
-    };
-  } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Unknown error";
-    return {
-      content: [
-        {
-          type: "text" as const,
-          text: `OpenEMIS health check failed at ${config.baseUrl}: ${message}. NOTE: health does a real login. If the error is 'Missing credentials', set OPENEMIS_USERNAME / OPENEMIS_PASSWORD / OPENEMIS_API_KEY. If the error is network/cert, check NODE_TLS_REJECT_UNAUTHORIZED=0 for self-signed localhost certs.`,
-        },
-      ],
-      structuredContent: {
-        ok: false,
-        baseUrl: config.baseUrl,
-        error: message,
-      },
-    };
-  }
-};
+function buildMcpServer(): McpServer {
+  const server = new McpServer({
+    name: "openemis-mcp",
+    version: "0.3.0",
+  });
 
-server.tool(
-  "openemis_health",
-  "Check whether the configured OpenEMIS API endpoint is reachable and credentials are valid. Does a real login round-trip — if this passes, CRUD will work.",
-  {},
-  wrapHandler("openemis_health", healthHandler, authStore, getCurrentUser)
-);
+  /**
+   * Health check tool: verify OpenEMIS API reachability.
+   */
+  const healthHandler = async () => {
+    try {
+      // Real signal: can we log in? If yes, the server is up AND creds are correct.
+      await client.getToken();
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: `OpenEMIS is reachable at ${config.baseUrl} — login succeeded.`,
+          },
+        ],
+        structuredContent: {
+          ok: true,
+          baseUrl: config.baseUrl,
+          login: "ok",
+        },
+      };
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Unknown error";
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: `OpenEMIS health check failed at ${config.baseUrl}: ${message}. NOTE: health does a real login. If the error is 'Missing credentials', set OPENEMIS_USERNAME / OPENEMIS_PASSWORD / OPENEMIS_API_KEY. If the error is network/cert, check NODE_TLS_REJECT_UNAUTHORIZED=0 for self-signed localhost certs.`,
+          },
+        ],
+        structuredContent: {
+          ok: false,
+          baseUrl: config.baseUrl,
+          error: message,
+        },
+      };
+    }
+  };
+
+  server.tool(
+    "openemis_health",
+    "Check whether the configured OpenEMIS API endpoint is reachable and credentials are valid. Does a real login round-trip — if this passes, CRUD will work.",
+    {},
+    wrapHandler("openemis_health", healthHandler, authStore, getCurrentUser),
+  );
+
+  // MCP SDK expects a ZodRawShape (plain object of zod types), not a wrapped z.object().
+  // The ZodObject `.shape` getter gives us the raw shape.
+  //
+  // Every tool handler is wrapped with `wrapHandler` so calls land in the
+  // SQLite audit log with ts / username / tool / args / ok / duration_ms.
+  server.tool(
+    OPENEMIS_GET_TOOL.name,
+    OPENEMIS_GET_TOOL.description,
+    openemisGetInputSchema.shape,
+    wrapHandler(
+      OPENEMIS_GET_TOOL.name,
+      createOpenemisGetHandler(client),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  server.tool(
+    OPENEMIS_CREATE_TOOL.name,
+    OPENEMIS_CREATE_TOOL.description,
+    openemisCreateInputSchema.shape,
+    wrapHandler(
+      OPENEMIS_CREATE_TOOL.name,
+      createOpenemisCreateHandler(client, manifest, config.baseUrl),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  server.tool(
+    OPENEMIS_UPDATE_TOOL.name,
+    OPENEMIS_UPDATE_TOOL.description,
+    openemisUpdateInputSchema.shape,
+    wrapHandler(
+      OPENEMIS_UPDATE_TOOL.name,
+      createOpenemisUpdateHandler(client, manifest, config.baseUrl),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  server.tool(
+    OPENEMIS_DELETE_TOOL.name,
+    OPENEMIS_DELETE_TOOL.description,
+    openemisDeleteInputSchema.shape,
+    wrapHandler(
+      OPENEMIS_DELETE_TOOL.name,
+      createOpenemisDeleteHandler(client, manifest, config.baseUrl),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  server.tool(
+    openemisListDomainsSpec.name,
+    openemisListDomainsSpec.description,
+    openemisListDomainsInputSchema.shape,
+    wrapHandler(
+      openemisListDomainsSpec.name,
+      async () => ({ content: await openemisListDomainsHandler() }),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  server.tool(
+    openemisDiscoverSpec.name,
+    openemisDiscoverSpec.description,
+    openemisDiscoverInputSchema.shape,
+    wrapHandler(
+      openemisDiscoverSpec.name,
+      async (args: { topic: string }) => ({
+        content: await openemisDiscoverHandler(args),
+      }),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  server.tool(
+    openemisListPlaybooksSpec.name,
+    openemisListPlaybooksSpec.description,
+    openemisListPlaybooksInputSchema.shape,
+    wrapHandler(
+      openemisListPlaybooksSpec.name,
+      async () => ({ content: await openemisListPlaybooksHandler() }),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  server.tool(
+    openemisGetPlaybookSpec.name,
+    openemisGetPlaybookSpec.description,
+    openemisGetPlaybookInputSchema.shape,
+    wrapHandler(
+      openemisGetPlaybookSpec.name,
+      async (args: { id: string }) => ({
+        content: await openemisGetPlaybookHandler(args),
+      }),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  // ── Per-user MCP auth tools ─────────────────────────────────────────────
+  // Registered in BOTH transports. The handlers detect the mode from the
+  // SDK's `extra.sessionId`:
+  //   - stdio: absent → module-global setCurrentUser / clearCurrentUser
+  //   - HTTP:  present → mcp-sessions map keyed on MCP session ID, so two
+  //     clients on the same process can't see each other's identities.
+  server.tool(
+    OPENEMIS_LOGIN_TOOL.name,
+    OPENEMIS_LOGIN_TOOL.description,
+    openemisLoginInputSchema.shape,
+    wrapHandler(
+      OPENEMIS_LOGIN_TOOL.name,
+      createOpenemisLoginHandler(client),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  server.tool(
+    OPENEMIS_LOGOUT_TOOL.name,
+    OPENEMIS_LOGOUT_TOOL.description,
+    openemisLogoutInputSchema.shape,
+    wrapHandler(
+      OPENEMIS_LOGOUT_TOOL.name,
+      createOpenemisLogoutHandler(),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  server.tool(
+    OPENEMIS_WHOAMI_TOOL.name,
+    OPENEMIS_WHOAMI_TOOL.description,
+    openemisWhoamiInputSchema.shape,
+    wrapHandler(
+      OPENEMIS_WHOAMI_TOOL.name,
+      createOpenemisWhoamiHandler(config, authStore),
+      authStore,
+      getCurrentUser,
+    ),
+  );
+
+  return server;
+}
 
 /**
  * Initialize server: register all tools and connect stdio transport.
@@ -133,174 +307,26 @@ async function main(): Promise<void> {
       const flushed = authStore.rotateOlderThan(today, config.authLogDir);
       if (flushed > 0) {
         console.error(
-          `[openemis-mcp-pro] Rotated ${flushed} tool-call rows to ${config.authLogDir}`
+          `[openemis-mcp-pro] Rotated ${flushed} tool-call rows to ${config.authLogDir}`,
         );
       }
     } catch (err) {
       console.error(
         `[openemis-mcp-pro] Log rotation failed (continuing):`,
-        err instanceof Error ? err.message : err
+        err instanceof Error ? err.message : err,
       );
     }
-  }
-
-  // Load manifest for write-tool validation
-  const manifest = loadManifest(config.manifestPath) as unknown as ManifestRow[];
-  // MCP SDK expects a ZodRawShape (plain object of zod types), not a wrapped z.object().
-  // The ZodObject `.shape` getter gives us the raw shape.
-  //
-  // Every tool handler is wrapped with `wrapHandler` so calls land in the
-  // SQLite audit log with ts / username / tool / args / ok / duration_ms.
-  // In HTTP mode `authStore` is null and the wrapper is a pass-through.
-  server.tool(
-    OPENEMIS_GET_TOOL.name,
-    OPENEMIS_GET_TOOL.description,
-    openemisGetInputSchema.shape,
-    wrapHandler(
-      OPENEMIS_GET_TOOL.name,
-      createOpenemisGetHandler(client),
-      authStore,
-      getCurrentUser
-    )
-  );
-
-  server.tool(
-    OPENEMIS_CREATE_TOOL.name,
-    OPENEMIS_CREATE_TOOL.description,
-    openemisCreateInputSchema.shape,
-    wrapHandler(
-      OPENEMIS_CREATE_TOOL.name,
-      createOpenemisCreateHandler(client, manifest, config.baseUrl),
-      authStore,
-      getCurrentUser
-    )
-  );
-
-  server.tool(
-    OPENEMIS_UPDATE_TOOL.name,
-    OPENEMIS_UPDATE_TOOL.description,
-    openemisUpdateInputSchema.shape,
-    wrapHandler(
-      OPENEMIS_UPDATE_TOOL.name,
-      createOpenemisUpdateHandler(client, manifest, config.baseUrl),
-      authStore,
-      getCurrentUser
-    )
-  );
-
-  server.tool(
-    OPENEMIS_DELETE_TOOL.name,
-    OPENEMIS_DELETE_TOOL.description,
-    openemisDeleteInputSchema.shape,
-    wrapHandler(
-      OPENEMIS_DELETE_TOOL.name,
-      createOpenemisDeleteHandler(client, manifest, config.baseUrl),
-      authStore,
-      getCurrentUser
-    )
-  );
-
-  server.tool(
-    openemisListDomainsSpec.name,
-    openemisListDomainsSpec.description,
-    openemisListDomainsInputSchema.shape,
-    wrapHandler(
-      openemisListDomainsSpec.name,
-      async () => ({ content: await openemisListDomainsHandler() }),
-      authStore,
-      getCurrentUser
-    )
-  );
-
-  server.tool(
-    openemisDiscoverSpec.name,
-    openemisDiscoverSpec.description,
-    openemisDiscoverInputSchema.shape,
-    wrapHandler(
-      openemisDiscoverSpec.name,
-      async (args: { topic: string }) => ({
-        content: await openemisDiscoverHandler(args),
-      }),
-      authStore,
-      getCurrentUser
-    )
-  );
-
-  server.tool(
-    openemisListPlaybooksSpec.name,
-    openemisListPlaybooksSpec.description,
-    openemisListPlaybooksInputSchema.shape,
-    wrapHandler(
-      openemisListPlaybooksSpec.name,
-      async () => ({ content: await openemisListPlaybooksHandler() }),
-      authStore,
-      getCurrentUser
-    )
-  );
-
-  server.tool(
-    openemisGetPlaybookSpec.name,
-    openemisGetPlaybookSpec.description,
-    openemisGetPlaybookInputSchema.shape,
-    wrapHandler(
-      openemisGetPlaybookSpec.name,
-      async (args: { id: string }) => ({
-        content: await openemisGetPlaybookHandler(args),
-      }),
-      authStore,
-      getCurrentUser
-    )
-  );
-
-  // ── Per-user auth tools (stdio only) ─────────────────────────────────────
-  // In HTTP mode the server is stateless, so these would be meaningless —
-  // skip registration entirely rather than return confusing errors.
-  if (authStore) {
-    server.tool(
-      OPENEMIS_LOGIN_TOOL.name,
-      OPENEMIS_LOGIN_TOOL.description,
-      openemisLoginInputSchema.shape,
-      wrapHandler(
-        OPENEMIS_LOGIN_TOOL.name,
-        createOpenemisLoginHandler(client),
-        authStore,
-        getCurrentUser
-      )
-    );
-
-    server.tool(
-      OPENEMIS_LOGOUT_TOOL.name,
-      OPENEMIS_LOGOUT_TOOL.description,
-      openemisLogoutInputSchema.shape,
-      wrapHandler(
-        OPENEMIS_LOGOUT_TOOL.name,
-        createOpenemisLogoutHandler(),
-        authStore,
-        getCurrentUser
-      )
-    );
-
-    server.tool(
-      OPENEMIS_WHOAMI_TOOL.name,
-      OPENEMIS_WHOAMI_TOOL.description,
-      openemisWhoamiInputSchema.shape,
-      wrapHandler(
-        OPENEMIS_WHOAMI_TOOL.name,
-        createOpenemisWhoamiHandler(config, authStore),
-        authStore,
-        getCurrentUser
-      )
-    );
   }
 
   // ── Transport selection ──────────────────────────────────────────────────
   if (config.transport === "http") {
     await startHttpTransport();
   } else {
+    const stdioServer = buildMcpServer();
     const transport = new StdioServerTransport();
-    await server.connect(transport);
+    await stdioServer.connect(transport);
     console.error(
-      `[openemis-mcp-pro] stdio transport ready. Auth DB: ${authStore?.path ?? "(disabled)"}`
+      `[openemis-mcp-pro] stdio transport ready. Auth DB: ${authStore?.path ?? "(disabled)"}`,
     );
   }
 }
@@ -310,6 +336,11 @@ async function main(): Promise<void> {
 // Set OPENEMIS_TRANSPORT=http to run as a persistent HTTP server instead of a
 // local stdio subprocess. Any MCP client that supports remote servers can then
 // connect by URL:  http://<host>:<port>/mcp
+//
+// Per-session stateful mode: each MCP client gets its own transport +
+// McpServer pair, indexed by the `mcp-session-id` header. The SDK handles
+// the session-ID plumbing; we just wire up a map so subsequent requests
+// find the right transport.
 //
 // Security: set OPENEMIS_AUTH_TOKEN to require  Authorization: Bearer <token>
 // on every request. Without it the endpoint is open — fine for localhost tests,
@@ -325,12 +356,10 @@ async function readBody(req: IncomingMessage): Promise<string> {
 }
 
 async function startHttpTransport(): Promise<void> {
-  // Stateless mode — no in-memory session state; safe for multi-client Oracle hosting.
-  const transport = new StreamableHTTPServerTransport({
-    sessionIdGenerator: undefined,
-  });
-
-  await server.connect(transport);
+  // Per-session transport map. Key = MCP session ID the SDK minted on
+  // `initialize`. Cleaned up by `transport.onclose` (DELETE request,
+  // client disconnect, or idle timeout from the SDK).
+  const transports = new Map<string, StreamableHTTPServerTransport>();
 
   const httpServer = createServer(async (req: IncomingMessage, res: ServerResponse) => {
     // ── Request timing + logging ──────────────────────────────────────────────
@@ -357,18 +386,40 @@ async function startHttpTransport(): Promise<void> {
 
     try {
       // ── Bearer token auth ─────────────────────────────────────────────────
-      // Applied to every route EXCEPT the OpenAPI schema (so ChatGPT can import it
-      // without credentials — the schema itself contains no sensitive data).
-      // /dashboard is also public but does its own key check via ?key= query param.
+      // Two kinds of Bearer token are accepted:
+      //
+      //   (a) the *gateway* token (OPENEMIS_AUTH_TOKEN) — proves the caller
+      //       can reach this deployment. Requests using it act as the
+      //       .env-default admin user (classic behaviour).
+      //
+      //   (b) a *session* token minted by POST /api/auth/login — proves which
+      //       OpenEMIS user the caller logged in as. Requests using it act
+      //       as that user, via AsyncLocalStorage `runAs`.
+      //
+      // The login endpoint itself MUST be reachable via (a), so this check
+      // runs BEFORE the /api/auth/login dispatch but accepts either flavour.
+      // Every route except the OpenAPI schema + health + privacy + dashboard
+      // requires auth.
       const isPublicRoute = req.url === "/openapi.json" || req.url === "/" || req.url === "/health"
         || req.url === "/privacy" || (req.url?.startsWith("/dashboard") ?? false);
+
+      let httpSessionUser: string | null = null;
       if (config.authToken && !isPublicRoute) {
         const authHeader = (req.headers["authorization"] ?? "") as string;
-        if (authHeader !== `Bearer ${config.authToken}`) {
+        const prefix = "Bearer ";
+        const bearer = authHeader.startsWith(prefix) ? authHeader.slice(prefix.length) : "";
+        const isGateway = bearer === config.authToken;
+        // Session tokens are 64 hex chars; cheap early reject for the
+        // common mismatched-gateway case avoids a Map lookup.
+        const session = !isGateway && bearer.length === 64 ? getHttpSession(bearer) : null;
+        if (!isGateway && !session) {
           res.writeHead(401, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({ error: "Unauthorized — set Authorization: Bearer <OPENEMIS_AUTH_TOKEN>" }));
+          res.end(JSON.stringify({
+            error: "Unauthorized — send Authorization: Bearer <OPENEMIS_AUTH_TOKEN> or a session token from POST /api/auth/login",
+          }));
           return;
         }
+        if (session) httpSessionUser = session.username;
       }
 
       // ── Root health probe (unauthenticated — for Oracle / uptime monitors) ─
@@ -378,23 +429,35 @@ async function startHttpTransport(): Promise<void> {
         return;
       }
 
-      // ── REST API + OpenAPI schema ─────────────────────────────────────────
-      const handled = await handleRestRequest(req, res, client, config);
-      if (handled) return;
+      // ── Request dispatch (wrapped in per-user context when a user is resolved) ─
+      const handle = async () => {
+        // REST API + OpenAPI schema
+        const handled = await handleRestRequest(req, res, client, config);
+        if (handled) return;
 
-      // ── MCP endpoint ─────────────────────────────────────────────────────
-      if (req.url === "/mcp") {
-        let parsedBody: unknown;
-        if (req.method === "POST") {
-          const raw = await readBody(req);
-          try { parsedBody = raw ? JSON.parse(raw) : undefined; } catch { parsedBody = undefined; }
+        // MCP endpoint — stateful per-session transport
+        if (req.url === "/mcp") {
+          await handleMcpRequest(req, res, transports);
+          return;
         }
-        await transport.handleRequest(req, res, parsedBody);
-        return;
-      }
 
-      res.writeHead(404, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Not found. MCP endpoint: /mcp  REST API: /api/*  Schema: /openapi.json" }));
+        res.writeHead(404, { "Content-Type": "application/json" });
+        res.end(JSON.stringify({ error: "Not found. MCP endpoint: /mcp  REST API: /api/*  Schema: /openapi.json" }));
+      };
+
+      // Resolve the effective user for this request — REST session token
+      // wins (explicit per-request identity), then MCP session mapping
+      // (per-client identity pinned by a prior openemis_login tool call),
+      // then env-default (no wrapping).
+      const mcpSessionId = (req.headers["mcp-session-id"] as string | undefined) ?? null;
+      const mcpUser = mcpSessionId ? getMcpSessionUser(mcpSessionId) : null;
+      const effectiveUser = httpSessionUser ?? mcpUser;
+
+      if (effectiveUser) {
+        await runAs(effectiveUser, handle);
+      } else {
+        await handle();
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error("[openemis-mcp-pro] HTTP handler error:", msg);
@@ -409,7 +472,7 @@ async function startHttpTransport(): Promise<void> {
 
   const base = `http://0.0.0.0:${config.port}`;
   console.error(`[openemis-mcp-pro] HTTP server listening on port ${config.port}`);
-  console.error(`[openemis-mcp-pro] MCP endpoint  : ${base}/mcp        ← Claude Code / Cursor / Cline`);
+  console.error(`[openemis-mcp-pro] MCP endpoint  : ${base}/mcp        ← Claude Code / Cursor / Cline (stateful sessions)`);
   console.error(`[openemis-mcp-pro] REST API       : ${base}/api/*      ← ChatGPT / any HTTP client`);
   console.error(`[openemis-mcp-pro] OpenAPI schema : ${base}/openapi.json`);
   console.error(`[openemis-mcp-pro] Health probe   : ${base}/health`);
@@ -418,6 +481,111 @@ async function startHttpTransport(): Promise<void> {
   } else {
     console.error(`[openemis-mcp-pro] ⚠️  No OPENEMIS_AUTH_TOKEN set — all routes are open`);
   }
+}
+
+/**
+ * Route a single /mcp request to the right StreamableHTTPServerTransport.
+ *
+ *   POST /mcp
+ *     - With `mcp-session-id` header + existing transport → forward
+ *       the JSON-RPC message to that transport.
+ *     - Without `mcp-session-id` + body is an `initialize` request →
+ *       create a new transport + McpServer, register it in the map
+ *       once the SDK mints its session ID.
+ *     - Otherwise → 400 (invalid MCP framing).
+ *
+ *   GET /mcp  (SSE stream for server-initiated messages)
+ *   DELETE /mcp  (session termination)
+ *     - Both require a valid `mcp-session-id` header.
+ */
+async function handleMcpRequest(
+  req: IncomingMessage,
+  res: ServerResponse,
+  transports: Map<string, StreamableHTTPServerTransport>,
+): Promise<void> {
+  const sessionId = (req.headers["mcp-session-id"] as string | undefined) ?? null;
+
+  if (req.method === "POST") {
+    // Parse body once — both the initialize detector and transport.handleRequest
+    // need it, and the raw stream can only be consumed once.
+    const raw = await readBody(req);
+    let parsedBody: unknown;
+    try {
+      parsedBody = raw ? JSON.parse(raw) : undefined;
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Invalid JSON body" }));
+      return;
+    }
+
+    // (1) Existing session — look up transport and forward.
+    if (sessionId && transports.has(sessionId)) {
+      const transport = transports.get(sessionId)!;
+      await transport.handleRequest(req, res, parsedBody);
+      return;
+    }
+
+    // (2) New session — body must be an `initialize` request. Create a
+    // fresh McpServer + transport pair and wire the map around it.
+    if (!sessionId && isInitializeRequest(parsedBody)) {
+      const newServer = buildMcpServer();
+      const transport = new StreamableHTTPServerTransport({
+        sessionIdGenerator: () => randomUUID(),
+        onsessioninitialized: (id: string) => {
+          transports.set(id, transport);
+        },
+      });
+
+      // Clean up when the session ends (DELETE, client disconnect, or
+      // SDK idle timeout). Drop both the transport map entry AND any
+      // `mcp-session-id → username` mapping so stale sessions don't
+      // leak identities.
+      transport.onclose = () => {
+        const sid = transport.sessionId;
+        if (sid) {
+          transports.delete(sid);
+          clearMcpSessionUser(sid);
+        }
+      };
+
+      await newServer.connect(transport);
+      // The transport will emit `onsessioninitialized` synchronously
+      // during handleRequest for an initialize call, so the map is
+      // populated before we return.
+      await transport.handleRequest(req, res, parsedBody);
+      return;
+    }
+
+    // (3) Anything else is bad framing — either missing session ID on a
+    // non-initialize call, or an unknown session ID. Mirror the SDK
+    // example error shape so clients get a clear hint.
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+      jsonrpc: "2.0",
+      error: {
+        code: -32000,
+        message: sessionId
+          ? "Bad Request: unknown or expired MCP session ID"
+          : "Bad Request: No valid session ID provided (the first request must be `initialize`)",
+      },
+      id: null,
+    }));
+    return;
+  }
+
+  if (req.method === "GET" || req.method === "DELETE") {
+    if (!sessionId || !transports.has(sessionId)) {
+      res.writeHead(400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Bad Request: missing or unknown MCP session ID" }));
+      return;
+    }
+    const transport = transports.get(sessionId)!;
+    await transport.handleRequest(req, res);
+    return;
+  }
+
+  res.writeHead(405, { "Content-Type": "application/json", "Allow": "GET, POST, DELETE" });
+  res.end(JSON.stringify({ error: "Method Not Allowed on /mcp" }));
 }
 
 main().catch((err) => {

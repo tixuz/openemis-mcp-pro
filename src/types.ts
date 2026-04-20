@@ -33,6 +33,22 @@ export interface OpenemisClient {
    * @returns Promise resolving to the response data object
    */
   delete(path: string): Promise<unknown>;
+
+  /**
+   * Per-user login: POST the supplied username + password to OpenEMIS,
+   * persist the returned JWT in the local auth store, and return the JWT.
+   *
+   * Used by:
+   *   - the stdio `openemis_login` MCP tool (src/tools/auth.ts), and
+   *   - the HTTP `POST /api/auth/login` REST endpoint (src/rest.ts).
+   *
+   * The password is never cached — only the returned JWT is. A 401 on a
+   * subsequent API call clears the JWT and forces re-login.
+   *
+   * Implementations without a configured AuthStore should throw — per-user
+   * login requires a store to hold the resulting JWT.
+   */
+  loginAs(username: string, password: string): Promise<string>;
 }
 
 /**
