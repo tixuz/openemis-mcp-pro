@@ -833,13 +833,17 @@
         "admin"
       ],
       "domain": "Student",
-      "description": "View a class profile: grade level assignment, enrolled student roster, active subjects, and monthly attendance summary. The attendance resource uses a composite primary key — there is no integer id field; always use list-style filters to fetch it.",
+      "description": "View a class profile: grade level assignment, enrolled student roster, active subjects, monthly attendance summary, and the full teacher roster (homeroom + secondary + subject teachers). The attendance resource uses a composite primary key — there is no integer id field; always use list-style filters to fetch it. The teacher roster is spread across three tables and requires a fan-out + dedupe.",
       "resources": [
+        "institution-classes",
         "institution-class-grades",
         "institution-class-students",
         "security-users",
         "institution-class-subjects",
-        "institution-class-attendance-records"
+        "institution-subjects",
+        "institution-class-attendance-records",
+        "institution-classes-secondary-staff",
+        "institution-subject-staff"
       ],
       "steps": [
         {
@@ -881,13 +885,25 @@
           "resource": "institution-class-attendance-records",
           "purpose": "Retrieve the monthly attendance summary for the class showing daily present-student counts.",
           "guidance": "CRITICAL: institution-class-attendance-records has NO integer id field. Its primary key is composite: (institution_class_id, academic_period_id, year, month). NEVER pass an id= param — it will return empty or error. Use list filters only: ?institution_class_id={id}&academic_period_id={period}&year={year}&month={month}. Alternatively use the composite-key path: GET /institution-class-attendance-records/institution_class_id/{X}/academic_period_id/{Y}/year/{Z}/month/{M}. day_1 through day_31 fields hold the daily present count; null means attendance was not yet submitted for that day."
+        },
+        {
+          "step": 5,
+          "title": "Fetch Teacher Roster",
+          "action": "openemis_get",
+          "resource": "institution-classes · institution-classes-secondary-staff · institution-subject-staff",
+          "purpose": "Build the full teacher list for the class by fanning out across three tables and deduping by staff_id.",
+          "guidance": "No single endpoint returns the full teacher list. Fan out across three tables and union by staff_id. (a) HOMEROOM TEACHER: openemis_get { resource: 'institution-classes', id: {class_id} } → row.staff_id (single security_users FK; may be null). (b) SECONDARY / CO-TEACHERS: openemis_get { resource: 'institution-classes-secondary-staff', params: { institution_class_id: {class_id} } } → rows with secondary_staff_id (FK to security_users). Composite PK (institution_class_id, secondary_staff_id) — no integer id, use list filters only. (c) SUBJECT TEACHERS: one row per (subject, staff) pair, NOT filterable by institution_class_id directly. Iterate over the institution_subject_id list from step 3: for each subjId: openemis_get { resource: 'institution-subject-staff', params: { institution_subject_id: subjId } } → rows with staff_id. DEDUPE: union all staff_id values into a Set (a person can appear in multiple lists — e.g. homeroom teacher often also teaches a subject). NAME RESOLUTION: one bulk call — openemis_get { resource: 'security-users', params: { ids: '13,42,99' } } — the server fans out internally and returns a merged array. Do NOT loop with individual calls."
         }
       ],
       "notes": [
         "NAMES: institution-class-students does NOT include name fields. Always resolve names via security-users (GET security-users?id={student_id}). first_name and last_name are on the security-users record.",
         "institution-class-attendance-records composite PK: (institution_class_id, academic_period_id, year, month). There is NO integer id column. Any call using a bare numeric id= filter will fail silently or return wrong data.",
         "This resource holds monthly aggregates (present-count per day). It is NOT the per-student absence log — for individual absences use student-attendance-marked-records.",
-        "day_X fields return null for days attendance was not submitted — treat as 'Pending', not as 0 absent."
+        "day_X fields return null for days attendance was not submitted — treat as 'Pending', not as 0 absent.",
+        "TEACHER ROSTER IS FRAGMENTED: homeroom lives on institution-classes.staff_id, co-teachers on institution-classes-secondary-staff, subject teachers on institution-subject-staff. There is no single endpoint that unions them — fan out and dedupe.",
+        "institution-classes-secondary-staff has a composite PK (institution_class_id, secondary_staff_id). No integer id — use list filters.",
+        "institution-subject-staff is NOT class-filterable. Filter by institution_subject_id only; iterate over the class's subject IDs from step 3.",
+        "Role-based visibility is a client concern today. Principals, VPs, and admins need to see all classes in their institution, but the API provides no 'classes I'm allowed to view' endpoint yet. The reverse query ('what classes can this staff_id see?') requires the same 3-table fan-out plus a role check — a dedicated core endpoint is on the OpenEMIS roadmap."
       ]
     },
     {
@@ -1377,6 +1393,101 @@
           "action": "openemis_create",
           "resource": "meal-nutritional-records"
         }
+      ]
+    },
+    {
+      "id": "resolve-my-identity",
+      "title": "Resolve My Identity (Who Am I In OpenEMIS?)",
+      "audience": [
+        "teacher",
+        "admin",
+        "staff"
+      ],
+      "domain": "Auth",
+      "description": "After openemis_login, figure out who the authenticated user is in OpenEMIS terms: their security_users id, full name, assigned institutions, position titles, and taught classes. Run this right after login (or at the start of any session where the user refers to 'me', 'my', 'mine') and cache the resolved user id for the remainder of the conversation. Bridge playbook between per-user auth and any 'show me my X' request. Requires openemis_login to have been called; otherwise openemis_whoami returns mode='env-default' and this playbook should warn the user that the implicit identity is the server's .env account.",
+      "resources": [
+        "security-users",
+        "institution-staff",
+        "institution-positions",
+        "staff-position-titles",
+        "institutions",
+        "institution-classes",
+        "institution-classes-secondary-staff",
+        "institution-subject-staff",
+        "institution-subjects",
+        "academic-periods"
+      ],
+      "steps": [
+        {
+          "action": "openemis_whoami",
+          "purpose": "Read the current session's username. Returns mode='per-user' if openemis_login was called, mode='env-default' if the server is running under its .env credentials (admin-like). Refuse to proceed with personal questions under env-default."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "security-users",
+          "params": {
+            "_conditions": "username:<username>",
+            "_fields": "id,username,first_name,last_name,email,gender_id"
+          },
+          "purpose": "Resolve username -> user id + display name. Exactly one row. Cache the id for the rest of the session."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-staff",
+          "params": {
+            "_conditions": "staff_id:<user_id>;staff_status_id:1",
+            "_fields": "id,institution_id,institution_position_id,FTE,start_date,end_date"
+          },
+          "purpose": "Institutions this user is an active staff member at. staff_status_id=1 filters to Assigned/Active. Teachers typically have 1-2 rows; admins without teaching load may have 0."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-positions",
+          "params": {
+            "ids": "<csv of distinct institution_position_id from step 3>",
+            "_fields": "id,staff_position_title_id"
+          },
+          "purpose": "Resolve each assignment's position title id. Batch with ?ids= — one call per distinct position id."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-classes",
+          "params": {
+            "_conditions": "staff_id:<user_id>;academic_period_id:<current>",
+            "_fields": "id,name,institution_id,education_grade_id"
+          },
+          "purpose": "Homeroom classes. staff_id on institution-classes is the homeroom-teacher FK. Use the current academic_period_id from GET academic-periods?current=1."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-classes-secondary-staff",
+          "params": {
+            "_conditions": "security_user_id:<user_id>",
+            "_fields": "id,institution_class_id"
+          },
+          "purpose": "Secondary / co-teaching assignments. Returns institution_class_id only — fan out to institution-classes with ?ids= for class names."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-subject-staff",
+          "params": {
+            "_conditions": "security_user_id:<user_id>",
+            "_fields": "id,institution_class_id,institution_subject_id"
+          },
+          "purpose": "Subject-teaching assignments. One row per (class, subject, staff). Batch-resolve class names + subject names with two ?ids= calls."
+        },
+        {
+          "action": "compose",
+          "purpose": "Union steps 5-7 by institution_class_id and dedupe. Compose a terse one-paragraph summary: 'You are {first} {last} — {position} at {institution}, teaching {N} classes this period.' Cache this as the implicit identity context for follow-up questions like 'my students', 'my attendance', 'my classes'."
+        }
+      ],
+      "notes": [
+        "After openemis_login: call openemis_whoami first; if it returns mode='env-default' the user skipped login and the identity is the server's shared .env account — do NOT treat that as the real user.",
+        "Username is case-sensitive on most OpenEMIS installs (MySQL default collation). Use the exact string from openemis_whoami.",
+        "Multi-institution users (principals on a cluster, dual-assignment teachers) have >1 rows in institution-staff. Ask which institution they mean before running follow-up queries.",
+        "Non-teaching admins (principals, HR, registrars) will typically have zero rows in steps 5-7. The summary should read 'You are the Principal of X' with no class list — not an error.",
+        "Resolve the current academic_period_id ONCE per session via GET academic-periods?current=1. Never hardcode a year number.",
+        "401 on any of these calls means the stored JWT expired — the MCP surfaces a 're-run openemis_login' error; ask the user to authenticate again."
       ]
     }
   ]

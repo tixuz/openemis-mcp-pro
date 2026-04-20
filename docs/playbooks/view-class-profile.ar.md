@@ -6,7 +6,7 @@
 
 ## الوصف
 
-عرض الملف الشخصي للصف: تعيين مستوى الصف، قائمة الطلاب المسجلين، المواد النشطة، وملخص الحضور الشهري. يستخدم مورد الحضور مفتاحًا أوليًا مركبًا — لا يوجد حقل `id` رقمي؛ استخدم دائمًا عوامل التصفية من نوع القائمة لجلب البيانات.
+عرض الملف الشخصي للصف: تعيين مستوى الصف، قائمة الطلاب المسجلين، المواد النشطة، ملخص الحضور الشهري، وقائمة المعلمين الكاملة (معلم الفصل + المعلمون الثانويون + معلمو المواد). يستخدم مورد الحضور مفتاحًا أوليًا مركبًا — لا يوجد حقل عدد صحيح `id`؛ استخدم دائمًا عوامل التصفية من نوع القائمة لجلب البيانات. موزعة قائمة المعلمين عبر ثلاث جداول وتتطلب توسيعًا وتكرارًا وإزالة التكرارات.
 
 ---
 
@@ -14,10 +14,14 @@
 
 | المورد | الغرض |
 |---|---|
+| `institution-classes` | صف الصف نفسه — يحمل `staff_id` (المفتاح الخارجي لمعلم الفصل) |
 | `institution-class-grades` | تحديد مستوى الصف التعليمي الذي ينتمي إليه هذا الصف |
 | `institution-class-students` | جميع الطلاب المسجلين حاليًا في الصف |
-| `institution-class-subjects` | المواد التي يتم تدريسها بشكل نشط في هذا الصف |
+| `institution-class-subjects` | المواد التي تُدرس بنشاط في هذا الصف |
+| `institution-subjects` | تحديد أسماء المواد من `institution_subject_id` |
 | `institution-class-attendance-records` | ملخص الحضور الشهري (أعداد الطلاب الحاضرين يوميًا) |
+| `institution-classes-secondary-staff` | المعلمون المشاركون / الموظفون الثانويون المعينون للصف |
+| `institution-subject-staff` | معلمو المواد — صف واحد لكل زوج (مادة، معلم) |
 
 ---
 
@@ -29,24 +33,25 @@
 | 2 | `openemis_get` | `institution-class-students` | سرد الطلاب المسجلين |
 | 3 | `openemis_get` | `institution-class-subjects` | سرد المواد النشطة |
 | 4 | `openemis_get` | `institution-class-attendance-records` | ملخص الحضور الشهري |
+| 5 | `openemis_get` × 3 | `institution-classes` · `institution-classes-secondary-staff` · `institution-subject-staff` | قائمة المعلمين (توسيع، اتحاد، إزالة التكرارات بواسطة `staff_id`) |
 
 ---
 
 ## ملاحظات الخطوات
 
 **الخطوة 1 — تعيين صف الصف**  
-قم بالتصفية حسب `institution_class_id`. يُرجع `education_grade_id` — وهو جدول تعيين (صف ↔ مستوى). عادةً ما يكون هناك صف واحد لكل صف، ولكن التكوينات متعددة المستويات صالحة.
+تصفية بواسطة `institution_class_id`. تُرجع `education_grade_id` — جدول تعيين (صف ↔ مستوى). عادةً صف واحد لكل صف، لكن التكوينات متعددة المستويات صالحة.
 
 **الخطوة 2 — الطلاب المسجلون**  
-قم بالتصفية حسب `institution_class_id` و `academic_period_id`. اضبط `student_status_id=1` لإرجاع الطلاب المسجلين حاليًا فقط. هذا جدول ارتباط — حقل `id` هنا هو معرف سجل التسجيل، وليس معرف الطالب. `student_id` هو المفتاح الخارجي لـ `security_users`.
+تصفية بواسطة `institution_class_id` و `academic_period_id`. اضبط `student_status_id=1` لإرجاع الطلاب المسجلين حاليًا فقط. هذا جدول اتصال — حقل `id` هنا هو معرف سجل التسجيل، وليس معرف الطالب. `student_id` هو المفتاح الخارجي لـ `security_users`.
 
 **الخطوة 3 — المواد النشطة**  
-قم بالتصفية حسب `institution_class_id` و `status=1` لإرجاع المواد النشطة فقط. أسماء المواد غير مدرجة — فقط المفتاح الخارجي `institution_subject_id`. قم بتحديد الأسماء بشكل منفصل عبر `institution-subjects` إذا لزم الأمر.
+تصفية بواسطة `institution_class_id` و `status=1` لإرجاع المواد النشطة فقط. أسماء المواد غير مدرجة — فقط المفتاح الخارجي `institution_subject_id`. حدد الأسماء بشكل منفصل عبر `institution-subjects` إذا لزم الأمر.
 
 **الخطوة 4 — ملخص الحضور الشهري**  
-> ⚠️ **هام:** `institution-class-attendance-records` **ليس له حقل `id` رقمي**. مفتاحه الأولي مركب: `(institution_class_id, academic_period_id, year, month)`. **لا تمرر أبدًا** معامل `id=` — سيعيد فارغًا أو خطأ.
+> ⚠️ **حرج:** `institution-class-attendance-records` **ليس له حقل عدد صحيح `id`**. مفتاحه الأولي مركب: `(institution_class_id, academic_period_id, year, month)`. **لا تمرر أبدًا** معامل `id=` — سيعيد فارغًا أو خطأ.
 
-استخدم عوامل التصفية القائمة فقط:
+استخدم عوامل تصفية القائمة فقط:
 ```
 ?institution_class_id={id}&academic_period_id={period}&year={year}&month={month}
 ```
@@ -54,15 +59,49 @@
 ```
 GET /institution-class-attendance-records/institution_class_id/{X}/academic_period_id/{Y}/year/{Z}/month/{M}
 ```
-تحتفظ الحقول من `day_1` إلى `day_31` بعدد الحاضرين يوميًا؛ `null` يعني أنه لم يتم تقديم الحضور لذلك اليوم بعد.
+تحمل الحقول `day_1` حتى `day_31` عدد الحاضرين يوميًا؛ `null` يعني أن الحضور لم يُسجل بعد لذلك اليوم.
+
+**الخطوة 5 — قائمة المعلمين**  
+لا توجد نقطة نهاية واحدة تُرجع قائمة المعلمين الكاملة للصف. قم بالتوسيع عبر ثلاث جداول واتحاد بواسطة `staff_id`:
+
+**(أ) معلم الفصل** — على صف الصف نفسه:
+```
+openemis_get { resource: "institution-classes", id: 42 }
+→ row.staff_id  (مفتاح خارجي واحد لـ security_users؛ قد يكون null)
+```
+
+**(ب) المعلمون الثانويون / المشاركون** — جدول اتصال مخصص (مفتاح أولي مركب، بدون عدد صحيح `id`):
+```
+openemis_get { resource: "institution-classes-secondary-staff",
+               params: { institution_class_id: 42 } }
+→ صفوف تحتوي على secondary_staff_id (مفتاح خارجي لـ security_users)
+```
+
+**(ج) معلمو المواد** — صف واحد لكل زوج (مادة، معلم). غير قابل للتصفية بواسطة `institution_class_id` مباشرة؛ قم بالتوسيع على قائمة `institution_subject_id` من الخطوة 3:
+```
+for each institution_subject_id in step 3:
+  openemis_get { resource: "institution-subject-staff",
+                 params: { institution_subject_id: subjId } }
+→ صفوف تحتوي على staff_id
+```
+
+**إزالة التكرارات + تحديد الأسماء.** يمكن أن يظهر الشخص في قوائم متعددة (معلم الفصل غالبًا ما يدرس مادة أيضًا). اتحاد بواسطة `staff_id`، ثم حدد الأسماء في استدعاء واحد:
+```
+openemis_get { resource: "security-users",
+               params: { ids: "13,42,99" } }
+```
 
 ---
 
-## المشاكل الشائعة الرئيسية
+## المزالق الرئيسية
 
-- **المفتاح الأولي المركب — لا يوجد معرف رقمي.** المفتاح الأولي لـ `institution-class-attendance-records` هو `(institution_class_id, academic_period_id, year, month)`. أي استدعاء يستخدم عامل تصفية `id=` رقميًا عاديًا سيفشل بصمت أو يعيد بيانات خاطئة.
-- **المجاميع الشهرية فقط.** يحتفظ هذا المورد بعدد الحاضرين لكل يوم. إنه **ليس** سجل الغياب لكل طالب — للغياب الفردي استخدم `student-attendance-marked-records`.
-- **الحقول اليومية `null` ≠ صفر.** تُرجع الحقول `day_X` قيمة `null` للأيام التي لم يُقدم فيها الحضور — عالجها على أنها `معلق`، وليس `0 غائب`.
+- **مفتاح أولي مركب — بدون عدد صحيح id.** المفتاح الأولي لـ `institution-class-attendance-records` هو `(institution_class_id, academic_period_id, year, month)`. أي استدعاء يستخدم عامل تصفية رقمي عادي `id=` سيفشل بصمت أو يُرجع بيانات خاطئة.
+- **مجمعات شهرية فقط.** يحتفظ هذا المورد بأعداد الحاضرين يوميًا. إنه ليس سجل الغياب لكل طالب — للغياب الفردي استخدم `student-attendance-marked-records`.
+- **الحقول `null` ليوم ≠ صفر.** تُرجع الحقول `day_X` قيمة `null` للأيام التي لم يُسجل فيها الحضور — عالجها على أنها `معلق`، وليس `0 غائب`.
+- **قائمة المعلمين مجزأة.** معلم الفصل موجود في `institution-classes.staff_id`، والمعلمون المشاركون في `institution-classes-secondary-staff`، ومعلمو المواد في `institution-subject-staff`. لا توجد نقطة نهاية واحدة توحدهم — قم بالتوسيع وإزالة التكرارات.
+- **`institution-classes-secondary-staff` مفتاح أولي مركب.** `(institution_class_id, secondary_staff_id)`. استخدم عوامل تصفية القائمة — لا تمرر `id=` رقميًا.
+- **`institution-subject-staff` غير قابل للتصفية حسب الصف.** صف حسب `institution_subject_id` فقط؛ كرر على معرفات مواد الصف من الخطوة 3.
+- **الرؤية القائمة على الدور هي شأن عميل اليوم.** يحتاج المديرون ووكلاؤهم والإداريون إلى رؤية *جميع* الصفوف في مؤسستهم، لكن واجهة برمجة التطبيقات لا توفر نقطة نهاية "الصفوف المسموح لي بمشاهدتها" بعد. الاستعلام العكسي ("ما الصفوف التي يمكن لهذا `staff_id` رؤيتها؟") يتطلب نفس التوسيع لثلاث جداول بالإضافة إلى فحص الدور — نقطة نهاية أساسية مخصصة موجودة في خارطة طريق OpenEMIS.
 
 ---
 
@@ -72,5 +111,11 @@ GET /institution-class-attendance-records/institution_class_id/{X}/academic_peri
 
 1. `openemis_get { resource: "institution-class-grades", params: { institution_class_id: 42 } }` → الصف 8
 2. `openemis_get { resource: "institution-class-students", params: { institution_class_id: 42, academic_period_id: 1, student_status_id: 1 } }` → 28 طالبًا
-3. `openemis_get { resource: "institution-class-subjects", params: { institution_class_id: 42, status: 1 } }` → 7 مواد
-4. `openemis_get { resource: "institution-class-attendance-records", params: { institution_class_id: 42, academic_period_id: 1, year: 2024, month: 3 } }` → الأعداد اليومية لشهر مارس 2024
+3. `openemis_get { resource: "institution-class-subjects", params: { institution_class_id: 42, status: 1 } }` → 7 مواد (معرفات `[101, 102, …, 107]`)
+4. `openemis_get { resource: "institution-class-attendance-records", params: { institution_class_id: 42, academic_period_id: 1, year: 2024, month: 3 } }` → أعداد مارس 2024 اليومية
+5. قائمة المعلمين:
+   - `openemis_get { resource: "institution-classes", id: 42 }` → معلم الفصل `staff_id=7`
+   - `openemis_get { resource: "institution-classes-secondary-staff", params: { institution_class_id: 42 } }` → المعلمون المشاركون `[12, 19]`
+   - `openemis_get { resource: "institution-subject-staff", params: { institution_subject_id: 101 } }` × 7 → معلمو المواد `[7, 23, 41, 58, …]`
+   - اتحاد + إزالة التكرارات → `{7, 12, 19, 23, 41, 58, …}`
+   - `openemis_get { resource: "security-users", params: { ids: "7,12,19,23,41,58" } }` → الأسماء في استدعاء واحد
