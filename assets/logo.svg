@@ -1,0 +1,62 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="snailGradient" cx="40%" cy="40%">
+      <stop offset="0%" style="stop-color:#7cd9a3;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2b9b7f;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+
+  <!-- Rounded hexagon outline -->
+  <path d="M 50 20 L 150 20 Q 160 20 160 30 L 160 100 Q 160 110 150 110 L 50 110 Q 40 110 40 100 L 40 30 Q 40 20 50 20"
+        fill="none" stroke="#1e3a5c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Maze pattern - rectilinear segments inside hexagon -->
+  <!-- Top horizontal -->
+  <line x1="60" y1="35" x2="140" y2="35" stroke="#1e3a5c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Right vertical down -->
+  <line x1="140" y1="35" x2="140" y2="55" stroke="#1e3a5c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Horizontal inward -->
+  <line x1="140" y1="55" x2="110" y2="55" stroke="#1e3a5c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Vertical down -->
+  <line x1="110" y1="55" x2="110" y2="75" stroke="#1e3a5c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Horizontal right -->
+  <line x1="110" y1="75" x2="130" y2="75" stroke="#1e3a5c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Left side vertical segments -->
+  <line x1="70" y1="45" x2="70" y2="75" stroke="#1e3a5c" stroke-width="2" stroke-linecap="round"/>
+  <line x1="70" y1="75" x2="90" y2="75" stroke="#1e3a5c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Center connector -->
+  <line x1="90" y1="75" x2="90" y2="90" stroke="#1e3a5c" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Snail shell (gradient circle with spiral) -->
+  <circle cx="100" cy="82" r="16" fill="url(#snailGradient)" opacity="0.9"/>
+
+  <!-- Shell spiral pattern -->
+  <path d="M 95 82 Q 100 78 105 82 Q 100 86 95 82"
+        fill="none" stroke="#1e3a5c" stroke-width="1.2" opacity="0.6"/>
+  <path d="M 98 85 Q 100 82 102 85"
+        fill="none" stroke="#1e3a5c" stroke-width="1" opacity="0.5"/>
+
+  <!-- Snail body -->
+  <ellipse cx="100" cy="100" rx="8" ry="6" fill="#2b9b7f" opacity="0.85"/>
+
+  <!-- Snail antennae -->
+  <line x1="97" y1="95" x2="94" y2="88" stroke="#1e3a5c" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="103" y1="95" x2="106" y2="88" stroke="#1e3a5c" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Accent arc near snail (seafoam) -->
+  <path d="M 85 105 Q 80 110 85 115"
+        fill="none" stroke="#7cd9a3" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Wordmark: "openemis-mcp" -->
+  <text x="100" y="150" font-family="Arial, sans-serif" font-size="18" font-weight="600" text-anchor="middle" fill="#1e3a5c">openemis-</text>
+  <text x="147" y="150" font-family="Arial, sans-serif" font-size="18" font-weight="600" text-anchor="start" fill="#5b8aa6">mcp</text>
+
+  <!-- Subtitle: "MODEL CONTEXT PROTOCOL" -->
+  <text x="100" y="168" font-family="Arial, sans-serif" font-size="11" font-weight="500" text-anchor="middle" fill="#1e3a5c" letter-spacing="1">MODEL CONTEXT PROTOCOL</text>
+</svg>

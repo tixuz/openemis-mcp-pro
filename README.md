@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="openemis-mcp logo" width="320">
+</p>
+
 # openemis-mcp
 
 **A natural-language bridge between MCP-aware agents (Claude, Codex, Cursor, etc.) and any OpenEMIS instance.**

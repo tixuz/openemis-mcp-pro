@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="openemis-mcp logo" width="320">
+</p>
+
 # openemis-mcp
 
 **MCP-सक्षम एजेंटों (Claude, Codex, Cursor, आदि) और किसी भी OpenEMIS इंस्टेंस के बीच एक प्राकृतिक-भाषा पुल।**

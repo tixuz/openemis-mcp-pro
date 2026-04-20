@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="openemis-mcp logo" width="320">
+</p>
+
 # openemis-mcp
 
 **Естественно-языковой мост между агентами, поддерживающими MCP (Claude, Codex, Cursor и др.), и любым экземпляром OpenEMIS.**

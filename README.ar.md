@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="openemis-mcp logo" width="320">
+</p>
+
 # openemis-mcp
 
 **جسر لغوي طبيعي بين الوكلاء المدركين لـ MCP (Claude، Codex، Cursor، إلخ) وأي نسخة من OpenEMIS.**

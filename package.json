@@ -23,6 +23,7 @@
     "dist",
     "data",
     "docs/playbooks",
+    "assets",
     "README.md",
     "LICENSE.md"
   ],
