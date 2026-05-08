@@ -1489,6 +1489,72 @@
         "Resolve the current academic_period_id ONCE per session via GET academic-periods?current=1. Never hardcode a year number.",
         "401 on any of these calls means the stored JWT expired — the MCP surfaces a 're-run openemis_login' error; ask the user to authenticate again."
       ]
+    },
+    {
+      "id": "diagnose-alert-delivery",
+      "title": "Diagnose alert delivery (POCOR-9509 alerts pipeline)",
+      "audience": [
+        "admin",
+        "ministry"
+      ],
+      "domain": "Alerts",
+      "description": "Answer 'did this alert actually go out?' or 'why didn't it?'. Since OpenEMIS Core 5.8 the alerts pipeline is Laravel-side: a cron-driven check (alerts:check) builds the queue, then alerts:send delivers via email/SMS. Read state from system-processes + alert-logs + message-recipients (the alerts:dispatch internal queue table is NOT exposed via /api/v5).",
+      "resources": [
+        "alerts",
+        "alert-rules",
+        "alert-logs",
+        "system-processes",
+        "message-recipients"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "List active alert configurations",
+          "action": "openemis_get",
+          "resource": "alerts",
+          "purpose": "Confirm the alert exists and is enabled. The alert.name string is the join key into alert-rules.feature.",
+          "guidance": "Use _conditions=feature:RetirementWarning (or whatever feature label the user named) to scope. Note the enabled flag (0/1)."
+        },
+        {
+          "step": 2,
+          "title": "Inspect the matching alert-rules thresholds and recipients",
+          "action": "openemis_get",
+          "resource": "alert-rules",
+          "purpose": "Resolve threshold values, delivery method (Email/SMS), and which security_roles get notified.",
+          "guidance": "Filter by feature using _conditions=feature:<name>. The security_roles join lives in alerts-roles (composite PK)."
+        },
+        {
+          "step": 3,
+          "title": "Check the most recent dispatcher run",
+          "action": "openemis_get",
+          "resource": "system-processes",
+          "purpose": "Find the latest alerts:check / alerts:send execution row. status=1 (running) flipping to status=2 (completed) is the success signal. Stuck status=1 means the worker died or never picked the row up.",
+          "guidance": "Order by created DESC, limit 20. Filter by name with _conditions=name:*Alert*. Each cron tick writes a row; absence of recent rows means the cron is not running."
+        },
+        {
+          "step": 4,
+          "title": "Read recent alert-logs to see actual delivery outcomes",
+          "action": "openemis_get",
+          "resource": "alert-logs",
+          "purpose": "alert-logs has one row per recipient per dispatch. status: 0=Pending, 1=Sent, -1=Failed. The checksum field is used to dedupe — a status=DEDUPED entry means the same checksum was already sent.",
+          "guidance": "Filter by feature and order by created DESC. For 'why did it fail' questions, narrow to status=-1 and read the message column for the SMTP/SMS error string."
+        },
+        {
+          "step": 5,
+          "title": "Cross-check message-recipients for the underlying email/SMS records",
+          "action": "openemis_get",
+          "resource": "message-recipients",
+          "purpose": "alert-logs stores the dispatcher view; message-recipients is the audit row attached to the actual outbound message. Use it to confirm the recipient address resolved correctly.",
+          "guidance": "Join semantically by created timestamp window (alert-logs.created ± a few seconds) — there is no direct FK. Watch out for null security_user_id which indicates a guardian or external recipient."
+        }
+      ],
+      "notes": [
+        "POCOR-9509 dispatch is CLI-driven: alerts are scheduled by a Laravel artisan cron (alerts:check + alerts:send), NOT triggered through any /api/v5 POST. Never tell the user to POST to /api/v5/alerts to fire one — that endpoint only edits the alert configuration row.",
+        "alerts.id=13 is RetirementWarning (specific to dmo-dev seed); the placeholder syntax in email_subject/email_body must use dot-notation prefixes ('${user.first_name}', not '${first_name}'). If a sysadmin reports placeholders rendering literally, that's the fix.",
+        "system-processes.status legend: 1=running, 2=completed, 3=failed. A missing recent row means the cron flock guard prevented a run or the cron itself isn't installed.",
+        "alert-logs.status legend: 0=Pending, 1=Sent, -1=Failed, plus DEDUPED markers introduced in POCOR-9509.",
+        "If the user is on Core <= 5.7, this playbook does not apply — the older alert pipeline ran via CakePHP shells and did not populate system-processes."
+      ]
     }
   ]
 }

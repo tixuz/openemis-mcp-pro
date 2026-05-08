@@ -53,6 +53,22 @@ A representative natural-language question like *"how many teachers at Avory Pri
 
 ---
 
+## Core compatibility
+
+Tested against **OpenEMIS Core 5.9** (master, May 2026). Earlier 5.7 / 5.8 deployments are also supported — the API surface is unchanged.
+
+### Optional capability flag — POCOR-9660 multi-id GET
+
+`openemis_get` accepts `params.ids = "1,2,3"` for batch lookups. By default (Core ≤ 5.9 master) the handler fans out N parallel single-record GETs, since `CrudApiController` does not yet understand a multi-id filter.
+
+When the target deployment carries POCOR-9660 (`?id=1,2,3` and `_conditions=id:IN(...)` support in `CrudApiController`), set:
+
+```bash
+OPENEMIS_CORE_IN_OPERATOR=1
+```
+
+The handler then collapses the batch into a single round-trip. Default off — flip on once the upstream branch is deployed.
+
 ## Verified against demo.openemis.org
 
 Every claim in this README was proven against the public demo instance before being written:

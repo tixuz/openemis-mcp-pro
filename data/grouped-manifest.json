@@ -2,7 +2,81 @@
   "version": 1,
   "total_endpoints": 3206,
   "total_resources": 645,
-  "domains": [],
+  "domains": [
+    {
+      "name": "Alerts",
+      "summary": "Threshold-driven notifications (student absence, retirement warnings, license expiry, scholarship events, etc.). Configuration via alerts/alert-rules. Delivery is Laravel-side cron + queue (POCOR-9509). Read state from alert-logs, system-processes, message-recipients.",
+      "resources": [
+        {
+          "name": "Alerts",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AlertRules",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AlertLogs",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AlertsRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SystemProcesses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "MessageRecipients",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 30
+    }
+  ],
   "families": [
     {
       "prefix": "Institution*",
@@ -9061,5 +9135,6 @@
     "general_policy": "OpenEMIS MCP is an AI-powered assistant for school administrators. It connects to your OpenEMIS instance and can read and write school data on your behalf, including students, staff, attendance, and exam records. All actions require valid credentials and respect the permissions of the authenticated user. Sensitive data must not be shared outside authorised users. This assistant is provided as-is for educational management purposes.",
     "test_policy": "TESTING ENVIRONMENT: This GPT is a testing and demonstration instance of OpenEMIS MCP. By continuing to use it, you acknowledge that: (1) This is not a production system — behaviour may change without notice. (2) Your interactions, including the questions you ask and the data you request, may be logged and reviewed by the development team to improve the product. (3) Do not enter real student or staff personal data — use demo or anonymised data only. (4) The development team may observe sessions to test and refine AI behaviour and playbooks.",
     "batch_id_lookup": "OpenEMIS has no native IN operator for GET queries. To fetch multiple records by ID in one call, use the ?ids= parameter on any GET /api/resources/{resource} endpoint: e.g. GET /api/resources/security-users?ids=13678,14671,13665 The server handles the fan-out internally and returns a merged array. NEVER do individual per-id calls in a loop when you have a list of IDs — always use ?ids= instead. Maximum 100 IDs per call."
-  }
+  },
+  "playbook_count": 29
 }

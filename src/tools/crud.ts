@@ -94,9 +94,12 @@ export function createOpenemisGetHandler(client: OpenemisClient) {
       const basePath = `/api/v5/${args.resource}`;
       const path = args.id ? `${basePath}/${args.id}` : basePath;
 
-      // ids= batch lookup: OpenEMIS has no IN operator, so we fan out parallel calls.
+      // ids= batch lookup. Two server modes:
+      //   1. Pre-POCOR-9660 core (default): no native IN operator — fan out N parallel
+      //      path lookups (GET /resource/{id}).
+      //   2. Post-POCOR-9660 core (OPENEMIS_CORE_IN_OPERATOR=1): a single GET with
+      //      ?id=1,2,3 returns the matching rows in one round-trip.
       // All OpenEMIS v5 single-field PKs are integers (audit of 671 models confirmed zero UUIDs).
-      // Uses path-based lookup (GET /resource/{id}) matching how single-record fetches work.
       // NOTE: composite-PK resources (attendance, junction tables, etc.) are NOT supported here.
       const idsParam = args.params?.ids;
       if (!args.id && typeof idsParam === "string" && idsParam.trim()) {
@@ -106,6 +109,21 @@ export function createOpenemisGetHandler(client: OpenemisClient) {
           .slice(0, 100);
         const rest = { ...args.params };
         delete rest.ids;
+
+        // Capability flag — flip on once POCOR-9660 (CrudApi multi-id GET) is deployed.
+        const useInOperator = /^(1|true|yes|on)$/i.test(
+          process.env.OPENEMIS_CORE_IN_OPERATOR ?? "",
+        );
+        if (useInOperator) {
+          const raw = await client.get(basePath, { ...rest, id: idList.join(",") });
+          const response = normalizeResponse(raw);
+          return {
+            content: [
+              { type: "text" as const, text: stringifyUntrusted(response) },
+            ],
+          };
+        }
+
         const settled = await Promise.allSettled(
           idList.map(id => client.get(`${basePath}/${id}`, rest))
         );
