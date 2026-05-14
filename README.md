@@ -20,7 +20,7 @@ The agent plans the calls, this MCP delivers the data, and you get the answer:
 
 You never write a line of code. You never see JSON. You just ask.
 
-> **Status:** v0.3.0 — **full CRUD** for non-workflow resources. Read queries work against every OpenEMIS v5 resource. Write tools (create/update/delete) are live for all resources that do not flow through the CakePHP Workflow plugin. Workflow-controlled resources (attendance, staff leave) are blocked at the tool level and redirect to the appropriate playbook.
+> **Status:** v1.0.0 — **full CRUD** for non-workflow resources. Read queries work against every OpenEMIS v5 resource. Write tools (create/update/delete) are live for all resources that do not flow through the CakePHP Workflow plugin. Workflow-controlled resources (attendance, staff leave) are blocked at the tool level and redirect to the appropriate playbook.
 
 ---
 
