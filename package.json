@@ -1,6 +1,7 @@
 {
   "name": "openemis-mcp-pro",
   "version": "1.0.0",
+  "mcpName": "io.github.tixuz/openemis-pro",
   "private": false,
   "description": "MCP server for the OpenEMIS v5 REST API — read/write tools, HTTP server mode, and ChatGPT OpenAPI adapter",
   "license": "MIT",

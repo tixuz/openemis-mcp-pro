@@ -1,0 +1,60 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.tixuz/openemis-pro",
+  "description": "MCP server for OpenEMIS v5 — read + write tools and ChatGPT OpenAPI adapter",
+  "repository": {
+    "url": "https://github.com/tixuz/openemis-mcp-pro",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "openemis-mcp-pro",
+      "version": "1.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "OPENEMIS_BASE_URL",
+          "description": "Base URL of your OpenEMIS instance (e.g., https://demo.openemis.org/core)",
+          "isRequired": true,
+          "format": "string"
+        },
+        {
+          "name": "OPENEMIS_API_KEY",
+          "description": "OpenEMIS API key (issued by the OpenEMIS admin). Required for every upstream login.",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true
+        },
+        {
+          "name": "OPENEMIS_USERNAME",
+          "description": "OpenEMIS login username. Optional — if unset, server fails closed and requires openemis_login at runtime.",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "OPENEMIS_PASSWORD",
+          "description": "OpenEMIS login password. Pairs with OPENEMIS_USERNAME for env-default auth.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true
+        },
+        {
+          "name": "OPENEMIS_TIMEOUT_MS",
+          "description": "Request timeout in milliseconds (default 30000)",
+          "isRequired": false,
+          "format": "string"
+        },
+        {
+          "name": "OPENEMIS_CORE_IN_OPERATOR",
+          "description": "Set to 1 to enable native IN-operator batch GETs once your OpenEMIS Core has POCOR-9660 deployed.",
+          "isRequired": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}
