@@ -68,7 +68,7 @@ export const openemisCreateInputSchema = z.object({
       "Resource name in kebab-case (e.g., 'institution-students', 'student-behaviours')"
     ),
   body: z
-    .record(z.unknown())
+    .record(z.string(), z.unknown())
     .describe("JSON fields to POST — the new record payload"),
 });
 
@@ -176,7 +176,7 @@ export const openemisUpdateInputSchema = z.object({
     .union([z.string(), z.number()])
     .describe("ID of the record to update"),
   body: z
-    .record(z.unknown())
+    .record(z.string(), z.unknown())
     .describe("JSON fields to PUT — the updated record payload"),
 });
 

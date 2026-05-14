@@ -65,7 +65,7 @@ export const openemisGetInputSchema = z.object({
     .optional()
     .describe("Resource ID to fetch a single record. Omit to list."),
   params: z
-    .record(z.unknown())
+    .record(z.string(), z.unknown())
     .optional()
     .describe(
       "Query parameters. Use `_conditions` for all field filtering — never bare field names. " +
