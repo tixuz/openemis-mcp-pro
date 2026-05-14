@@ -6,6 +6,8 @@
 
 **A natural-language bridge between MCP-aware agents (Claude, Codex, Cursor, etc.) and any OpenEMIS instance.**
 
+**Translations:** [Русский](docs/translations/README.ru.md) · [Español](docs/translations/README.es.md) · [हिन्दी](docs/translations/README.hi.md) · [العربية](docs/translations/README.ar.md)
+
 Built on top of the published **OpenEMIS Core API** (reference docs at [api.openemis.org/core](https://api.openemis.org/core)) and **verified end-to-end against the public demo at [demo.openemis.org/core](https://demo.openemis.org/core)** with real credentials, real data, real round-trips.
 
 Ask in English:
