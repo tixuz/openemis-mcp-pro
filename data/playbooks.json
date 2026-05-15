@@ -21,11 +21,11 @@
   "global_policies": {
     "v5_only": "EVERY call to OpenEMIS goes to /api/v5/{resource}. See top-level api_contract for the strict rule and the list of forbidden legacy paths. If a playbook ever mentions a v4 path or an Angular nested route, it is in a 'frontend_quirks' / caution note — NEVER in the steps/resources an agent should execute.",
     "workflow_writes_deferred_to_app": "The MCP MUST NOT create, update, or delete resources whose records flow through CakePHP's Workflow plugin (status_id → WorkflowSteps). These records need a human-in-the-loop approval chain that cannot be safely driven by an agent. Known workflow-controlled resources include but are not limited to: institution-staff-leave, assessment-period-excluded-security-roles, custom-reports (generation jobs), scholarship applications, some profile-change requests. For any CREATE/UPDATE/DELETE ask on a workflow resource, the MCP should reply: 'This process involves workflow and assignment for approval. Please use the official OpenEMIS application or website at https://demo.openemis.org/core (or your configured instance) to submit and approve it.' GET (read) operations on workflow resources remain safe and encouraged.",
-    "read_only_v0_2_x": "This MCP is getter-only in the 0.2.x line. openemis_create / openemis_update / openemis_delete arrive in 0.3.0. Until then, playbooks that describe writes are informative only — the agent cannot execute them. If the user asks for a write, respond: 'The OpenEMIS MCP is read-only in v0.2.x; please mark this in the official OpenEMIS application. The v5 endpoint that would be used is POST /api/v5/{resource} with body {...}.' DO NOT fall back to raw curl against v4 — that bypasses the MCP contract and will hit wrong or legacy endpoints.",
     "current_academic_period": "When the user refers to 'this year', 'current year', or 'now' without specifying an academic_period_id, ALWAYS resolve it first: GET academic-periods?current=1 — the row where current=1 is the active period. Use its id as academic_period_id in all subsequent calls. NEVER assume a year number or hardcode an id. The current period may also be found by inspecting the 'current' field in the academic-periods list (value 1 = active).",
     "general_policy": "OpenEMIS MCP is an AI-powered assistant for school administrators. It connects to your OpenEMIS instance and can read and write school data on your behalf, including students, staff, attendance, and exam records. All actions require valid credentials and respect the permissions of the authenticated user. Sensitive data must not be shared outside authorised users. This assistant is provided as-is for educational management purposes.",
     "test_policy": "TESTING ENVIRONMENT: This GPT is a testing and demonstration instance of OpenEMIS MCP. By continuing to use it, you acknowledge that: (1) This is not a production system — behaviour may change without notice. (2) Your interactions, including the questions you ask and the data you request, may be logged and reviewed by the development team to improve the product. (3) Do not enter real student or staff personal data — use demo or anonymised data only. (4) The development team may observe sessions to test and refine AI behaviour and playbooks.",
-    "batch_id_lookup": "OpenEMIS has no native IN operator for GET queries. To fetch multiple records by ID in one call, use the ?ids= parameter on any GET /api/resources/{resource} endpoint: e.g. GET /api/resources/security-users?ids=13678,14671,13665 The server handles the fan-out internally and returns a merged array. NEVER do individual per-id calls in a loop when you have a list of IDs — always use ?ids= instead. Maximum 100 IDs per call."
+    "batch_id_lookup": "OpenEMIS has no native IN operator for GET queries. To fetch multiple records by ID in one call, use the ?ids= parameter on any GET /api/resources/{resource} endpoint: e.g. GET /api/resources/security-users?ids=13678,14671,13665 The server handles the fan-out internally and returns a merged array. NEVER do individual per-id calls in a loop when you have a list of IDs — always use ?ids= instead. Maximum 100 IDs per call.",
+    "writes_live": "Pro distribution exposes openemis_create / openemis_update / openemis_delete tools (since v1.0.0). All writes flow through the v5 CrudApiController and are audit-logged into user_activities per POCOR-9697. Workflow-controlled resources remain deferred — see workflow_writes_deferred_to_app."
   },
   "playbooks": [
     {
@@ -1554,6 +1554,327 @@
         "system-processes.status legend: 1=running, 2=completed, 3=failed. A missing recent row means the cron flock guard prevented a run or the cron itself isn't installed.",
         "alert-logs.status legend: 0=Pending, 1=Sent, -1=Failed, plus DEDUPED markers introduced in POCOR-9509.",
         "If the user is on Core <= 5.7, this playbook does not apply — the older alert pipeline ran via CakePHP shells and did not populate system-processes."
+      ]
+    },
+    {
+      "id": "view-school-accreditation",
+      "title": "View school accreditation records (POCOR-9610)",
+      "audience": [
+        "admin",
+        "ministry",
+        "principal"
+      ],
+      "domain": "Institution",
+      "description": "OpenEMIS Core 5.10.0 introduced /api/v5/institution-accreditations (POCOR-9610). Each row links one institution to one education_programme it is accredited to offer, with a valid_from..valid_to window. Status is derived from those dates, not stored. The UI tab under Institution → General is read-only — accreditation data is meant to be set via the API.",
+      "resources": [
+        "institution-accreditations",
+        "institutions",
+        "education-programmes",
+        "education-cycles",
+        "education-levels",
+        "education-systems"
+      ],
+      "schema_invariants": [
+        "institution_accreditations columns: id, institution_id, education_programme_id, valid_from, valid_to, modified_user_id, modified, created_user_id, created.",
+        "valid_from and valid_to are nullable. A null valid_to means open-ended (still in force). A null valid_from is unusual and likely a data-entry error.",
+        "Status is NOT a stored column. Derive it from now() vs the valid_from..valid_to window: Active (now in window), Expired (now > valid_to), Future (now < valid_from).",
+        "education_programme_id chains to education_programmes → education_cycles → education_levels → education_systems. Each step needs a separate GET to humanize the label.",
+        "There is no soft-delete and no workflow approval — DELETE is permanent and immediate."
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "List accreditations for an institution",
+          "action": "openemis_get",
+          "resource": "institution-accreditations",
+          "purpose": "Pull every accreditation row for the institution.",
+          "guidance": "Filter with institution_id:<id>. Request _fields=['id','institution_id','education_programme_id','valid_from','valid_to'] to keep the payload small. There is typically a handful of rows per institution — no pagination needed unless the institution has 100+ programmes accredited."
+        },
+        {
+          "step": 2,
+          "title": "Resolve programme labels (4 lookups deep)",
+          "action": "openemis_get",
+          "resource": "education-programmes",
+          "purpose": "Humanize each education_programme_id into 'System → Level → Cycle → Programme' breadcrumbs.",
+          "guidance": "For each unique education_programme_id from step 1, fetch the programme to get code+name+education_cycle_id. Then walk education-cycles → education-levels → education-systems with the same pattern. Cache the chain — many accreditations share the same parent chain."
+        },
+        {
+          "step": 3,
+          "title": "Compute status per row",
+          "action": "compute",
+          "purpose": "Derive Active / Expired / Future from valid_from and valid_to.",
+          "guidance": "Use today's date in the institution's locale (not server UTC if the institution sits in a different timezone). Active = valid_from <= today AND (valid_to is null OR today <= valid_to). Expired = valid_to is not null AND today > valid_to. Future = valid_from is not null AND today < valid_from."
+        },
+        {
+          "step": 4,
+          "title": "Render",
+          "action": "format",
+          "purpose": "Produce a table the user can read: Programme code | Programme name | Valid from | Valid to | Status.",
+          "guidance": "Sort by Status (Active first, then Future, then Expired), then by valid_from descending within each group so the most recent accreditation surfaces at the top."
+        }
+      ],
+      "notes": [
+        "POCOR-9610 deliberately keeps the institutions table untouched — accreditation lives in its own table so it can be replaced/extended without schema-evolving institutions.",
+        "API read access is granted to roles 1-7, 9, 10. Write access is granted only to roles whose `order` < 5 (super-admin tier). If a write fails with 403, the caller is likely a teacher/staff role.",
+        "There is no `status` column to filter on. Do not try _conditions=status:Active — it will silently match nothing."
+      ]
+    },
+    {
+      "id": "view-school-registration",
+      "title": "View school registration records (POCOR-9610)",
+      "audience": [
+        "admin",
+        "ministry",
+        "principal"
+      ],
+      "domain": "Institution",
+      "description": "Sibling of institution-accreditations. /api/v5/institution-registrations holds the institution's registration windows with the ministry/regulator. Schema is simpler than accreditation — registration is institution-level (no programme link).",
+      "resources": [
+        "institution-registrations",
+        "institutions"
+      ],
+      "schema_invariants": [
+        "institution_registrations columns: id, institution_id, valid_from, valid_to, modified_user_id, modified, created_user_id, created. Note the absence of education_programme_id — registration is whole-institution.",
+        "An institution typically has at most one active registration at a time, but the table is append-only and keeps history. Sort by valid_from DESC to get the current one first.",
+        "Same date-driven Status derivation as accreditation: Active / Expired / Future from valid_from..valid_to."
+      ],
+      "steps": [
+        "openemis_get('institution-registrations', params: {institution_id: <id>, _fields: ['id','institution_id','valid_from','valid_to'], orderby: 'valid_from', order: 'desc'})",
+        "Compute Status per row: Active = valid_from <= today AND (valid_to null OR today <= valid_to); Expired = today > valid_to; Future = today < valid_from.",
+        "Identify the current registration (Status=Active) and report its valid_to as the next renewal deadline (or note 'open-ended' if valid_to is null).",
+        "If no Active row exists, surface a warning — the institution is currently unregistered for at least part of today."
+      ],
+      "notes": [
+        "Same permissions model as institution-accreditations: read open to roles 1-7,9,10; write restricted to roles with order < 5.",
+        "Registration history is NOT user-deletable from the UI (HideButton). If the user asks 'remove a registration row', they have to use the API directly — and that requires write permission."
+      ]
+    },
+    {
+      "id": "view-institution-budget",
+      "title": "View institution budget records (Core 5.10.0)",
+      "audience": [
+        "admin",
+        "finance"
+      ],
+      "domain": "Institution",
+      "description": "List the budget records attached to an institution and resolve their budget types and academic periods. Useful for the question 'what budget did the school plan for this year?' or 'show me last year's budget vs this year's.'",
+      "resources": [
+        "institution-budgets",
+        "budget-types",
+        "academic-periods",
+        "institutions"
+      ],
+      "schema_invariants": [
+        "institution_budgets columns: id, institution_id, academic_period_id, budget_type_id, amount, file_name, file_content (longblob — do NOT request this field unless the user wants the file), description, modified_user_id/modified, created_user_id/created.",
+        "amount is a string in the API response (CakePHP decimal handling) — parseFloat before summing.",
+        "file_content is the attachment binary. Always exclude it from list responses via _fields to keep payloads small. Fetch by id when the user wants the actual file."
+      ],
+      "steps": [
+        "openemis_get('institution-budgets', params: {institution_id: <id>, academic_period_id: <period>, _fields: ['id','academic_period_id','budget_type_id','amount','description','created'], limit: 100})",
+        "openemis_get('budget-types', params: {_fields: ['id','name'], limit: 50}) — global reference list, cache it.",
+        "If filtering across years, also fetch academic-periods to humanize period labels.",
+        "Sum amount per budget_type_id to answer 'total operating budget' / 'total capital budget' style questions.",
+        "If the user wants the attachment, do a single-row GET on institution-budgets/{id} requesting _fields=['file_name','file_content'] — but warn them the response will be large."
+      ]
+    },
+    {
+      "id": "query-student-absence-history",
+      "title": "Query a student's absence history (Core 5.10.0 aggregates)",
+      "audience": [
+        "teacher",
+        "admin",
+        "parent",
+        "counsellor"
+      ],
+      "domain": "Attendance",
+      "description": "Answer 'how often was this student absent last term?' / 'what days did they miss?' / 'are absences clustering?'. Core 5.10.0 exposes two aggregate resources: institution-student-absences (per-day rows with absence_type_id) and institution-student-absence-days (multi-day spans with absent_days count). They complement the per-period student-attendance-marked-records used during roll call.",
+      "resources": [
+        "institution-student-absences",
+        "institution-student-absence-days",
+        "student-attendance-marked-records",
+        "absence-types",
+        "academic-periods"
+      ],
+      "schema_invariants": [
+        "institution-student-absences is a flat per-day record: id, student_id, institution_id, academic_period_id, institution_class_id, education_grade_id, date, absence_type_id, institution_student_absence_day_id (FK back to the span row).",
+        "institution-student-absence-days collapses consecutive days into a span: id, student_id, institution_id, absence_type_id, absent_days (integer), start_date, end_date. Use it for 'longest absence stretch' questions.",
+        "absence_type_id resolves via the absence-types reference list. 1 typically = Unexcused, 2 = Excused, but ALWAYS resolve names — sites can edit them.",
+        "An absence in institution-student-absences does NOT imply a row in student-attendance-marked-records (and vice versa). The per-period roll-call records and the per-day aggregates are independent surfaces — joining them is application-level glue, not a DB FK."
+      ],
+      "steps": [
+        "Resolve the academic period(s) of interest: openemis_get('academic-periods', params: {_fields: ['id','code','name','start_date','end_date'], limit: 50})",
+        "List per-day absences: openemis_get('institution-student-absences', params: {student_id: <id>, academic_period_id: <period>, _fields: ['date','absence_type_id','institution_class_id'], limit: 365, orderby: 'date', order: 'desc'})",
+        "List span aggregates: openemis_get('institution-student-absence-days', params: {student_id: <id>, _fields: ['absence_type_id','absent_days','start_date','end_date'], orderby: 'start_date', order: 'desc'})",
+        "Resolve absence_type_id → human label: openemis_get('absence-types', params: {_fields: ['id','name','code'], limit: 50})",
+        "Render: total absent days for the period (sum of absent_days from the span table — that's the canonical count, not the per-day rows), broken down by type. Flag if any single span >= 5 consecutive days (chronic-absence threshold the ministry typically cares about)."
+      ],
+      "notes": [
+        "POCOR-9560/9660 deprecated some legacy attendance paths — the v4 student-attendances endpoints are gone. Stick to v5 only.",
+        "Do not try to derive the span table from the per-day table — the span table is the source of truth for absent_days. Per-day rows are for surfacing exception days; the span row aggregates them.",
+        "If you need the reason free-text (e.g. 'sick — doctor's note attached'), fetch institution-student-absence-details linked by composite key. Most playbook callers won't need that depth."
+      ]
+    },
+    {
+      "id": "query-user-activity-audit-log",
+      "title": "Query the user activity audit log (POCOR-9697 — Wave 3)",
+      "audience": [
+        "admin",
+        "security",
+        "ministry"
+      ],
+      "domain": "Security",
+      "description": "Answer 'who changed this record?' / 'when was this user's password reset?' / 'show all writes by user X this week.' POCOR-9697 (Core 5.10.0) introduced Wave-3 audit logging: every write through the v5 API is recorded into user_activities with per-field old/new snapshots, redacted for sensitive columns. The CakePHP stack writes the same row shape via a ported trait.",
+      "resources": [
+        "user-activities",
+        "security-users"
+      ],
+      "schema_invariants": [
+        "user_activities row shape: id, model (PHP class like 'Institutions'), model_reference (the row's PK as a string), field (column name), field_type, old_value, new_value, operation (CREATE/UPDATE/DELETE), security_user_id (actor — derived from JWT, never client-supplied), created_user_id, created.",
+        "On DELETE: per-field snapshot is taken BEFORE the row is removed, so the audit captures the entire deleted row. The FK to security_users is ON DELETE SET NULL — hard-deleting a user keeps the audit but loses the actor link.",
+        "Redactions: password, super_admin, and photo_content fields are never written to user_activities. If you see a UPDATE row on security_users with no 'password' field, that's the redaction at work — not a missing entry.",
+        "The actor (security_user_id) is ALWAYS the JWT subject. It is NOT trusted from request body — POCOR-9697 explicitly strips client-supplied created_user_id/modified_user_id on the read side and derives them server-side."
+      ],
+      "steps": [
+        "openemis_get('user-activities', params: {security_user_id: <actor_id>, _fields: ['model','model_reference','field','old_value','new_value','operation','created'], orderby: 'created', order: 'desc', limit: 200}) — 'what did this user change recently?'",
+        "openemis_get('user-activities', params: {model: 'Institutions', model_reference: '<institution_id>', orderby: 'created', order: 'desc'}) — 'what was changed on this institution row?'",
+        "To time-bound: add _conditions=created>=<iso-date> and created<=<iso-date>. The created column is a DATETIME and indexed.",
+        "For DELETE diagnostics: filter operation='DELETE' and the rows give you a full per-field snapshot of what was removed — useful for restore work.",
+        "Resolve security_user_id → username via security-users (limit lookups; cache)."
+      ],
+      "notes": [
+        "user_activities is APPEND-ONLY in practice — there is no UI to edit or delete entries. Treat any 'delete an audit row' request as a red flag.",
+        "Volume scaling: a busy production tenant writes ~10k rows/day into user_activities. Always paginate; never request without a filter and limit.",
+        "If a write went through the legacy CakePHP UI (not the v5 API), it ALSO writes a user_activities row (POCOR-9697 ported the trait). Same redaction rules apply.",
+        "Pre-5.10.0 (i.e. Core <= 5.9) had per-row UserActivityLog::add() at scattered call sites — the new pattern is uniform via the model trait. If a row predates 2026-05 it may have a different shape (no per-field snapshot, only a free-text description)."
+      ]
+    },
+    {
+      "id": "view-class-roster",
+      "title": "View a class's roster (institution-classes + students)",
+      "audience": [
+        "teacher",
+        "admin",
+        "homeroom"
+      ],
+      "domain": "Institution",
+      "description": "Pull the students in a specific institution class. /api/v5/institution-classes (Core 5.10.0) is the class definition; institution-class-students joins it to the student roster. Webhook-enabled (POCOR-9257) — changes fire created/updated/deleted events.",
+      "resources": [
+        "institution-classes",
+        "institution-class-students",
+        "institution-students",
+        "education-grades",
+        "academic-periods"
+      ],
+      "schema_invariants": [
+        "institution_classes fields: id, name, class_number, capacity, total_male_students, total_female_students, staff_id (homeroom teacher), institution_shift_id, institution_id, institution_unit_id, institution_course_id, academic_period_id.",
+        "total_male_students and total_female_students are CACHED counts updated by the application — they may briefly drift from the actual count in institution-class-students. Treat them as 'approximate' and verify with a count(institution-class-students) when accuracy matters.",
+        "Capacity is a soft limit — the API does NOT enforce it on enrolment. UI may warn; backend will accept.",
+        "POCOR-9257 webhooks: created / updated / deleted events for institution-classes are dispatched on each write. Useful for downstream sync but irrelevant to read paths."
+      ],
+      "steps": [
+        "Identify the class: openemis_get('institution-classes', params: {institution_id: <id>, academic_period_id: <period>, _fields: ['id','name','staff_id','institution_unit_id','capacity'], limit: 100}). Filter by name or institution_unit_id (the grade) as needed.",
+        "Get the roster: openemis_get('institution-class-students', params: {institution_class_id: <class_id>, _fields: ['student_id','education_grade_id','student_status_id','start_date','end_date'], limit: 200})",
+        "Resolve student details: openemis_get('institution-students', params: {ids: [<student_ids>], _fields: ['student_id','first_name','last_name','date_of_birth','gender_id']}). The ids= fan-out (v0.3.0+) lets you fetch many at once.",
+        "Resolve homeroom teacher: openemis_get('security-users', params: {id: <staff_id>, _fields: ['first_name','last_name','openemis_no']}). Only one lookup needed for the staff_id from step 1.",
+        "Render: class name + grade + capacity + roster (student#, name, status). Flag any student_status_id that's not Enrolled (e.g., Withdrawn, Transferred) since those students appear in the roster but are not active."
+      ],
+      "notes": [
+        "institution-class-students has student-level status (student_status_id), not class-level. A withdrawn student stays in the roster as a historical record — UIs typically filter by student_status_id=1 (Enrolled) for the 'current' view.",
+        "POCOR-9687 changed how Enrolled (Repeater) is derived. If a student is in the roster of the same class for a second academic period, that's the repeater flow — handled by application logic, not a schema change.",
+        "If the homeroom teacher (staff_id) is null, the class has no assigned homeroom — common in early planning before staff assignments."
+      ]
+    },
+    {
+      "id": "set-school-accreditation",
+      "title": "Set / update a school accreditation (POCOR-9610, pro-only write)",
+      "audience": [
+        "admin",
+        "ministry"
+      ],
+      "domain": "Institution",
+      "description": "Create or update an institution_accreditations row via the v5 API. Available only in the pro distribution (free is read-only). Permission gate: caller's security role must have order < 5.",
+      "resources": [
+        "institution-accreditations",
+        "institutions",
+        "education-programmes"
+      ],
+      "schema_invariants": [
+        "POST body shape: { institution_id, education_programme_id, valid_from (YYYY-MM-DD), valid_to (YYYY-MM-DD or null) }. modified_user_id, created_user_id, modified, created are derived server-side from the JWT subject — DO NOT include them in the body (they are silently stripped by POCOR-9697).",
+        "valid_from is required. valid_to nullable (open-ended). Date format is YYYY-MM-DD; ISO datetime is also accepted and truncated.",
+        "Same row can be reused across years by updating valid_to to null when extending, or by POSTing a NEW row with a fresh valid_from when re-accredited after expiry."
+      ],
+      "steps": [
+        "Verify the caller has write permission (role.order < 5). If unsure, dispatch a single openemis_get('institution-accreditations', params:{limit:1, institution_id:<id>}) and try the write — a 403 is the gate failing.",
+        "Resolve education_programme_id: openemis_get('education-programmes', params: {_fields:['id','code','name','education_cycle_id'], limit: 200}). Pick the programme the institution is being accredited for.",
+        "openemis_create('institution-accreditations', body: { institution_id, education_programme_id, valid_from: '2026-09-01', valid_to: '2030-08-31' })",
+        "On success the API returns the row with its assigned id. The audit trail (user_activities, POCOR-9697) records the CREATE with per-field snapshots — no separate audit call needed.",
+        "To EXTEND an existing accreditation: openemis_update('institution-accreditations', id: <accreditation_id>, body: { valid_to: '<new-date>' or null }). To REPLACE: POST a fresh row instead of updating valid_from."
+      ],
+      "notes": [
+        "Permission errors return 403 with a 'Forbidden' message. There is no special UNAUTHORIZED-because-of-role-order shape — same code as 'JWT missing or invalid'. Distinguish by checking the bearer is present and valid.",
+        "Do NOT include education_programme_id values from inactive education_systems / education_levels — there is no FK constraint catching this, the write will succeed but the row will be invisible in the Institution → Accreditations UI.",
+        "There is no soft-delete. openemis_delete is irreversible. POCOR-9697 captures the deletion in user_activities for forensic recovery — but the row itself is gone."
+      ]
+    },
+    {
+      "id": "set-school-registration",
+      "title": "Set / update a school registration (POCOR-9610, pro-only write)",
+      "audience": [
+        "admin",
+        "ministry"
+      ],
+      "domain": "Institution",
+      "description": "Create or update an institution_registrations row. Sibling of set-school-accreditation but simpler: there is no programme link, only the institution and the valid_from..valid_to window.",
+      "resources": [
+        "institution-registrations",
+        "institutions"
+      ],
+      "schema_invariants": [
+        "POST body shape: { institution_id, valid_from (YYYY-MM-DD), valid_to (YYYY-MM-DD or null) }. Same server-side derivation of audit fields.",
+        "An institution typically has one Active registration row at a time. The API does NOT enforce non-overlap — it is policy-level. The application UI sorts by valid_from DESC and treats the newest Active row as 'current'."
+      ],
+      "steps": [
+        "openemis_get('institution-registrations', params: {institution_id: <id>, orderby:'valid_from', order:'desc'}) — review existing rows to decide CREATE vs UPDATE.",
+        "If extending: openemis_update('institution-registrations', id:<existing_id>, body:{valid_to:'<new-date>' or null})",
+        "If new registration cycle: openemis_create('institution-registrations', body:{institution_id, valid_from:'YYYY-MM-DD', valid_to:'YYYY-MM-DD' or null})",
+        "Confirm by re-listing — newest row should be Active."
+      ],
+      "notes": [
+        "Same role.order < 5 write gate as accreditations. Same audit shape (user_activities CREATE/UPDATE/DELETE per POCOR-9697).",
+        "If valid_from is set in the future, the registration is in Future state — the UI will show it but it's not yet in force."
+      ]
+    },
+    {
+      "id": "mark-student-meal-participation",
+      "title": "Mark student meal participation (pro-only write)",
+      "audience": [
+        "teacher",
+        "admin",
+        "nutritionist"
+      ],
+      "domain": "Meal",
+      "description": "Write per-day meal participation into student_meal_marked_records. Used during meal-distribution roll call: which students received which benefit on a given date. Free MCP only reads this (via view-institution-meals); writes are pro-only.",
+      "resources": [
+        "student-meal-marked-records",
+        "meal-institution-programmes",
+        "institution-class-students",
+        "meal-benefits"
+      ],
+      "schema_invariants": [
+        "student_meal_marked_records columns: id, institution_id, academic_period_id, institution_class_id, meal_programmes_id, date, meal_benefit_id. Note the column is meal_programmes_id (with an S, pointing at meal_programmes), not meal_programme_id.",
+        "One row per (student in class, programme, date, benefit). The same student CAN have multiple rows on the same date if they receive multiple benefits — no unique constraint enforces 'one per student per day'.",
+        "date is YYYY-MM-DD. Use the institution's local date, not server UTC."
+      ],
+      "steps": [
+        "Identify which class and programme: openemis_get('meal-institution-programmes', params:{institution_id:<id>, academic_period_id:<period>}) — this gives you the meal_programme_id (the underlying programme id) and meal_implementer_id.",
+        "Resolve which students are in the class today: openemis_get('institution-class-students', params:{institution_class_id:<class>, student_status_id:1, _fields:['student_id']}).",
+        "For each student you want to mark, POST: openemis_create('student-meal-marked-records', body:{institution_id, academic_period_id, institution_class_id, meal_programmes_id, date:'YYYY-MM-DD', meal_benefit_id}).",
+        "Absence-by-omission: if a student is in the class today but does NOT get a row, they did not receive a meal. The application uses this convention rather than null entries.",
+        "Confirm by re-reading: openemis_get('student-meal-marked-records', params:{institution_class_id:<class>, date:'YYYY-MM-DD', _fields:['student_id','meal_benefit_id']})."
+      ],
+      "notes": [
+        "There is no v5 endpoint that bulk-marks 'everyone present today.' Loop POSTs, or build the array client-side and submit one-by-one.",
+        "Mistakes are corrected via openemis_delete on the row, not by overwriting. The composite of (student_id implied by class roster, date, meal_benefit_id) is not enforced as unique, so an overwrite would create a duplicate."
       ]
     }
   ]

@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "total_endpoints": 3206,
-  "total_resources": 645,
+  "total_endpoints": 3355,
+  "total_resources": 675,
   "domains": [
     {
       "name": "Alerts",
@@ -24,8 +24,8 @@
           "kinds": {
             "LIST": 1,
             "CREATE": 1,
-            "GET": 1,
             "UPDATE": 1,
+            "GET": 1,
             "DELETE": 1
           }
         },
@@ -35,9 +35,9 @@
           "kinds": {
             "LIST": 1,
             "CREATE": 1,
+            "DELETE": 1,
             "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
+            "UPDATE": 1
           }
         },
         {
@@ -47,8 +47,8 @@
             "LIST": 1,
             "CREATE": 1,
             "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
+            "DELETE": 1,
+            "UPDATE": 1
           }
         },
         {
@@ -82,6 +82,17 @@
       "prefix": "Institution*",
       "resources": [
         {
+          "name": "InstitutionAccreditations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InstitutionActivities",
           "endpoints": 5,
           "kinds": {
@@ -94,6 +105,17 @@
         },
         {
           "name": "InstitutionAssets",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionAssociations",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -126,7 +148,7 @@
           }
         },
         {
-          "name": "InstitutionAssociations",
+          "name": "InstitutionAttachments",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -148,7 +170,7 @@
           }
         },
         {
-          "name": "InstitutionAttachments",
+          "name": "InstitutionBankAccounts",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -159,7 +181,7 @@
           }
         },
         {
-          "name": "InstitutionBankAccounts",
+          "name": "InstitutionBudgets",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -258,6 +280,39 @@
           }
         },
         {
+          "name": "InstitutionClasses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionClassesCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionClassesSecondaryStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InstitutionClassGrades",
           "endpoints": 5,
           "kinds": {
@@ -291,28 +346,6 @@
           }
         },
         {
-          "name": "InstitutionClassesCustomFieldValues",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionClassesSecondaryStaff",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "InstitutionCommitteeAttachments",
           "endpoints": 5,
           "kinds": {
@@ -336,6 +369,17 @@
         },
         {
           "name": "InstitutionCommittees",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionCommitteeTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -401,6 +445,17 @@
           }
         },
         {
+          "name": "InstitutionCurriculars",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InstitutionCurricularStaff",
           "endpoints": 5,
           "kinds": {
@@ -423,17 +478,6 @@
           }
         },
         {
-          "name": "InstitutionCurriculars",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "InstitutionCustomFieldOptions",
           "endpoints": 5,
           "kinds": {
@@ -445,7 +489,7 @@
           }
         },
         {
-          "name": "InstitutionCustomFieldValues",
+          "name": "InstitutionCustomFields",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -456,7 +500,7 @@
           }
         },
         {
-          "name": "InstitutionCustomFields",
+          "name": "InstitutionCustomFieldValues",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -555,6 +599,17 @@
           }
         },
         {
+          "name": "InstitutionFees",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InstitutionFeeTypes",
           "endpoints": 5,
           "kinds": {
@@ -566,7 +621,7 @@
           }
         },
         {
-          "name": "InstitutionFees",
+          "name": "InstitutionFloors",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -764,6 +819,17 @@
           }
         },
         {
+          "name": "InstitutionRegistrations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InstitutionRepeaterSurveyAnswers",
           "endpoints": 5,
           "kinds": {
@@ -775,7 +841,7 @@
           }
         },
         {
-          "name": "InstitutionRepeaterSurveyTableCells",
+          "name": "InstitutionRepeaterSurveys",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -786,7 +852,7 @@
           }
         },
         {
-          "name": "InstitutionRepeaterSurveys",
+          "name": "InstitutionRepeaterSurveyTableCells",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -992,7 +1058,29 @@
           }
         },
         {
+          "name": "InstitutionStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InstitutionStaffAppraisals",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStaffAttendanceActivities",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1091,7 +1179,7 @@
           }
         },
         {
-          "name": "InstitutionStaffSurveyTableCells",
+          "name": "InstitutionStaffSurveys",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1102,7 +1190,7 @@
           }
         },
         {
-          "name": "InstitutionStaffSurveys",
+          "name": "InstitutionStaffSurveyTableCells",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1146,7 +1234,29 @@
           }
         },
         {
+          "name": "InstitutionStudentAbsenceDays",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InstitutionStudentAbsenceDetails",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentAbsences",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1180,79 +1290,6 @@
         },
         {
           "name": "InstitutionStudentRisks",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentSurveyAnswers",
-          "endpoints": 1,
-          "kinds": {
-            "LIST": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentSurveyTableCells",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentSurveys",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentTransfers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentVisitRequests",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentVisits",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InstitutionStudentWithdraw",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1318,7 +1355,14 @@
           }
         },
         {
-          "name": "InstitutionSubjectStaff",
+          "name": "InstitutionStudentSurveyAnswers",
+          "endpoints": 1,
+          "kinds": {
+            "LIST": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentSurveys",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1329,7 +1373,51 @@
           }
         },
         {
-          "name": "InstitutionSubjectStudents",
+          "name": "InstitutionStudentSurveyTableCells",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentTransfers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentVisitRequests",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentVisits",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionStudentWithdraw",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1362,6 +1450,28 @@
           }
         },
         {
+          "name": "InstitutionSubjectStaff",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "InstitutionSubjectStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InstitutionSurveyAnswers",
           "endpoints": 5,
           "kinds": {
@@ -1373,7 +1483,7 @@
           }
         },
         {
-          "name": "InstitutionSurveyTableCells",
+          "name": "InstitutionSurveys",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1384,7 +1494,7 @@
           }
         },
         {
-          "name": "InstitutionSurveys",
+          "name": "InstitutionSurveyTableCells",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1483,7 +1593,7 @@
           }
         }
       ],
-      "endpoint_count": 633
+      "endpoint_count": 683
     },
     {
       "prefix": "Staff*",
@@ -1555,7 +1665,7 @@
           }
         },
         {
-          "name": "StaffCustomFieldValues",
+          "name": "StaffCustomFields",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1566,7 +1676,7 @@
           }
         },
         {
-          "name": "StaffCustomFields",
+          "name": "StaffCustomFieldValues",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1644,6 +1754,17 @@
         },
         {
           "name": "StaffEmploymentStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "StaffExtracurriculars",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -1929,6 +2050,17 @@
           }
         },
         {
+          "name": "StaffTrainings",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "StaffTrainingSelfStudies",
           "endpoints": 5,
           "kinds": {
@@ -1962,17 +2094,6 @@
           }
         },
         {
-          "name": "StaffTrainings",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "StaffTypes",
           "endpoints": 5,
           "kinds": {
@@ -1984,20 +2105,20 @@
           }
         }
       ],
-      "endpoint_count": 225
+      "endpoint_count": 230
     },
     {
       "prefix": "Infrastructure*",
       "resources": [
         {
           "name": "InfrastructureAttachmentTypes",
-          "endpoints": 6,
+          "endpoints": 5,
           "kinds": {
             "LIST": 1,
             "CREATE": 1,
             "GET": 1,
             "UPDATE": 1,
-            "DELETE": 2
+            "DELETE": 1
           }
         },
         {
@@ -2078,7 +2199,7 @@
           }
         },
         {
-          "name": "InfrastructureNeedTypes",
+          "name": "InfrastructureNeeds",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2089,7 +2210,7 @@
           }
         },
         {
-          "name": "InfrastructureNeeds",
+          "name": "InfrastructureNeedTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2210,6 +2331,17 @@
           }
         },
         {
+          "name": "InfrastructureWashHygienes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InfrastructureWashHygieneSoapashAvailabilities",
           "endpoints": 5,
           "kinds": {
@@ -2222,17 +2354,6 @@
         },
         {
           "name": "InfrastructureWashHygieneTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InfrastructureWashHygienes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2276,6 +2397,17 @@
           }
         },
         {
+          "name": "InfrastructureWashSanitations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InfrastructureWashSanitationTypes",
           "endpoints": 5,
           "kinds": {
@@ -2298,29 +2430,7 @@
           }
         },
         {
-          "name": "InfrastructureWashSanitations",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "InfrastructureWashSewageFunctionalities",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "InfrastructureWashSewageTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2342,6 +2452,17 @@
           }
         },
         {
+          "name": "InfrastructureWashSewageTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "InfrastructureWashWasteFunctionalities",
           "endpoints": 5,
           "kinds": {
@@ -2353,7 +2474,7 @@
           }
         },
         {
-          "name": "InfrastructureWashWasteTypes",
+          "name": "InfrastructureWashWastes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2364,7 +2485,7 @@
           }
         },
         {
-          "name": "InfrastructureWashWastes",
+          "name": "InfrastructureWashWasteTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2430,7 +2551,7 @@
           }
         },
         {
-          "name": "InfrastructureWashWaterTypes",
+          "name": "InfrastructureWashWaters",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2441,7 +2562,7 @@
           }
         },
         {
-          "name": "InfrastructureWashWaters",
+          "name": "InfrastructureWashWaterTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2452,7 +2573,7 @@
           }
         }
       ],
-      "endpoint_count": 211
+      "endpoint_count": 210
     },
     {
       "prefix": "Student*",
@@ -2491,7 +2612,7 @@
           }
         },
         {
-          "name": "StudentAttendanceMarkTypes",
+          "name": "StudentAttendanceMarkedRecords",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2502,7 +2623,7 @@
           }
         },
         {
-          "name": "StudentAttendanceMarkedRecords",
+          "name": "StudentAttendanceMarkTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2590,7 +2711,7 @@
           }
         },
         {
-          "name": "StudentCustomFieldValues",
+          "name": "StudentCustomFields",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2601,7 +2722,7 @@
           }
         },
         {
-          "name": "StudentCustomFields",
+          "name": "StudentCustomFieldValues",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2711,6 +2832,17 @@
           }
         },
         {
+          "name": "StudentMarkTypeStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "StudentMarkTypeStatusGrades",
           "endpoints": 5,
           "kinds": {
@@ -2722,7 +2854,7 @@
           }
         },
         {
-          "name": "StudentMarkTypeStatuses",
+          "name": "StudentMealMarkedRecords",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2799,7 +2931,7 @@
           }
         },
         {
-          "name": "StudentStatusUpdates",
+          "name": "StudentStatuses",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2810,7 +2942,7 @@
           }
         },
         {
-          "name": "StudentStatuses",
+          "name": "StudentStatusUpdates",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -2865,7 +2997,7 @@
           }
         }
       ],
-      "endpoint_count": 185
+      "endpoint_count": 190
     },
     {
       "prefix": "User*",
@@ -3044,7 +3176,7 @@
           }
         },
         {
-          "name": "UserHealthTests",
+          "name": "UserHealths",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3055,7 +3187,7 @@
           }
         },
         {
-          "name": "UserHealths",
+          "name": "UserHealthTests",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3129,6 +3261,17 @@
           }
         },
         {
+          "name": "UserSpecialNeedsDiagnostics",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "UserSpecialNeedsPlans",
           "endpoints": 5,
           "kinds": {
@@ -3162,7 +3305,7 @@
           }
         }
       ],
-      "endpoint_count": 129
+      "endpoint_count": 134
     },
     {
       "prefix": "Training*",
@@ -3179,7 +3322,7 @@
           }
         },
         {
-          "name": "TrainingCourseTypes",
+          "name": "TrainingCourses",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3190,7 +3333,18 @@
           }
         },
         {
-          "name": "TrainingCourses",
+          "name": "TrainingCoursesPrerequisites",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingCoursesProviders",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3224,6 +3378,17 @@
         },
         {
           "name": "TrainingCoursesTargetPopulations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingCourseTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3377,28 +3542,6 @@
           }
         },
         {
-          "name": "TrainingSessionTraineeResults",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "TrainingSessionTrainers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "TrainingSessions",
           "endpoints": 5,
           "kinds": {
@@ -3421,6 +3564,28 @@
           }
         },
         {
+          "name": "TrainingSessionTraineeResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "TrainingSessionTrainers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "TrainingSpecialisations",
           "endpoints": 5,
           "kinds": {
@@ -3432,7 +3597,7 @@
           }
         }
       ],
-      "endpoint_count": 120
+      "endpoint_count": 130
     },
     {
       "prefix": "Scholarship*",
@@ -3493,7 +3658,7 @@
           }
         },
         {
-          "name": "ScholarshipFinancialAssistanceTypes",
+          "name": "ScholarshipFinancialAssistances",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3504,7 +3669,7 @@
           }
         },
         {
-          "name": "ScholarshipFinancialAssistances",
+          "name": "ScholarshipFinancialAssistanceTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3768,6 +3933,17 @@
           }
         },
         {
+          "name": "SummaryInstitutions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "SummaryInstitutionStudentAbsences",
           "endpoints": 5,
           "kinds": {
@@ -3780,17 +3956,6 @@
         },
         {
           "name": "SummaryInstitutionStudentSubjectResults",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SummaryInstitutions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -3866,6 +4031,199 @@
         }
       ],
       "endpoint_count": 82
+    },
+    {
+      "prefix": "Examination*",
+      "resources": [
+        {
+          "name": "ExaminationCentreRooms",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentreRoomsExaminations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentreRoomsExaminationsInvigilators",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentreRoomsExaminationsStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentres",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminations",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsInstitutions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsInvigilators",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentresExaminationsSubjectsStudents",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationCentreSpecialNeeds",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationGradingOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationGradingTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationStudentSubjectResults",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationStudentSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ExaminationSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 85
     },
     {
       "prefix": "Appraisal*",
@@ -4050,188 +4408,6 @@
       "endpoint_count": 80
     },
     {
-      "prefix": "Examination*",
-      "resources": [
-        {
-          "name": "ExaminationCentreRooms",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentreRoomsExaminations",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentreRoomsExaminationsInvigilators",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentreRoomsExaminationsStudents",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentreSpecialNeeds",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentres",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentresExaminationsInstitutions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentresExaminationsInvigilators",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentresExaminationsStudents",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentresExaminationsSubjects",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationCentresExaminationsSubjectsStudents",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationGradingOptions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationGradingTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationStudentSubjectResults",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationStudentSubjects",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "ExaminationSubjects",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 80
-    },
-    {
       "prefix": "Education*",
       "resources": [
         {
@@ -4367,6 +4543,17 @@
           }
         },
         {
+          "name": "EducationStages",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "EducationSubjects",
           "endpoints": 5,
           "kinds": {
@@ -4400,156 +4587,7 @@
           }
         }
       ],
-      "endpoint_count": 75
-    },
-    {
-      "prefix": "Security*",
-      "resources": [
-        {
-          "name": "SecurityFunctions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityGroupAreas",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityGroupInstitutions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityGroupUsers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityGroups",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityRestSessions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityRoleFunctions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityRoles",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUserCodes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUserLogins",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUserPasswordRequests",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUserSessions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SecurityUsers",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 65
+      "endpoint_count": 80
     },
     {
       "prefix": "Survey*",
@@ -4654,7 +4692,7 @@
           }
         },
         {
-          "name": "SurveyStatusPeriods",
+          "name": "SurveyRules",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -4666,6 +4704,17 @@
         },
         {
           "name": "SurveyStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SurveyStatusPeriods",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -4698,11 +4747,182 @@
           }
         }
       ],
+      "endpoint_count": 70
+    },
+    {
+      "prefix": "Security*",
+      "resources": [
+        {
+          "name": "SecurityFunctions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityGroupAreas",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityGroupInstitutions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityGroups",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityGroupUsers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityRestSessions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityRoleFunctions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityRoles",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUserCodes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUserLogins",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUserPasswordRequests",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUsers",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SecurityUserSessions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
       "endpoint_count": 65
     },
     {
       "prefix": "Custom*",
       "resources": [
+        {
+          "name": "CustomFieldOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CustomFields",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
         {
           "name": "CustomFieldTypes",
           "endpoints": 5,
@@ -4722,17 +4942,6 @@
             "LIST": 1,
             "UPDATE": 1,
             "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CustomFields",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
             "DELETE": 1
           }
         },
@@ -4825,7 +5034,7 @@
           }
         }
       ],
-      "endpoint_count": 55
+      "endpoint_count": 60
     },
     {
       "prefix": "Meal*",
@@ -4864,6 +5073,17 @@
           }
         },
         {
+          "name": "MealInstitutionProgrammes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "MealNutritionalRecords",
           "endpoints": 5,
           "kinds": {
@@ -4886,7 +5106,7 @@
           }
         },
         {
-          "name": "MealProgrammeTypes",
+          "name": "MealProgrammes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -4897,7 +5117,7 @@
           }
         },
         {
-          "name": "MealProgrammes",
+          "name": "MealProgrammeTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -4952,7 +5172,7 @@
           }
         }
       ],
-      "endpoint_count": 55
+      "endpoint_count": 60
     },
     {
       "prefix": "Workflow*",
@@ -5129,17 +5349,6 @@
           }
         },
         {
-          "name": "AssessmentItemStudentExemptions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "AssessmentItems",
           "endpoints": 5,
           "kinds": {
@@ -5158,6 +5367,17 @@
             "CREATE": 1,
             "GET": 1,
             "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AssessmentItemStudentExemptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
             "DELETE": 1
           }
         },
@@ -5223,6 +5443,17 @@
           }
         },
         {
+          "name": "RubricStatuses",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "RubricStatusPeriods",
           "endpoints": 5,
           "kinds": {
@@ -5246,17 +5477,6 @@
         },
         {
           "name": "RubricStatusRoles",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "RubricStatuses",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -5296,17 +5516,6 @@
       "resources": [
         {
           "name": "SpecialNeedDifficulties",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "SpecialNeedTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -5392,6 +5601,17 @@
             "UPDATE": 1,
             "DELETE": 1
           }
+        },
+        {
+          "name": "SpecialNeedTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
         }
       ],
       "endpoint_count": 45
@@ -5444,17 +5664,6 @@
           }
         },
         {
-          "name": "ReportCardSubjects",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "ReportCards",
           "endpoints": 5,
           "kinds": {
@@ -5466,7 +5675,195 @@
           }
         },
         {
+          "name": "ReportCardSubjects",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
           "name": "ReportProgress",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ReportQueries",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 40
+    },
+    {
+      "prefix": "Competency*",
+      "resources": [
+        {
+          "name": "CompetencyCriterias",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CompetencyGradingOptions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "DELETE": 1,
+            "UPDATE": 1
+          }
+        },
+        {
+          "name": "CompetencyGradingTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "DELETE": 1,
+            "GET": 1
+          }
+        },
+        {
+          "name": "CompetencyItems",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CompetencyItemsPeriods",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CompetencyPeriods",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "CompetencyTemplates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 35
+    },
+    {
+      "prefix": "Utility*",
+      "resources": [
+        {
+          "name": "UtilityElectricityConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityElectricityTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityInternetBandwidths",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityInternetConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityInternetTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityTelephoneConditions",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "UtilityTelephoneTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -5552,78 +5949,6 @@
       "endpoint_count": 30
     },
     {
-      "prefix": "Competency*",
-      "resources": [
-        {
-          "name": "CompetencyCriterias",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CompetencyGradingOptions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "DELETE": 1,
-            "UPDATE": 1
-          }
-        },
-        {
-          "name": "CompetencyGradingTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "DELETE": 1,
-            "GET": 1
-          }
-        },
-        {
-          "name": "CompetencyItems",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CompetencyItemsPeriods",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "CompetencyPeriods",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 30
-    },
-    {
       "prefix": "Health*",
       "resources": [
         {
@@ -5696,10 +6021,10 @@
       "endpoint_count": 30
     },
     {
-      "prefix": "Utility*",
+      "prefix": "Asset*",
       "resources": [
         {
-          "name": "UtilityElectricityConditions",
+          "name": "AssetConditions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -5710,7 +6035,7 @@
           }
         },
         {
-          "name": "UtilityElectricityTypes",
+          "name": "AssetMakes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -5721,7 +6046,18 @@
           }
         },
         {
-          "name": "UtilityInternetBandwidths",
+          "name": "AssetModels",
+          "endpoints": 5,
+          "kinds": {
+            "CREATE": 1,
+            "LIST": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "AssetStatuses",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -5732,7 +6068,24 @@
           }
         },
         {
-          "name": "UtilityInternetConditions",
+          "name": "AssetTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "UPDATE": 1,
+            "GET": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 25
+    },
+    {
+      "prefix": "Outcome*",
+      "resources": [
+        {
+          "name": "OutcomeCriterias",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -5743,7 +6096,7 @@
           }
         },
         {
-          "name": "UtilityInternetTypes",
+          "name": "OutcomeGradingOptions",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -5754,7 +6107,29 @@
           }
         },
         {
-          "name": "UtilityTelephoneConditions",
+          "name": "OutcomeGradingTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "OutcomePeriods",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "OutcomeTemplates",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -5765,7 +6140,7 @@
           }
         }
       ],
-      "endpoint_count": 30
+      "endpoint_count": 25
     },
     {
       "prefix": "System*",
@@ -5827,56 +6202,6 @@
         }
       ],
       "endpoint_count": 25
-    },
-    {
-      "prefix": "Asset*",
-      "resources": [
-        {
-          "name": "AssetConditions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AssetMakes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AssetModels",
-          "endpoints": 5,
-          "kinds": {
-            "CREATE": 1,
-            "LIST": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "AssetTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "UPDATE": 1,
-            "GET": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 20
     },
     {
       "prefix": "Config*",
@@ -5966,56 +6291,6 @@
         },
         {
           "name": "DataManagementLogs",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 20
-    },
-    {
-      "prefix": "Outcome*",
-      "resources": [
-        {
-          "name": "OutcomeGradingOptions",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "OutcomeGradingTypes",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "OutcomePeriods",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "OutcomeTemplates",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -6121,17 +6396,6 @@
           }
         },
         {
-          "name": "ClassProfileTemplates",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
           "name": "ClassProfiles",
           "endpoints": 5,
           "kinds": {
@@ -6139,6 +6403,17 @@
             "CREATE": 1,
             "UPDATE": 1,
             "GET": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "ClassProfileTemplates",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
             "DELETE": 1
           }
         }
@@ -6179,6 +6454,45 @@
             "GET": 1,
             "DELETE": 1,
             "UPDATE": 1
+          }
+        }
+      ],
+      "endpoint_count": 15
+    },
+    {
+      "prefix": "Idp*",
+      "resources": [
+        {
+          "name": "IdpGoogle",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "IdpOauth",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "IdpSaml",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
           }
         }
       ],
@@ -6610,34 +6924,6 @@
       "endpoint_count": 10
     },
     {
-      "prefix": "Idp*",
-      "resources": [
-        {
-          "name": "IdpGoogle",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        },
-        {
-          "name": "IdpOauth",
-          "endpoints": 5,
-          "kinds": {
-            "LIST": 1,
-            "CREATE": 1,
-            "GET": 1,
-            "UPDATE": 1,
-            "DELETE": 1
-          }
-        }
-      ],
-      "endpoint_count": 10
-    },
-    {
       "prefix": "Income*",
       "resources": [
         {
@@ -6753,7 +7039,7 @@
       "prefix": "Locale*",
       "resources": [
         {
-          "name": "LocaleContentTranslations",
+          "name": "LocaleContents",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -6764,7 +7050,7 @@
           }
         },
         {
-          "name": "LocaleContents",
+          "name": "LocaleContentTranslations",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -6821,6 +7107,62 @@
         },
         {
           "name": "MoodleApiLog",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 10
+    },
+    {
+      "prefix": "Room*",
+      "resources": [
+        {
+          "name": "RoomCustomFieldValues",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "RoomTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        }
+      ],
+      "endpoint_count": 10
+    },
+    {
+      "prefix": "Salary*",
+      "resources": [
+        {
+          "name": "SalaryAdditionTypes",
+          "endpoints": 5,
+          "kinds": {
+            "LIST": 1,
+            "CREATE": 1,
+            "GET": 1,
+            "UPDATE": 1,
+            "DELETE": 1
+          }
+        },
+        {
+          "name": "SalaryDeductionTypes",
           "endpoints": 5,
           "kinds": {
             "LIST": 1,
@@ -7123,7 +7465,7 @@
       }
     },
     {
-      "name": "FeeTypes",
+      "name": "FeedersInstitutions",
       "endpoints": 5,
       "kinds": {
         "LIST": 1,
@@ -7134,7 +7476,7 @@
       }
     },
     {
-      "name": "FeedersInstitutions",
+      "name": "FeeTypes",
       "endpoints": 5,
       "kinds": {
         "LIST": 1,
@@ -7190,6 +7532,17 @@
     },
     {
       "name": "IdentityTypes",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
+      "name": "ImportMapping",
       "endpoints": 5,
       "kinds": {
         "LIST": 1,
@@ -7299,6 +7652,17 @@
       }
     },
     {
+      "name": "Nationalities",
+      "endpoints": 5,
+      "kinds": {
+        "LIST": 1,
+        "CREATE": 1,
+        "GET": 1,
+        "UPDATE": 1,
+        "DELETE": 1
+      }
+    },
+    {
       "name": "Notices",
       "endpoints": 5,
       "kinds": {
@@ -7377,28 +7741,6 @@
     },
     {
       "name": "Risks",
-      "endpoints": 5,
-      "kinds": {
-        "LIST": 1,
-        "CREATE": 1,
-        "GET": 1,
-        "UPDATE": 1,
-        "DELETE": 1
-      }
-    },
-    {
-      "name": "RoomTypes",
-      "endpoints": 5,
-      "kinds": {
-        "LIST": 1,
-        "CREATE": 1,
-        "GET": 1,
-        "UPDATE": 1,
-        "DELETE": 1
-      }
-    },
-    {
-      "name": "SalaryAdditionTypes",
       "endpoints": 5,
       "kinds": {
         "LIST": 1,
@@ -7498,10 +7840,10 @@
     }
   ],
   "summary": {
-    "domain_endpoint_total": 0,
-    "family_endpoint_total": 2931,
+    "domain_endpoint_total": 30,
+    "family_endpoint_total": 3080,
     "orphan_endpoint_total": 275,
-    "playbook_count": 27
+    "playbook_count": 38
   },
   "playbooks": [
     {
@@ -7534,17 +7876,7 @@
         "For each returned position, fetch its staff: openemis_get('institution-staff', params: {institution_position_id: <pos_id>, limit: 50, _fields: ['id','FTE','staff_status_id','end_date']})",
         "Tally vacant: a position counts as vacant if (returned rows = 0) OR (sum of parseFloat(row.FTE) across active rows < 1.0)",
         "Return the vacant count (and optionally under-staffed positions with their current FTE total)"
-      ],
-      "coverage": {
-        "present": [
-          "institution-positions",
-          "institution-staff-position-profiles",
-          "staff-position-titles",
-          "institutions"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "mark-student-attendance",
@@ -7688,24 +8020,7 @@
         "Do NOT POST to institution-class-attendance-records directly for marking — it is a month-level aggregate that the backend updates via afterSaveCommit hook in plugins/Attendance/src/Model/Table/StudentAttendanceMarkedRecordsTable.php.",
         "ABSENCE-BY-OMISSION: once a day/period/subject has been marked (institution-class-attendance-records shows MARKED or PARTIAL_MARKED), students WITHOUT a row in student-attendance-marked-records for that day/period are treated as PRESENT. You do NOT need to POST a row for every present student — only for the ones who are late/absent/excused. That is why POSTing even one absence row 'flips' the day to marked via the afterSaveCommit hook.",
         "NO-SCHEDULED-CLASS for holidays / force-majeure / teacher-absent / class-cancelled: POST one row with no_scheduled_class set to 99 and no per-student rows — this records that no roll is taken that day. Sentinel 0 means class WAS scheduled and happened. The reading side (view-latest-attendance) must skip days where no_scheduled_class=99 when computing attendance rates, otherwise every student looks 'absent' for a holiday."
-      ],
-      "coverage": {
-        "present": [
-          "institution-class-grades",
-          "institution-students",
-          "absence-types",
-          "student-attendance-marked-records",
-          "student-attendance-mark-types",
-          "student-attendance-per-day-periods",
-          "institution-class-subjects",
-          "institution-subjects",
-          "institution-student-absence-details",
-          "student-absence-reasons",
-          "institution-class-attendance-records"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "mark-staff-attendance",
@@ -7773,18 +8088,7 @@
         "IMPLICATION for marking: before POSTing a staff attendance for a given date, the caller should GET institution-staff-leave for that staff_id+date to avoid double-booking a staff member who's on approved leave. Before POSTing a leave, no corresponding attendance action is needed — but know that the leave will NOT appear in institution-staff-attendances readouts.",
         "IMPLICATION for reading a staff member's attendance rate: union institution-staff-attendances + institution-staff-leave yourself on the client side — the backend does not join them. The official UI report (plugins/Institution/src/Model/Table/StaffAttendancesTable.php:155,247) reads both separately.",
         "WORKFLOW WRITE WARNING: institution-staff-leave is workflow-controlled. For now, the MCP should NOT offer to CREATE/UPDATE/DELETE leave requests via the API — the approval chain needs a human-in-the-loop. When asked to mark someone absent-on-leave, respond with: 'This process involves workflow and assignment for approval. Please use the official OpenEMIS application or website to submit/approve leave.' Reading leave (GET) is safe and encouraged."
-      ],
-      "coverage": {
-        "present": [
-          "institution-staff-position-profiles",
-          "institution-staff-attendances",
-          "institution-staff-leave",
-          "staff-leave-types",
-          "absence-types"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-student-timetable",
@@ -7807,19 +8111,7 @@
         "Resolve student → class: openemis_get('institution-students', params: {student_id, academic_period_id, student_status_id: 1, _fields: [institution_class_id, institution_id, education_grade_id]})",
         "Read the timetable for that class: openemis_get('institution-timetable', params: {institution_class_id, academic_period_id})",
         "Enrich with subject/staff/room lookups as needed"
-      ],
-      "coverage": {
-        "present": [
-          "institution-students",
-          "institution-class-grades",
-          "institution-class-subjects",
-          "institution-subject-staff",
-          "institution-schedule-timetables",
-          "institution-rooms"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "student-dashboard",
@@ -7842,18 +8134,7 @@
         "Latest attendance: openemis_get('student-attendance-marked-records', params: {student_id, limit: 30, orderby: date, order: desc})",
         "Behavior incidents: openemis_get('institution-student-behaviours', params: {student_id, limit: 10, orderby: date_of_behaviour, order: desc})",
         "Recent marks: openemis_get('assessment-item-results', params: {student_id, academic_period_id, limit: 50})"
-      ],
-      "coverage": {
-        "present": [
-          "institution-students",
-          "student-attendance-marked-records",
-          "student-behaviours",
-          "assessment-item-results",
-          "report-card-comment-codes"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "generate-student-report-card-pdf",
@@ -7879,21 +8160,7 @@
         "Kick off generation: openemis_create('institution-report-card-processes', body: {institution_id, student_id, report_card_id}) — (write tool arrives in v0.2)",
         "Poll status: openemis_get('institution-report-card-processes', id: <process_id>)",
         "Once 'completed', fetch the PDF URL: openemis_get('institution-students-report-cards', params: {student_id, report_card_id})"
-      ],
-      "coverage": {
-        "present": [
-          "institution-students-report-cards",
-          "institution-report-cards",
-          "institution-report-card-processes",
-          "report-card-processes",
-          "report-card-email-processes",
-          "report-card-subjects",
-          "report-card-comment-codes",
-          "institution-students-report-cards-comments"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "enroll-new-student",
@@ -7965,19 +8232,7 @@
           "purpose": "Associate a guardian/parent record with the student.",
           "guidance": "Required: student_id, guardian_id (pre-existing user id), guardian_relation_id."
         }
-      ],
-      "coverage": {
-        "present": [
-          "security-users",
-          "user-identities",
-          "student-guardians",
-          "education-grades",
-          "academic-periods",
-          "institution-students"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "record-behavior-incident",
@@ -8018,16 +8273,7 @@
           "purpose": "Create the behaviour record linked to the student, institution, and academic period.",
           "guidance": "Required fields: student_id, institution_id, academic_period_id, date_of_behaviour, description, student_behaviour_category_id, student_behaviour_classification_id. Optional: action_taken, follow_up_date."
         }
-      ],
-      "coverage": {
-        "present": [
-          "student-behaviour-categories",
-          "student-behaviour-classifications",
-          "student-behaviours"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "submit-exam-marks",
@@ -8049,19 +8295,7 @@
         "Get the assessment + period: openemis_get('assessments', params: {academic_period_id, education_grade_id})",
         "Fetch class roster: openemis_get('institution-class-students', params: {institution_class_id, academic_period_id, student_status_id: 1})",
         "Submit a mark per student: openemis_create('assessment-item-results', body: {assessment_id, assessment_period_id, student_id, marks, ...})"
-      ],
-      "coverage": {
-        "present": [
-          "assessments",
-          "assessment-periods",
-          "assessment-items",
-          "assessment-item-results",
-          "education-subjects",
-          "institution-class-students"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "institution-summary",
@@ -8083,17 +8317,7 @@
         "Count current students: openemis_get('institution-students', params: {institution_id, student_status_id: 1, limit: 1}) → read last_page",
         "Count active staff: openemis_get('institution-staff', params: {institution_id, status_id: 1, limit: 1}) → read last_page",
         "Count vacant positions: openemis_get('institution-positions', params: {institution_id, status: 'vacant', limit: 1}) → read last_page"
-      ],
-      "coverage": {
-        "present": [
-          "institutions",
-          "institution-students",
-          "institution-staff-position-profiles",
-          "institution-positions"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "generate-institution-statistics-pdf",
@@ -8113,16 +8337,7 @@
         "Start generation: openemis_create('report-card-processes', body: {...template_id, institution_id, ...})",
         "Poll and download once 'completed'"
       ],
-      "notes": "NOTE: 'custom-reports' is not available via the v5 REST API. Statistics PDF generation uses the report engine inside the application. This playbook covers data lookup only — trigger the PDF from the application UI.",
-      "coverage": {
-        "present": [
-          "institutions",
-          "report-card-processes",
-          "institution-report-card-processes"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      "notes": "NOTE: 'custom-reports' is not available via the v5 REST API. Statistics PDF generation uses the report engine inside the application. This playbook covers data lookup only — trigger the PDF from the application UI."
     },
     {
       "id": "view-latest-attendance",
@@ -8148,28 +8363,18 @@
         "step_4": "Compute rates: for each student, absent_days = count of their absence rows on MARKED non-holiday days; present_days = total_marked_non_holiday_days - absent_days. Do NOT subtract from total calendar days; only from days actually marked."
       },
       "steps": [
-        "Resolve roster: openemis_get('institution-class-students', params: {institution_class_id, academic_period_id, student_status_id: 1})",
+        "Resolve roster: openemis_get('institution-class-students', params: {institution_class_id, academic_period_id, student_status_id: 1}). NOTE: this returns student_id only — no names. Resolve names via security-users?id={student_id} if you need to display a named list.",
         "Load absence-type lookup (to distinguish absent vs late vs excused): openemis_get('absence-types')",
         "Check which days were actually marked: openemis_get('institution-class-attendance-records', params: {institution_class_id, academic_period_id, year: <Y>, month: <M>})",
         "Pull absence events for the date range: openemis_get('student-attendance-marked-records', params: {institution_class_id, date_from: <monday>, date_to: <today>, limit: 500})",
         "Apply the reading invariant (see reading_invariant field): skip no_scheduled_class=99 days; for MARKED days, absent_rows are absences, roster-minus-absent_rows are present"
       ],
       "notes": [
+        "NAMES: institution-class-students returns student_id only. To display names in attendance reports, resolve each student_id via security-users.",
         "The 'chronic absentee' calculation must use marked days only — using the full calendar count (e.g., 30 days in April) will under-report presence for any day a teacher forgot to take roll.",
         "no_scheduled_class sentinels (on student-attendance-marked-records rows): 99 = no class that day (holiday, force-majeure, teacher sick, field trip), 0 = class was scheduled and happened. Readers must filter by this.",
         "For a parent/guardian view of their own kid: filter student-attendance-marked-records by student_id AND institution_class_id (they can see their own kid's absence events but NOT the full class roster unless scoped permissions allow)."
-      ],
-      "coverage": {
-        "present": [
-          "institution-class-grades",
-          "institution-class-students",
-          "institution-class-attendance-records",
-          "student-attendance-marked-records",
-          "absence-types"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-student-profile",
@@ -8219,17 +8424,7 @@
           "purpose": "Retrieve the student's recent absence, late, and excused events to give the teacher or admin a quick overview of attendance patterns.",
           "guidance": "Filter by student_id. Add orderby=date&order=desc and limit=30 for the most recent 30 events. Each row has absence_type_id (1=Excused, 2=Unexcused, 3=Late) and date. Remember: only exception rows are stored — a student with no rows on a given MARKED day was PRESENT by omission. To check total absences over a period, also filter by date_from/date_to."
         }
-      ],
-      "coverage": {
-        "present": [
-          "institution-students",
-          "student-guardians",
-          "guardian-relations",
-          "student-attendance-marked-records"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-student-marks",
@@ -8298,19 +8493,7 @@
           "purpose": "Retrieve the actual scored marks for this student across all assessment items in the selected assessment and period.",
           "guidance": "Filter by student_id and assessment_id. Optionally filter by assessment_period_id if the user asked for a specific period. Each row contains assessment_item_id (join to step 4 for subject), marks (numeric score), and grading_option_id (letter grade reference). Absent rows mean the mark was not yet entered — distinguish from a zero mark."
         }
-      ],
-      "coverage": {
-        "present": [
-          "institution-students",
-          "assessments",
-          "assessment-periods",
-          "assessment-items",
-          "assessment-item-results",
-          "education-subjects"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-class-report",
@@ -8360,17 +8543,7 @@
           "purpose": "Pull all student mark rows for this grade and academic period to construct the class-level summary table.",
           "guidance": "Filter by education_grade_id (from step 2) and academic_period_id. For a large class, paginate using limit=200. Each row has student_id, assessment_item_id, marks, and grading_option_id. Group by student_id and assessment_item_id to build the per-student per-subject grid. Rows with marks=null indicate not-yet-entered grades."
         }
-      ],
-      "coverage": {
-        "present": [
-          "report-cards",
-          "institution-class-grades",
-          "report-card-subjects",
-          "assessment-item-results"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-timetable",
@@ -8411,15 +8584,7 @@
           "purpose": "Check for missing period slots in the timetable by comparing the fetched rows against the expected number of periods per day.",
           "guidance": "Group the results from step 1 by day_of_week and list the period numbers present. If consecutive periods are missing (e.g., day 2 has periods 1, 2, 4 but not 3), note them as unscheduled or free periods. This is informational — the resource does not have a 'gap' field; the caller must compute it."
         }
-      ],
-      "coverage": {
-        "present": [
-          "institution-schedule-timetables",
-          "institution-class-grades"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-institution-profile",
@@ -8476,17 +8641,7 @@
         "is_deleted=0 is essential on the institutions fetch — soft-deleted schools remain in the DB and will appear in list results without this filter.",
         "institution-localities has NO institution-specific filter. It is a standalone reference table. To find which locality an institution belongs to, read locality_id from the institutions record and look it up in this table.",
         "contact_person on the institutions record is a free-text string, NOT a FK to security_users. Separate, richer contact records live in institution-contact-persons filtered by institution_id."
-      ],
-      "coverage": {
-        "present": [
-          "institutions",
-          "institution-grades",
-          "institution-localities",
-          "institution-contact-persons"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-class-profile",
@@ -8496,13 +8651,17 @@
         "admin"
       ],
       "domain": "Student",
-      "description": "View a class profile: grade level assignment, enrolled student roster, active subjects, and monthly attendance summary. The attendance resource uses a composite primary key — there is no integer id field; always use list-style filters to fetch it.",
+      "description": "View a class profile: grade level assignment, enrolled student roster, active subjects, monthly attendance summary, and the full teacher roster (homeroom + secondary + subject teachers). The attendance resource uses a composite primary key — there is no integer id field; always use list-style filters to fetch it. The teacher roster is spread across three tables and requires a fan-out + dedupe.",
       "resources": [
+        "institution-classes",
         "institution-class-grades",
         "institution-class-students",
         "security-users",
         "institution-class-subjects",
-        "institution-class-attendance-records"
+        "institution-subjects",
+        "institution-class-attendance-records",
+        "institution-classes-secondary-staff",
+        "institution-subject-staff"
       ],
       "steps": [
         {
@@ -8526,7 +8685,7 @@
           "title": "Resolve Student Names",
           "action": "openemis_get",
           "resource": "security-users",
-          "purpose": "Get first_name and last_name — institution-class-students returns IDs only.",
+          "purpose": "Get first_name and last_name for each enrolled student — institution-class-students returns IDs only.",
           "guidance": "institution-class-students returns student_id FK values — no name fields. Collect ALL student_id values from step 2, then make ONE call: GET /api/resources/security-users?ids={id1},{id2},{id3}... The server fans out the lookups internally and returns a merged array. Fields available: id, openemis_no, first_name, last_name, gender_id (1=Male, 2=Female), date_of_birth. Do NOT loop with individual calls. Do NOT ask for permission."
         },
         {
@@ -8544,24 +8703,26 @@
           "resource": "institution-class-attendance-records",
           "purpose": "Retrieve the monthly attendance summary for the class showing daily present-student counts.",
           "guidance": "CRITICAL: institution-class-attendance-records has NO integer id field. Its primary key is composite: (institution_class_id, academic_period_id, year, month). NEVER pass an id= param — it will return empty or error. Use list filters only: ?institution_class_id={id}&academic_period_id={period}&year={year}&month={month}. Alternatively use the composite-key path: GET /institution-class-attendance-records/institution_class_id/{X}/academic_period_id/{Y}/year/{Z}/month/{M}. day_1 through day_31 fields hold the daily present count; null means attendance was not yet submitted for that day."
+        },
+        {
+          "step": 5,
+          "title": "Fetch Teacher Roster",
+          "action": "openemis_get",
+          "resource": "institution-classes · institution-classes-secondary-staff · institution-subject-staff",
+          "purpose": "Build the full teacher list for the class by fanning out across three tables and deduping by staff_id.",
+          "guidance": "No single endpoint returns the full teacher list. Fan out across three tables and union by staff_id. (a) HOMEROOM TEACHER: openemis_get { resource: 'institution-classes', id: {class_id} } → row.staff_id (single security_users FK; may be null). (b) SECONDARY / CO-TEACHERS: openemis_get { resource: 'institution-classes-secondary-staff', params: { institution_class_id: {class_id} } } → rows with secondary_staff_id (FK to security_users). Composite PK (institution_class_id, secondary_staff_id) — no integer id, use list filters only. (c) SUBJECT TEACHERS: one row per (subject, staff) pair, NOT filterable by institution_class_id directly. Iterate over the institution_subject_id list from step 3: for each subjId: openemis_get { resource: 'institution-subject-staff', params: { institution_subject_id: subjId } } → rows with staff_id. DEDUPE: union all staff_id values into a Set (a person can appear in multiple lists — e.g. homeroom teacher often also teaches a subject). NAME RESOLUTION: one bulk call — openemis_get { resource: 'security-users', params: { ids: '13,42,99' } } — the server fans out internally and returns a merged array. Do NOT loop with individual calls."
         }
       ],
       "notes": [
-        "NAMES: always resolve via security-users?id={student_id} after getting IDs from institution-class-students.",
+        "NAMES: institution-class-students does NOT include name fields. Always resolve names via security-users (GET security-users?id={student_id}). first_name and last_name are on the security-users record.",
         "institution-class-attendance-records composite PK: (institution_class_id, academic_period_id, year, month). There is NO integer id column. Any call using a bare numeric id= filter will fail silently or return wrong data.",
         "This resource holds monthly aggregates (present-count per day). It is NOT the per-student absence log — for individual absences use student-attendance-marked-records.",
-        "day_X fields return null for days attendance was not submitted — treat as 'Pending', not as 0 absent."
-      ],
-      "coverage": {
-        "present": [
-          "institution-class-grades",
-          "institution-class-students",
-          "institution-class-subjects",
-          "institution-class-attendance-records"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+        "day_X fields return null for days attendance was not submitted — treat as 'Pending', not as 0 absent.",
+        "TEACHER ROSTER IS FRAGMENTED: homeroom lives on institution-classes.staff_id, co-teachers on institution-classes-secondary-staff, subject teachers on institution-subject-staff. There is no single endpoint that unions them — fan out and dedupe.",
+        "institution-classes-secondary-staff has a composite PK (institution_class_id, secondary_staff_id). No integer id — use list filters.",
+        "institution-subject-staff is NOT class-filterable. Filter by institution_subject_id only; iterate over the class's subject IDs from step 3.",
+        "Role-based visibility is a client concern today. Principals, VPs, and admins need to see all classes in their institution, but the API provides no 'classes I'm allowed to view' endpoint yet. The reverse query ('what classes can this staff_id see?') requires the same 3-table fan-out plus a role check — a dedicated core endpoint is on the OpenEMIS roadmap."
+      ]
     },
     {
       "id": "view-staff-profile",
@@ -8617,17 +8778,7 @@
         "FTE is uppercase in the API response: row.FTE not row.fte. Parse to float before displaying or computing (e.g. parseFloat(row.FTE)).",
         "institution-staff-leave is workflow-controlled. GET is always safe. For CREATE/UPDATE/DELETE, direct the user to the official OpenEMIS application.",
         "user-contacts covers both phone and email in one endpoint. contact_type_id must be resolved via /api/v5/contact-types for human-readable labels."
-      ],
-      "coverage": {
-        "present": [
-          "institution-staff-position-profiles",
-          "institution-staff-leave",
-          "historical-staff-positions",
-          "user-contacts"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "enhance-student-profile",
@@ -8694,18 +8845,7 @@
         "user-special-needs-plans FK spelling: special_needs_plan_types_id (plural). Resolve via /api/v5/special-needs-plan-types.",
         "file_content on both user-special-needs-assessments and user-special-needs-plans is always null in list responses to save bandwidth. Call GET /{id} on a specific record to retrieve the base64 file.",
         "Steps 2–5 can be fetched in parallel once security_user_id is known from step 1."
-      ],
-      "coverage": {
-        "present": [
-          "institution-students",
-          "user-contacts",
-          "user-nationalities",
-          "user-special-needs-assessments",
-          "user-special-needs-plans"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-institution-infrastructure",
@@ -8783,22 +8923,7 @@
         "Utilities (electricity, internet, telephone) and WASH resources DO use academic_period_id. Always pass it for those resources.",
         "WASH sanitation total_* columns are auto-calculated — display only, never write directly.",
         "Steps 4–6 can run in parallel once institution_id and academic_period_id are known."
-      ],
-      "coverage": {
-        "present": [
-          "institution-lands",
-          "institution-buildings",
-          "infrastructure-statuses",
-          "infrastructure-conditions",
-          "land-types",
-          "building-types",
-          "infrastructure-utility-electricities",
-          "infrastructure-wash-waters",
-          "infrastructure-wash-sanitations"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-institution-meals",
@@ -8857,19 +8982,7 @@
         "institution-meal-programmes maps to DB table meal_institution_programmes. The FK alias issue: the association for programme type, target, and implementer may use short aliases ('type', 'targeting', 'implementer') rather than _type_id suffixes in API responses — inspect the actual response keys before building filters.",
         "institution-meal-students maps to student_meal_marked_records — per-day attendance/participation records, not a static enrollment list. Filter by date if you want a specific day's participation.",
         "meal-implementers does NOT use FieldOption behavior — it only has id and name, no visible/order/default fields."
-      ],
-      "coverage": {
-        "present": [
-          "institution-meal-programmes",
-          "meal-programme-types",
-          "meal-implementers",
-          "meal-nutritional-records",
-          "meal-benefits",
-          "institution-meal-students"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-student-risks",
@@ -8930,20 +9043,7 @@
         "student-risks-criterias is a composite-PK join table — do NOT filter by a bare integer id. Use institution_student_risk_id.",
         "institution-cases is WORKFLOW-CONTROLLED. GET is safe. For creating or updating cases, use the OpenEMIS application — direct API writes bypass the approval chain.",
         "case_priority_id FK name — not priority_id. case_type_id — not type_id."
-      ],
-      "coverage": {
-        "present": [
-          "institution-student-risks",
-          "risks",
-          "risk-criterias",
-          "student-risks-criterias",
-          "institution-cases",
-          "case-types",
-          "case-priorities"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "view-institution-risks",
@@ -9010,19 +9110,7 @@
         "alerts↔alert-rules join is by STRING (alerts.name = alert_rules.feature), not by integer FK. This is the most non-obvious join in this domain.",
         "risks.academic_period_id is mandatory — the resource validates it cannot be empty.",
         "alert-logs.status values: 0=Pending, 1=Success, -1=Failed."
-      ],
-      "coverage": {
-        "present": [
-          "institution-risks",
-          "risks",
-          "risk-criterias",
-          "alerts",
-          "alert-rules",
-          "alert-logs"
-        ],
-        "missing": [],
-        "pct": 100
-      }
+      ]
     },
     {
       "id": "add-institution-asset",
@@ -9052,8 +9140,7 @@
           "action": "openemis_create",
           "resource": "institution-assets"
         }
-      ],
-      "coverage": 100
+      ]
     },
     {
       "id": "record-infrastructure-repair",
@@ -9078,8 +9165,7 @@
           "action": "openemis_create",
           "resource": "infrastructure-needs"
         }
-      ],
-      "coverage": 100
+      ]
     },
     {
       "id": "add-meal-programme",
@@ -9125,16 +9211,490 @@
           "action": "openemis_create",
           "resource": "meal-nutritional-records"
         }
+      ]
+    },
+    {
+      "id": "resolve-my-identity",
+      "title": "Resolve My Identity (Who Am I In OpenEMIS?)",
+      "audience": [
+        "teacher",
+        "admin",
+        "staff"
       ],
-      "coverage": 100
+      "domain": "Auth",
+      "description": "After openemis_login, figure out who the authenticated user is in OpenEMIS terms: their security_users id, full name, assigned institutions, position titles, and taught classes. Run this right after login (or at the start of any session where the user refers to 'me', 'my', 'mine') and cache the resolved user id for the remainder of the conversation. Bridge playbook between per-user auth and any 'show me my X' request. Requires openemis_login to have been called; otherwise openemis_whoami returns mode='env-default' and this playbook should warn the user that the implicit identity is the server's .env account.",
+      "resources": [
+        "security-users",
+        "institution-staff",
+        "institution-positions",
+        "staff-position-titles",
+        "institutions",
+        "institution-classes",
+        "institution-classes-secondary-staff",
+        "institution-subject-staff",
+        "institution-subjects",
+        "academic-periods"
+      ],
+      "steps": [
+        {
+          "action": "openemis_whoami",
+          "purpose": "Read the current session's username. Returns mode='per-user' if openemis_login was called, mode='env-default' if the server is running under its .env credentials (admin-like). Refuse to proceed with personal questions under env-default."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "security-users",
+          "params": {
+            "_conditions": "username:<username>",
+            "_fields": "id,username,first_name,last_name,email,gender_id"
+          },
+          "purpose": "Resolve username -> user id + display name. Exactly one row. Cache the id for the rest of the session."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-staff",
+          "params": {
+            "_conditions": "staff_id:<user_id>;staff_status_id:1",
+            "_fields": "id,institution_id,institution_position_id,FTE,start_date,end_date"
+          },
+          "purpose": "Institutions this user is an active staff member at. staff_status_id=1 filters to Assigned/Active. Teachers typically have 1-2 rows; admins without teaching load may have 0."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-positions",
+          "params": {
+            "ids": "<csv of distinct institution_position_id from step 3>",
+            "_fields": "id,staff_position_title_id"
+          },
+          "purpose": "Resolve each assignment's position title id. Batch with ?ids= — one call per distinct position id."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-classes",
+          "params": {
+            "_conditions": "staff_id:<user_id>;academic_period_id:<current>",
+            "_fields": "id,name,institution_id,education_grade_id"
+          },
+          "purpose": "Homeroom classes. staff_id on institution-classes is the homeroom-teacher FK. Use the current academic_period_id from GET academic-periods?current=1."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-classes-secondary-staff",
+          "params": {
+            "_conditions": "security_user_id:<user_id>",
+            "_fields": "id,institution_class_id"
+          },
+          "purpose": "Secondary / co-teaching assignments. Returns institution_class_id only — fan out to institution-classes with ?ids= for class names."
+        },
+        {
+          "action": "openemis_get",
+          "resource": "institution-subject-staff",
+          "params": {
+            "_conditions": "security_user_id:<user_id>",
+            "_fields": "id,institution_class_id,institution_subject_id"
+          },
+          "purpose": "Subject-teaching assignments. One row per (class, subject, staff). Batch-resolve class names + subject names with two ?ids= calls."
+        },
+        {
+          "action": "compose",
+          "purpose": "Union steps 5-7 by institution_class_id and dedupe. Compose a terse one-paragraph summary: 'You are {first} {last} — {position} at {institution}, teaching {N} classes this period.' Cache this as the implicit identity context for follow-up questions like 'my students', 'my attendance', 'my classes'."
+        }
+      ],
+      "notes": [
+        "After openemis_login: call openemis_whoami first; if it returns mode='env-default' the user skipped login and the identity is the server's shared .env account — do NOT treat that as the real user.",
+        "Username is case-sensitive on most OpenEMIS installs (MySQL default collation). Use the exact string from openemis_whoami.",
+        "Multi-institution users (principals on a cluster, dual-assignment teachers) have >1 rows in institution-staff. Ask which institution they mean before running follow-up queries.",
+        "Non-teaching admins (principals, HR, registrars) will typically have zero rows in steps 5-7. The summary should read 'You are the Principal of X' with no class list — not an error.",
+        "Resolve the current academic_period_id ONCE per session via GET academic-periods?current=1. Never hardcode a year number.",
+        "401 on any of these calls means the stored JWT expired — the MCP surfaces a 're-run openemis_login' error; ask the user to authenticate again."
+      ]
+    },
+    {
+      "id": "diagnose-alert-delivery",
+      "title": "Diagnose alert delivery (POCOR-9509 alerts pipeline)",
+      "audience": [
+        "admin",
+        "ministry"
+      ],
+      "domain": "Alerts",
+      "description": "Answer 'did this alert actually go out?' or 'why didn't it?'. Since OpenEMIS Core 5.8 the alerts pipeline is Laravel-side: a cron-driven check (alerts:check) builds the queue, then alerts:send delivers via email/SMS. Read state from system-processes + alert-logs + message-recipients (the alerts:dispatch internal queue table is NOT exposed via /api/v5).",
+      "resources": [
+        "alerts",
+        "alert-rules",
+        "alert-logs",
+        "system-processes",
+        "message-recipients"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "List active alert configurations",
+          "action": "openemis_get",
+          "resource": "alerts",
+          "purpose": "Confirm the alert exists and is enabled. The alert.name string is the join key into alert-rules.feature.",
+          "guidance": "Use _conditions=feature:RetirementWarning (or whatever feature label the user named) to scope. Note the enabled flag (0/1)."
+        },
+        {
+          "step": 2,
+          "title": "Inspect the matching alert-rules thresholds and recipients",
+          "action": "openemis_get",
+          "resource": "alert-rules",
+          "purpose": "Resolve threshold values, delivery method (Email/SMS), and which security_roles get notified.",
+          "guidance": "Filter by feature using _conditions=feature:<name>. The security_roles join lives in alerts-roles (composite PK)."
+        },
+        {
+          "step": 3,
+          "title": "Check the most recent dispatcher run",
+          "action": "openemis_get",
+          "resource": "system-processes",
+          "purpose": "Find the latest alerts:check / alerts:send execution row. status=1 (running) flipping to status=2 (completed) is the success signal. Stuck status=1 means the worker died or never picked the row up.",
+          "guidance": "Order by created DESC, limit 20. Filter by name with _conditions=name:*Alert*. Each cron tick writes a row; absence of recent rows means the cron is not running."
+        },
+        {
+          "step": 4,
+          "title": "Read recent alert-logs to see actual delivery outcomes",
+          "action": "openemis_get",
+          "resource": "alert-logs",
+          "purpose": "alert-logs has one row per recipient per dispatch. status: 0=Pending, 1=Sent, -1=Failed. The checksum field is used to dedupe — a status=DEDUPED entry means the same checksum was already sent.",
+          "guidance": "Filter by feature and order by created DESC. For 'why did it fail' questions, narrow to status=-1 and read the message column for the SMTP/SMS error string."
+        },
+        {
+          "step": 5,
+          "title": "Cross-check message-recipients for the underlying email/SMS records",
+          "action": "openemis_get",
+          "resource": "message-recipients",
+          "purpose": "alert-logs stores the dispatcher view; message-recipients is the audit row attached to the actual outbound message. Use it to confirm the recipient address resolved correctly.",
+          "guidance": "Join semantically by created timestamp window (alert-logs.created ± a few seconds) — there is no direct FK. Watch out for null security_user_id which indicates a guardian or external recipient."
+        }
+      ],
+      "notes": [
+        "POCOR-9509 dispatch is CLI-driven: alerts are scheduled by a Laravel artisan cron (alerts:check + alerts:send), NOT triggered through any /api/v5 POST. Never tell the user to POST to /api/v5/alerts to fire one — that endpoint only edits the alert configuration row.",
+        "alerts.id=13 is RetirementWarning (specific to dmo-dev seed); the placeholder syntax in email_subject/email_body must use dot-notation prefixes ('${user.first_name}', not '${first_name}'). If a sysadmin reports placeholders rendering literally, that's the fix.",
+        "system-processes.status legend: 1=running, 2=completed, 3=failed. A missing recent row means the cron flock guard prevented a run or the cron itself isn't installed.",
+        "alert-logs.status legend: 0=Pending, 1=Sent, -1=Failed, plus DEDUPED markers introduced in POCOR-9509.",
+        "If the user is on Core <= 5.7, this playbook does not apply — the older alert pipeline ran via CakePHP shells and did not populate system-processes."
+      ]
+    },
+    {
+      "id": "view-school-accreditation",
+      "title": "View school accreditation records (POCOR-9610)",
+      "audience": [
+        "admin",
+        "ministry",
+        "principal"
+      ],
+      "domain": "Institution",
+      "description": "OpenEMIS Core 5.10.0 introduced /api/v5/institution-accreditations (POCOR-9610). Each row links one institution to one education_programme it is accredited to offer, with a valid_from..valid_to window. Status is derived from those dates, not stored. The UI tab under Institution → General is read-only — accreditation data is meant to be set via the API.",
+      "resources": [
+        "institution-accreditations",
+        "institutions",
+        "education-programmes",
+        "education-cycles",
+        "education-levels",
+        "education-systems"
+      ],
+      "schema_invariants": [
+        "institution_accreditations columns: id, institution_id, education_programme_id, valid_from, valid_to, modified_user_id, modified, created_user_id, created.",
+        "valid_from and valid_to are nullable. A null valid_to means open-ended (still in force). A null valid_from is unusual and likely a data-entry error.",
+        "Status is NOT a stored column. Derive it from now() vs the valid_from..valid_to window: Active (now in window), Expired (now > valid_to), Future (now < valid_from).",
+        "education_programme_id chains to education_programmes → education_cycles → education_levels → education_systems. Each step needs a separate GET to humanize the label.",
+        "There is no soft-delete and no workflow approval — DELETE is permanent and immediate."
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "List accreditations for an institution",
+          "action": "openemis_get",
+          "resource": "institution-accreditations",
+          "purpose": "Pull every accreditation row for the institution.",
+          "guidance": "Filter with institution_id:<id>. Request _fields=['id','institution_id','education_programme_id','valid_from','valid_to'] to keep the payload small. There is typically a handful of rows per institution — no pagination needed unless the institution has 100+ programmes accredited."
+        },
+        {
+          "step": 2,
+          "title": "Resolve programme labels (4 lookups deep)",
+          "action": "openemis_get",
+          "resource": "education-programmes",
+          "purpose": "Humanize each education_programme_id into 'System → Level → Cycle → Programme' breadcrumbs.",
+          "guidance": "For each unique education_programme_id from step 1, fetch the programme to get code+name+education_cycle_id. Then walk education-cycles → education-levels → education-systems with the same pattern. Cache the chain — many accreditations share the same parent chain."
+        },
+        {
+          "step": 3,
+          "title": "Compute status per row",
+          "action": "compute",
+          "purpose": "Derive Active / Expired / Future from valid_from and valid_to.",
+          "guidance": "Use today's date in the institution's locale (not server UTC if the institution sits in a different timezone). Active = valid_from <= today AND (valid_to is null OR today <= valid_to). Expired = valid_to is not null AND today > valid_to. Future = valid_from is not null AND today < valid_from."
+        },
+        {
+          "step": 4,
+          "title": "Render",
+          "action": "format",
+          "purpose": "Produce a table the user can read: Programme code | Programme name | Valid from | Valid to | Status.",
+          "guidance": "Sort by Status (Active first, then Future, then Expired), then by valid_from descending within each group so the most recent accreditation surfaces at the top."
+        }
+      ],
+      "notes": [
+        "POCOR-9610 deliberately keeps the institutions table untouched — accreditation lives in its own table so it can be replaced/extended without schema-evolving institutions.",
+        "API read access is granted to roles 1-7, 9, 10. Write access is granted only to roles whose `order` < 5 (super-admin tier). If a write fails with 403, the caller is likely a teacher/staff role.",
+        "There is no `status` column to filter on. Do not try _conditions=status:Active — it will silently match nothing."
+      ]
+    },
+    {
+      "id": "view-school-registration",
+      "title": "View school registration records (POCOR-9610)",
+      "audience": [
+        "admin",
+        "ministry",
+        "principal"
+      ],
+      "domain": "Institution",
+      "description": "Sibling of institution-accreditations. /api/v5/institution-registrations holds the institution's registration windows with the ministry/regulator. Schema is simpler than accreditation — registration is institution-level (no programme link).",
+      "resources": [
+        "institution-registrations",
+        "institutions"
+      ],
+      "schema_invariants": [
+        "institution_registrations columns: id, institution_id, valid_from, valid_to, modified_user_id, modified, created_user_id, created. Note the absence of education_programme_id — registration is whole-institution.",
+        "An institution typically has at most one active registration at a time, but the table is append-only and keeps history. Sort by valid_from DESC to get the current one first.",
+        "Same date-driven Status derivation as accreditation: Active / Expired / Future from valid_from..valid_to."
+      ],
+      "steps": [
+        "openemis_get('institution-registrations', params: {institution_id: <id>, _fields: ['id','institution_id','valid_from','valid_to'], orderby: 'valid_from', order: 'desc'})",
+        "Compute Status per row: Active = valid_from <= today AND (valid_to null OR today <= valid_to); Expired = today > valid_to; Future = today < valid_from.",
+        "Identify the current registration (Status=Active) and report its valid_to as the next renewal deadline (or note 'open-ended' if valid_to is null).",
+        "If no Active row exists, surface a warning — the institution is currently unregistered for at least part of today."
+      ],
+      "notes": [
+        "Same permissions model as institution-accreditations: read open to roles 1-7,9,10; write restricted to roles with order < 5.",
+        "Registration history is NOT user-deletable from the UI (HideButton). If the user asks 'remove a registration row', they have to use the API directly — and that requires write permission."
+      ]
+    },
+    {
+      "id": "view-institution-budget",
+      "title": "View institution budget records (Core 5.10.0)",
+      "audience": [
+        "admin",
+        "finance"
+      ],
+      "domain": "Institution",
+      "description": "List the budget records attached to an institution and resolve their budget types and academic periods. Useful for the question 'what budget did the school plan for this year?' or 'show me last year's budget vs this year's.'",
+      "resources": [
+        "institution-budgets",
+        "budget-types",
+        "academic-periods",
+        "institutions"
+      ],
+      "schema_invariants": [
+        "institution_budgets columns: id, institution_id, academic_period_id, budget_type_id, amount, file_name, file_content (longblob — do NOT request this field unless the user wants the file), description, modified_user_id/modified, created_user_id/created.",
+        "amount is a string in the API response (CakePHP decimal handling) — parseFloat before summing.",
+        "file_content is the attachment binary. Always exclude it from list responses via _fields to keep payloads small. Fetch by id when the user wants the actual file."
+      ],
+      "steps": [
+        "openemis_get('institution-budgets', params: {institution_id: <id>, academic_period_id: <period>, _fields: ['id','academic_period_id','budget_type_id','amount','description','created'], limit: 100})",
+        "openemis_get('budget-types', params: {_fields: ['id','name'], limit: 50}) — global reference list, cache it.",
+        "If filtering across years, also fetch academic-periods to humanize period labels.",
+        "Sum amount per budget_type_id to answer 'total operating budget' / 'total capital budget' style questions.",
+        "If the user wants the attachment, do a single-row GET on institution-budgets/{id} requesting _fields=['file_name','file_content'] — but warn them the response will be large."
+      ]
+    },
+    {
+      "id": "query-student-absence-history",
+      "title": "Query a student's absence history (Core 5.10.0 aggregates)",
+      "audience": [
+        "teacher",
+        "admin",
+        "parent",
+        "counsellor"
+      ],
+      "domain": "Attendance",
+      "description": "Answer 'how often was this student absent last term?' / 'what days did they miss?' / 'are absences clustering?'. Core 5.10.0 exposes two aggregate resources: institution-student-absences (per-day rows with absence_type_id) and institution-student-absence-days (multi-day spans with absent_days count). They complement the per-period student-attendance-marked-records used during roll call.",
+      "resources": [
+        "institution-student-absences",
+        "institution-student-absence-days",
+        "student-attendance-marked-records",
+        "absence-types",
+        "academic-periods"
+      ],
+      "schema_invariants": [
+        "institution-student-absences is a flat per-day record: id, student_id, institution_id, academic_period_id, institution_class_id, education_grade_id, date, absence_type_id, institution_student_absence_day_id (FK back to the span row).",
+        "institution-student-absence-days collapses consecutive days into a span: id, student_id, institution_id, absence_type_id, absent_days (integer), start_date, end_date. Use it for 'longest absence stretch' questions.",
+        "absence_type_id resolves via the absence-types reference list. 1 typically = Unexcused, 2 = Excused, but ALWAYS resolve names — sites can edit them.",
+        "An absence in institution-student-absences does NOT imply a row in student-attendance-marked-records (and vice versa). The per-period roll-call records and the per-day aggregates are independent surfaces — joining them is application-level glue, not a DB FK."
+      ],
+      "steps": [
+        "Resolve the academic period(s) of interest: openemis_get('academic-periods', params: {_fields: ['id','code','name','start_date','end_date'], limit: 50})",
+        "List per-day absences: openemis_get('institution-student-absences', params: {student_id: <id>, academic_period_id: <period>, _fields: ['date','absence_type_id','institution_class_id'], limit: 365, orderby: 'date', order: 'desc'})",
+        "List span aggregates: openemis_get('institution-student-absence-days', params: {student_id: <id>, _fields: ['absence_type_id','absent_days','start_date','end_date'], orderby: 'start_date', order: 'desc'})",
+        "Resolve absence_type_id → human label: openemis_get('absence-types', params: {_fields: ['id','name','code'], limit: 50})",
+        "Render: total absent days for the period (sum of absent_days from the span table — that's the canonical count, not the per-day rows), broken down by type. Flag if any single span >= 5 consecutive days (chronic-absence threshold the ministry typically cares about)."
+      ],
+      "notes": [
+        "POCOR-9560/9660 deprecated some legacy attendance paths — the v4 student-attendances endpoints are gone. Stick to v5 only.",
+        "Do not try to derive the span table from the per-day table — the span table is the source of truth for absent_days. Per-day rows are for surfacing exception days; the span row aggregates them.",
+        "If you need the reason free-text (e.g. 'sick — doctor's note attached'), fetch institution-student-absence-details linked by composite key. Most playbook callers won't need that depth."
+      ]
+    },
+    {
+      "id": "query-user-activity-audit-log",
+      "title": "Query the user activity audit log (POCOR-9697 — Wave 3)",
+      "audience": [
+        "admin",
+        "security",
+        "ministry"
+      ],
+      "domain": "Security",
+      "description": "Answer 'who changed this record?' / 'when was this user's password reset?' / 'show all writes by user X this week.' POCOR-9697 (Core 5.10.0) introduced Wave-3 audit logging: every write through the v5 API is recorded into user_activities with per-field old/new snapshots, redacted for sensitive columns. The CakePHP stack writes the same row shape via a ported trait.",
+      "resources": [
+        "user-activities",
+        "security-users"
+      ],
+      "schema_invariants": [
+        "user_activities row shape: id, model (PHP class like 'Institutions'), model_reference (the row's PK as a string), field (column name), field_type, old_value, new_value, operation (CREATE/UPDATE/DELETE), security_user_id (actor — derived from JWT, never client-supplied), created_user_id, created.",
+        "On DELETE: per-field snapshot is taken BEFORE the row is removed, so the audit captures the entire deleted row. The FK to security_users is ON DELETE SET NULL — hard-deleting a user keeps the audit but loses the actor link.",
+        "Redactions: password, super_admin, and photo_content fields are never written to user_activities. If you see a UPDATE row on security_users with no 'password' field, that's the redaction at work — not a missing entry.",
+        "The actor (security_user_id) is ALWAYS the JWT subject. It is NOT trusted from request body — POCOR-9697 explicitly strips client-supplied created_user_id/modified_user_id on the read side and derives them server-side."
+      ],
+      "steps": [
+        "openemis_get('user-activities', params: {security_user_id: <actor_id>, _fields: ['model','model_reference','field','old_value','new_value','operation','created'], orderby: 'created', order: 'desc', limit: 200}) — 'what did this user change recently?'",
+        "openemis_get('user-activities', params: {model: 'Institutions', model_reference: '<institution_id>', orderby: 'created', order: 'desc'}) — 'what was changed on this institution row?'",
+        "To time-bound: add _conditions=created>=<iso-date> and created<=<iso-date>. The created column is a DATETIME and indexed.",
+        "For DELETE diagnostics: filter operation='DELETE' and the rows give you a full per-field snapshot of what was removed — useful for restore work.",
+        "Resolve security_user_id → username via security-users (limit lookups; cache)."
+      ],
+      "notes": [
+        "user_activities is APPEND-ONLY in practice — there is no UI to edit or delete entries. Treat any 'delete an audit row' request as a red flag.",
+        "Volume scaling: a busy production tenant writes ~10k rows/day into user_activities. Always paginate; never request without a filter and limit.",
+        "If a write went through the legacy CakePHP UI (not the v5 API), it ALSO writes a user_activities row (POCOR-9697 ported the trait). Same redaction rules apply.",
+        "Pre-5.10.0 (i.e. Core <= 5.9) had per-row UserActivityLog::add() at scattered call sites — the new pattern is uniform via the model trait. If a row predates 2026-05 it may have a different shape (no per-field snapshot, only a free-text description)."
+      ]
+    },
+    {
+      "id": "view-class-roster",
+      "title": "View a class's roster (institution-classes + students)",
+      "audience": [
+        "teacher",
+        "admin",
+        "homeroom"
+      ],
+      "domain": "Institution",
+      "description": "Pull the students in a specific institution class. /api/v5/institution-classes (Core 5.10.0) is the class definition; institution-class-students joins it to the student roster. Webhook-enabled (POCOR-9257) — changes fire created/updated/deleted events.",
+      "resources": [
+        "institution-classes",
+        "institution-class-students",
+        "institution-students",
+        "education-grades",
+        "academic-periods"
+      ],
+      "schema_invariants": [
+        "institution_classes fields: id, name, class_number, capacity, total_male_students, total_female_students, staff_id (homeroom teacher), institution_shift_id, institution_id, institution_unit_id, institution_course_id, academic_period_id.",
+        "total_male_students and total_female_students are CACHED counts updated by the application — they may briefly drift from the actual count in institution-class-students. Treat them as 'approximate' and verify with a count(institution-class-students) when accuracy matters.",
+        "Capacity is a soft limit — the API does NOT enforce it on enrolment. UI may warn; backend will accept.",
+        "POCOR-9257 webhooks: created / updated / deleted events for institution-classes are dispatched on each write. Useful for downstream sync but irrelevant to read paths."
+      ],
+      "steps": [
+        "Identify the class: openemis_get('institution-classes', params: {institution_id: <id>, academic_period_id: <period>, _fields: ['id','name','staff_id','institution_unit_id','capacity'], limit: 100}). Filter by name or institution_unit_id (the grade) as needed.",
+        "Get the roster: openemis_get('institution-class-students', params: {institution_class_id: <class_id>, _fields: ['student_id','education_grade_id','student_status_id','start_date','end_date'], limit: 200})",
+        "Resolve student details: openemis_get('institution-students', params: {ids: [<student_ids>], _fields: ['student_id','first_name','last_name','date_of_birth','gender_id']}). The ids= fan-out (v0.3.0+) lets you fetch many at once.",
+        "Resolve homeroom teacher: openemis_get('security-users', params: {id: <staff_id>, _fields: ['first_name','last_name','openemis_no']}). Only one lookup needed for the staff_id from step 1.",
+        "Render: class name + grade + capacity + roster (student#, name, status). Flag any student_status_id that's not Enrolled (e.g., Withdrawn, Transferred) since those students appear in the roster but are not active."
+      ],
+      "notes": [
+        "institution-class-students has student-level status (student_status_id), not class-level. A withdrawn student stays in the roster as a historical record — UIs typically filter by student_status_id=1 (Enrolled) for the 'current' view.",
+        "POCOR-9687 changed how Enrolled (Repeater) is derived. If a student is in the roster of the same class for a second academic period, that's the repeater flow — handled by application logic, not a schema change.",
+        "If the homeroom teacher (staff_id) is null, the class has no assigned homeroom — common in early planning before staff assignments."
+      ]
+    },
+    {
+      "id": "set-school-accreditation",
+      "title": "Set / update a school accreditation (POCOR-9610, pro-only write)",
+      "audience": [
+        "admin",
+        "ministry"
+      ],
+      "domain": "Institution",
+      "description": "Create or update an institution_accreditations row via the v5 API. Available only in the pro distribution (free is read-only). Permission gate: caller's security role must have order < 5.",
+      "resources": [
+        "institution-accreditations",
+        "institutions",
+        "education-programmes"
+      ],
+      "schema_invariants": [
+        "POST body shape: { institution_id, education_programme_id, valid_from (YYYY-MM-DD), valid_to (YYYY-MM-DD or null) }. modified_user_id, created_user_id, modified, created are derived server-side from the JWT subject — DO NOT include them in the body (they are silently stripped by POCOR-9697).",
+        "valid_from is required. valid_to nullable (open-ended). Date format is YYYY-MM-DD; ISO datetime is also accepted and truncated.",
+        "Same row can be reused across years by updating valid_to to null when extending, or by POSTing a NEW row with a fresh valid_from when re-accredited after expiry."
+      ],
+      "steps": [
+        "Verify the caller has write permission (role.order < 5). If unsure, dispatch a single openemis_get('institution-accreditations', params:{limit:1, institution_id:<id>}) and try the write — a 403 is the gate failing.",
+        "Resolve education_programme_id: openemis_get('education-programmes', params: {_fields:['id','code','name','education_cycle_id'], limit: 200}). Pick the programme the institution is being accredited for.",
+        "openemis_create('institution-accreditations', body: { institution_id, education_programme_id, valid_from: '2026-09-01', valid_to: '2030-08-31' })",
+        "On success the API returns the row with its assigned id. The audit trail (user_activities, POCOR-9697) records the CREATE with per-field snapshots — no separate audit call needed.",
+        "To EXTEND an existing accreditation: openemis_update('institution-accreditations', id: <accreditation_id>, body: { valid_to: '<new-date>' or null }). To REPLACE: POST a fresh row instead of updating valid_from."
+      ],
+      "notes": [
+        "Permission errors return 403 with a 'Forbidden' message. There is no special UNAUTHORIZED-because-of-role-order shape — same code as 'JWT missing or invalid'. Distinguish by checking the bearer is present and valid.",
+        "Do NOT include education_programme_id values from inactive education_systems / education_levels — there is no FK constraint catching this, the write will succeed but the row will be invisible in the Institution → Accreditations UI.",
+        "There is no soft-delete. openemis_delete is irreversible. POCOR-9697 captures the deletion in user_activities for forensic recovery — but the row itself is gone."
+      ]
+    },
+    {
+      "id": "set-school-registration",
+      "title": "Set / update a school registration (POCOR-9610, pro-only write)",
+      "audience": [
+        "admin",
+        "ministry"
+      ],
+      "domain": "Institution",
+      "description": "Create or update an institution_registrations row. Sibling of set-school-accreditation but simpler: there is no programme link, only the institution and the valid_from..valid_to window.",
+      "resources": [
+        "institution-registrations",
+        "institutions"
+      ],
+      "schema_invariants": [
+        "POST body shape: { institution_id, valid_from (YYYY-MM-DD), valid_to (YYYY-MM-DD or null) }. Same server-side derivation of audit fields.",
+        "An institution typically has one Active registration row at a time. The API does NOT enforce non-overlap — it is policy-level. The application UI sorts by valid_from DESC and treats the newest Active row as 'current'."
+      ],
+      "steps": [
+        "openemis_get('institution-registrations', params: {institution_id: <id>, orderby:'valid_from', order:'desc'}) — review existing rows to decide CREATE vs UPDATE.",
+        "If extending: openemis_update('institution-registrations', id:<existing_id>, body:{valid_to:'<new-date>' or null})",
+        "If new registration cycle: openemis_create('institution-registrations', body:{institution_id, valid_from:'YYYY-MM-DD', valid_to:'YYYY-MM-DD' or null})",
+        "Confirm by re-listing — newest row should be Active."
+      ],
+      "notes": [
+        "Same role.order < 5 write gate as accreditations. Same audit shape (user_activities CREATE/UPDATE/DELETE per POCOR-9697).",
+        "If valid_from is set in the future, the registration is in Future state — the UI will show it but it's not yet in force."
+      ]
+    },
+    {
+      "id": "mark-student-meal-participation",
+      "title": "Mark student meal participation (pro-only write)",
+      "audience": [
+        "teacher",
+        "admin",
+        "nutritionist"
+      ],
+      "domain": "Meal",
+      "description": "Write per-day meal participation into student_meal_marked_records. Used during meal-distribution roll call: which students received which benefit on a given date. Free MCP only reads this (via view-institution-meals); writes are pro-only.",
+      "resources": [
+        "student-meal-marked-records",
+        "meal-institution-programmes",
+        "institution-class-students",
+        "meal-benefits"
+      ],
+      "schema_invariants": [
+        "student_meal_marked_records columns: id, institution_id, academic_period_id, institution_class_id, meal_programmes_id, date, meal_benefit_id. Note the column is meal_programmes_id (with an S, pointing at meal_programmes), not meal_programme_id.",
+        "One row per (student in class, programme, date, benefit). The same student CAN have multiple rows on the same date if they receive multiple benefits — no unique constraint enforces 'one per student per day'.",
+        "date is YYYY-MM-DD. Use the institution's local date, not server UTC."
+      ],
+      "steps": [
+        "Identify which class and programme: openemis_get('meal-institution-programmes', params:{institution_id:<id>, academic_period_id:<period>}) — this gives you the meal_programme_id (the underlying programme id) and meal_implementer_id.",
+        "Resolve which students are in the class today: openemis_get('institution-class-students', params:{institution_class_id:<class>, student_status_id:1, _fields:['student_id']}).",
+        "For each student you want to mark, POST: openemis_create('student-meal-marked-records', body:{institution_id, academic_period_id, institution_class_id, meal_programmes_id, date:'YYYY-MM-DD', meal_benefit_id}).",
+        "Absence-by-omission: if a student is in the class today but does NOT get a row, they did not receive a meal. The application uses this convention rather than null entries.",
+        "Confirm by re-reading: openemis_get('student-meal-marked-records', params:{institution_class_id:<class>, date:'YYYY-MM-DD', _fields:['student_id','meal_benefit_id']})."
+      ],
+      "notes": [
+        "There is no v5 endpoint that bulk-marks 'everyone present today.' Loop POSTs, or build the array client-side and submit one-by-one.",
+        "Mistakes are corrected via openemis_delete on the row, not by overwriting. The composite of (student_id implied by class roster, date, meal_benefit_id) is not enforced as unique, so an overwrite would create a duplicate."
+      ]
     }
   ],
-  "global_policies": {
-    "current_academic_period": "When the user says 'this year', 'current year', or 'now': ALWAYS call GET academic-periods?current=1 first. The row with current=1 is the active year. Use its id as academic_period_id. NEVER assume a year from list order or context.",
-    "student_names": "institution-class-students and institution-students return student_id (FK) only — NO name fields. To get first_name and last_name, call GET security-users?id={student_id}. This is the base user table for all roles.",
-    "general_policy": "OpenEMIS MCP is an AI-powered assistant for school administrators. It connects to your OpenEMIS instance and can read and write school data on your behalf, including students, staff, attendance, and exam records. All actions require valid credentials and respect the permissions of the authenticated user. Sensitive data must not be shared outside authorised users. This assistant is provided as-is for educational management purposes.",
-    "test_policy": "TESTING ENVIRONMENT: This GPT is a testing and demonstration instance of OpenEMIS MCP. By continuing to use it, you acknowledge that: (1) This is not a production system — behaviour may change without notice. (2) Your interactions, including the questions you ask and the data you request, may be logged and reviewed by the development team to improve the product. (3) Do not enter real student or staff personal data — use demo or anonymised data only. (4) The development team may observe sessions to test and refine AI behaviour and playbooks.",
-    "batch_id_lookup": "OpenEMIS has no native IN operator for GET queries. To fetch multiple records by ID in one call, use the ?ids= parameter on any GET /api/resources/{resource} endpoint: e.g. GET /api/resources/security-users?ids=13678,14671,13665 The server handles the fan-out internally and returns a merged array. NEVER do individual per-id calls in a loop when you have a list of IDs — always use ?ids= instead. Maximum 100 IDs per call."
-  },
-  "playbook_count": 29
+  "playbook_count": 38
 }
