@@ -6,6 +6,8 @@
 
 **جسر لغوي طبيعي بين الوكلاء المدركين لـ MCP (Claude، Codex، Cursor، إلخ) وأي نسخة من OpenEMIS.**
 
+OpenEMIS هو نظام معلومات إدارة مدرسية مجاني ومفتوح المصدر طورته اليونسكو وKORDIT، ويُستخدم في رياض الأطفال والمدارس ومؤسسات التعليم المهني الثانوي والجامعات.
+
 مبني على **واجهة برمجة التطبيقات الأساسية المنشورة لـ OpenEMIS Core** (الوثائق المرجعية على [api.openemis.org/core](https://api.openemis.org/core)) و **تم التحقق منه من البداية إلى النهاية ضد النسخة التجريبية العامة على [demo.openemis.org/core](https://demo.openemis.org/core)** باستخدام بيانات اعتماد حقيقية، وبيانات حقيقية، ودورات اتصال حقيقية.
 
 اسأل بالإنجليزية:
@@ -18,13 +20,13 @@
 
 أنتم لا تكتبون سطرًا واحدًا من التعليمات البرمجية. أنتم لا ترون JSON. أنتم فقط تسألون.
 
-> **الحالة:** v0.3.0 — **عمليات CRUD الكاملة** للموارد غير الخاضعة لسير العمل. تعمل استعلامات القراءة ضد كل مورد في OpenEMIS v5. أدوات الكتابة (إنشاء/تحديث/حذف) نشطة لجميع الموارد التي لا تمر عبر إضافة CakePHP Workflow. الموارد الخاضعة لسير العمل (مثل الحضور، إجازة الموظفين) محظورة على مستوى الأداة ويتم توجيهها إلى دليل الإجراءات المناسب.
+> **الحالة:** v1.0.0 — **عمليات CRUD الكاملة** للموارد غير الخاضعة لسير العمل. تعمل استعلامات القراءة ضد كل مورد في OpenEMIS v5. أدوات الكتابة (إنشاء/تحديث/حذف) نشطة لجميع الموارد التي لا تمر عبر إضافة CakePHP Workflow. الموارد الخاضعة لسير العمل (مثل الحضور، إجازة الموظفين) محظورة على مستوى الأداة ويتم توجيهها إلى دليل الإجراءات المناسب.
 
 ---
 
 ## لماذا يوجد هذا
 
-واجهة برمجة التطبيقات REST الأساسية لـ OpenEMIS كبيرة — حيث تعرض واجهة v5 وحدها حوالي **1350 نقطة نهاية عبر ~670 موردًا**. لا يمكن لأي وكيل ذكي استيعاب ذلك في السياق، كما أن الاستبطان الخام على طراز Swagger يغمر المحادثة بضوضاء ليس لها علاقة بسؤال المستخدم الفعلي.
+واجهة برمجة التطبيقات REST الأساسية لـ OpenEMIS كبيرة — حيث تعرض واجهة v5 وحدها **3,355 نقطة نهاية عبر 675 موردًا** (Core 5.10.0). لا يمكن لأي وكيل ذكي استيعاب ذلك في السياق، كما أن الاستبطان الخام على طراز Swagger يغمر المحادثة بضوضاء ليس لها علاقة بسؤال المستخدم الفعلي.
 
 يحل هذا MCP هذه المشكلة بطريقتين:
 
@@ -42,7 +44,7 @@
 | `openemis_health` | v0.1 | يتحقق من وصول النسخة المكونة ويبلغ عن إمكانية الوصول. يقوم بدورة تسجيل دخول حقيقية — إذا نجح هذا، ستعمل عمليات CRUD. |
 | `openemis_list_domains` | v0.1 | يسرد نطاقات OpenEMIS المختارة — الحضور، التقييم، الموظفون، الطلاب، المؤسسة، الجدول الزمني، الامتحان، التقرير — كل منها مع ملخص سطر واحد. يستخدم الوكيل هذا لمعرفة *أين* يعيش السؤال. |
 | `openemis_discover` | v0.1 | الإدخال: سلسلة موضوع. الإخراج: ما يصل إلى 30 نقطة نهاية ذات صلة بهذا الموضوع، مأخوذة من حزمة المعرفة الخاصة بالنطاق والبيان الوصفي لكل نسخة. يحافظ على صغر المحادثات بغض النظر عن حجم واجهة برمجة التطبيقات الأساسية. |
-| `openemis_list_playbooks` | v0.2 | يسرد جميع أدلة الإجراءات السبعة والعشرين المختارة مع المعرف، العنوان، النطاق، والجمهور. يستخدم الوكيل هذا للعثور على الدليل التدريجي المناسب لمهمة على مستوى المستخدم. |
+| `openemis_list_playbooks` | v0.2 | يسرد جميع أدلة الإجراءات الـ 40 المختارة مع المعرف، العنوان، النطاق، والجمهور. يستخدم الوكيل هذا للعثور على الدليل التدريجي المناسب لمهمة على مستوى المستخدم. |
 | `openemis_get_playbook` | v0.2 | الإدخال: معرف دليل الإجراءات. الإخراج: دليل الإجراءات الكامل — الموارد، الخطوات المرتبة، ملاحظات التوجيه، واستعلامات المثال. |
 | `openemis_get` | v0.1 | أداة قراءة موحدة. `{ resource, id?, params? }` — إذا كان `id` موجودًا، يجلب المفرد؛ وإلا يسرد مع أي مجموعة من `_fields`, `_conditions`, `orderby`, `order`, `page`, `limit`، بالإضافة إلى أي مفتاح تصفية خاص. |
 | `openemis_create` | v0.3.0 | إنشاء سجل جديد. `{ resource, body }` — الموارد غير الخاضعة لسير العمل فقط. الموارد الخاضعة لسير العمل (مثل institution-staff-leave) محظورة وسيتم توجيهها إلى دليل الإجراءات المناسب. |
@@ -232,7 +234,7 @@ curl http://your-server:3000/health
 │  • openemis_health     │
 │  • openemis_list_dom…  │  ← يقرأ Domain-*.md من الخزنة
 │  • openemis_discover   │  ← موضوع → ≤30 نقطة نهاية محددة النطاق
-│  • openemis_list_play… │  ← سرد جميع أدلة الإجراءات الـ 16 الخاصة بسير العمل
+│  • openemis_list_play… │  ← سرد جميع أدلة الإجراءات الـ 40 الخاصة بسير العمل
 │  • openemis_get_playbk │  ← تحميل دليل إجراءات بواسطة المعرف
 │  • openemis_get / _create / _update / _delete   │
 └───────────┬────────────┘
@@ -254,12 +256,14 @@ curl http://your-server:3000/health
 
 ## التوثيق
 
-- [مرجع الموارد](docs/resources.md) — جميع الموارد الـ 645 مع توفر طريقة HTTP وحالة الكتابة
-- [أدلة الإجراءات](docs/playbooks/) — 27 دليل إجراءات مختار لسير العمل (24 قراءة · 3 كتابة)
+- [مرجع الموارد](docs/resources.md) — جميع الموارد الـ 675 مع توفر طريقة HTTP وحالة الكتابة (Core 5.10.0)
+- [أدلة الإجراءات](docs/playbooks/) — 40 دليل إجراءات مختار لسير العمل (26 قراءة · 14 كتابة/مصادقة)
 - [دليل المعلم لـ ChatGPT](docs/CHATGPT-TEACHER-GUIDE.md) — كيفية السماح للمعلمين بتسجيل الحضور عبر ChatGPT Custom GPT
 - [روتين تأليف دليل الإجراءات](docs/PLAYBOOK-ROUTINE.md) — عملية من 4 خطوات لإضافة أدلة إجراءات جديدة
 
 ### أدلة الإجراءات
+
+> **جديد في v1.1.0:** تمت إضافة 9 أدلة إجراءات جديدة لـ OpenEMIS Core 5.10.0 — اعتماد / تسجيل المدرسة، ميزانية المؤسسة، تاريخ غياب الطالب، سجل تدقيق نشاط المستخدم، قائمة الفصل، حالة قائمة انتظار القبول / التسجيل، وشرح عام لنظام سير العمل. المعرّفات: `diagnose-alert-delivery`, `view-school-accreditation`, `view-school-registration`, `view-institution-budget`, `query-student-absence-history`, `query-user-activity-audit-log`, `view-class-roster`, `set-school-accreditation` ✏️, `set-school-registration` ✏️, `mark-student-meal-participation` ✏️, `view-admission-and-enrolment-queue-state`, `explain-workflow-system`. متوفرة عبر `openemis_get_playbook` — حاليًا بالإنجليزية فقط؛ ملفات markdown الفردية والترجمات ستصدر في إصدار لاحق.
 
 | # | دليل الإجراءات | النطاق | الجمهور | الترجمات |
 |---|---|---|---|---|
@@ -290,48 +294,6 @@ curl http://your-server:3000/health
 | 25 | [إضافة معدات أو أصول ✏️](docs/playbooks/add-institution-asset.md) | البنية التحتية | مسؤول، محاسب، مرافق | [RU](docs/playbooks/add-institution-asset.ru.md) · [ES](docs/playbooks/add-institution-asset.es.md) · [HI](docs/playbooks/add-institution-asset.hi.md) · [AR](docs/playbooks/add-institution-asset.ar.md) |
 | 26 | [تسجيل إصلاح بنية تحتية ✏️](docs/playbooks/record-infrastructure-repair.md) | البنية التحتية | مسؤول، محاسب، مرافق | [RU](docs/playbooks/record-infrastructure-repair.ru.md) · [ES](docs/playbooks/record-infrastructure-repair.es.md) · [HI](docs/playbooks/record-infrastructure-repair.hi.md) · [AR](docs/playbooks/record-infrastructure-repair.ar.md) |
 | 27 | [إضافة برنامج وجبات جديد ✏️](docs/playbooks/add-meal-programme.md) | الوجبات | مسؤول، محاسب، أخصائي تغذية | [RU](docs/playbooks/add-meal-programme.ru.md) · [ES](docs/playbooks/add-meal-programme.es.md) · [HI](docs/playbooks/add-meal-programme.hi.md) · [AR](docs/playbooks/add-meal-programme.ar.md) |
----
-
-## خارطة الطريق
-
-### v0.4.0 — مصادقة المتصفح (مخطط)
-
-اليوم، تتطلب بيانات الاعتماد `api_key` صادر يدويًا من مسؤول OpenEMIS. ستضيف v0.4.0 أداة اختيارية `openemis_browser_auth` تلغي جميع تكوينات بيانات الاعتماد اليدوية:
-
-1. تطلق الأداة متصفح Playwright محلي — **لا حاجة لعنوان URL مستهدف مسبقًا**.
-2. يتنقل المستخدم إلى نسخة OpenEMIS الخاصة به ويسجل الدخول بشكل طبيعي.
-3. يراقب Playwright كل حركة مرور الشبكة. عندما يرى استجابة لـ **`POST */api/v5/login`** أو **`POST */api/v4/login`** (كلاهما يعيدان نفس JWT):
-   - يتم استخراج **عنوان URL الأساسي** تلقائيًا من عنوان URL الطلب (مثل `https://dev-demo.openemis.org/core/api/v5/login` → أساسي `https://dev-demo.openemis.org/core`) — لا حاجة لتكوين `OPENEMIS_BASE_URL` مسبقًا.
-   - يتم استخراج **JWT** من جسم الاستجابة.
-4. يتم تخزين كلاهما مؤقتًا في الذاكرة واستخدامهما لجميع مكالمات CRUD اللاحقة.
-
-هذا يزيل `OPENEMIS_BASE_URL`، `OPENEMIS_USERNAME`، `OPENEMIS_PASSWORD`، و `OPENEMIS_API_KEY` كمتطلبات — المستخدم فقط يفتح متصفحًا ويسجل الدخول. يعمل مع أي نسخة OpenEMIS، أي نطاق، أي نطاق فرعي، بما في ذلك بيئات التطوير، والاختبار، والإنتاج دون أي إعادة تكوين.
-
-**تبقى بيانات الاعتماد القائمة على `.env` مدعومة بالكامل** — الإعدادات الحالية دون تغيير. مصادقة المتصفح اختيارية عبر الأداة الجديدة.
-
-### v0.5.0 — لوحات تحكم المخاطر ✅
-
-`view-student-risks` و `view-institution-risks` — تم الشحن. درجات المخاطر، تفصيل حسب المعيار، حالات الرعاية، قواعد التنبيه، وسجلات التسليم.
-
-### v0.6.0 — مسارات سير العمل *(Institution Pro + Country Pro)*
-
-أدوات الكتابة الحالية (`openemis_create`, `openemis_update`, `openemis_delete`) تنفذ عملية واحدة في كل مرة. تأخذ مسارات سير العمل هذا إلى أبعد من ذلك: **ينسق MCP دليل إجراءات متعدد الخطوات بالكامل تلقائيًا**، يحمل الحالة من خطوة إلى أخرى ويطبق التحقق قبل الالتزام في كل مرحلة.
-
-**أداة جديدة:** `openemis_run_workflow { playbook_id, params, dry_run? }` — يقبل معرف دليل إجراءات ومعلمات إدخال منظمة، ينفذ جميع الخطوات بالتسلسل، يعيد سجل تشغيل منظم. في وضع التجربة الجافة، يبلغ عما سيتغير دون كتابة أي شيء.
-
-مسارات سير العمل مقيدة فوق Individual Pro لأن عمليات الكتابة الجماعية بالذكاء الاصطناعي على مستوى المؤسسة أو الوطني تحتاج إلى إشراف. معلم يسجل 30 طالبًا يحتاج إلى سرعة؛ مكتب منطقة يسجل 500 طالب عبر 20 مدرسة يحتاج إلى تدقيق وموافقة.
-
-| الميزة | Individual Pro | Institution Pro | Country Pro |
-|---|---|---|---|---|
-| الكتابة المباشرة (سجل واحد) | ✅ | ✅ | ✅ |
-| سجل تدقيق المؤسسة | — | ✅ | ✅ |
-| تنفيذ مسار سير العمل | — | ✅ | ✅ |
-| بوابة موافقة مسؤول المؤسسة | — | ✅ | ✅ |
-| عمليات الدُفعات داخل مؤسسة واحدة | — | ✅ | ✅ |
-| عمليات الدُفعات متعددة المؤسسات | — | — | ✅ |
-| بوابات موافقة الوزارة | — | — | ✅ |
-| لوحة تحكم إشرافية عبر المؤسسات | — | — | ✅ |
-| التراجع عند الفشل الجزئي | — | — | ✅ |
 
 ---
 
@@ -339,384 +301,22 @@ curl http://your-server:3000/health
 
 | | **مجاني** | **Individual Pro** | **Institution Pro** | **Country Pro** |
 |---|---|---|---|---|
-| **النطاق**
-# OpenEMIS API Bridge
-
-**جسر API لنظام إدارة التعليم المفتوح (OpenEMIS)** — أداة سطر أوامر (CLI) وواجهة برمجة تطبيقات (API) مفتوحة المصدر للتفاعل مع واجهة برمجة تطبيقات OpenEMIS Core.
-
-[![npm version](https://img.shields.io/npm/v/openemis-api-bridge.svg)](https://www.npmjs.com/package/openemis-api-bridge)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-
----
-
-## ⚠️ تحذير: هذا مشروع تجريبي
-
-هذا الجسر هو **أداة تجريبية** تم تطويرها من قبل مجتمع المستخدمين. إنه:
-- **غير رسمي** — غير تابع لـ OpenEMIS أو المطورين الأصليين.
-- **غير مدعوم** — لا توجد ضمانات للاستقرار أو الأمان.
-- **للاستخدام على مسؤوليتك الخاصة** — اختبر دائمًا في بيئة غير إنتاجية أولاً.
-
-**يتم تخزين بيانات الاعتماد والبيانات الحساسة على جهازك المحلي فقط.** لا يتم إرسال أي شيء إلى خوادم الطرف الثالث.
-
----
-
-## 📌 نظرة عامة
-
-`openemis-api-bridge` هو أداة سطر أوامر (CLI) وواجهة برمجة تطبيقات (API) تتيح لك:
-- **الاستعلام** عن البيانات من OpenEMIS Core (قراءة فقط بشكل افتراضي).
-- **إنشاء/تحديث/حذف** السجلات عبر واجهة برمجة التطبيقات العامة.
-- **أتمتة** مهام إدارة المؤسسات التعليمية.
-- **التكامل** مع أنظمة الطرف الثالث (مثل لوحات المعلومات، أدوات التحليل).
-- **الترحيل** الجماعي للبيانات بين بيئات OpenEMIS.
-
-يعمل الجسر كوسيط بين تطبيقك وواجهة برمجة تطبيقات OpenEMIS Core الرسمية، معالجة المصادقة، وإدارة الجلسات، وإعادة المحاولات التلقائية، والتحقق من الأخطاء.
-
----
-
-## 🚀 البدء السريع
-
-### التثبيت
-
-```bash
-npm install -g openemis-api-bridge
-```
-
-أو استخدام `npx` بدون تثبيت عالمي:
-
-```bash
-npx openemis-api-bridge --help
-```
-
-### التكوين الأساسي
-
-1. **إنشاء ملف تكوين** (`openemis-config.json`):
-
-```json
-{
-  "baseUrl": "https://your-openemis-instance.com",
-  "username": "your_api_user",
-  "password": "your_api_password",
-  "institutionId": 12345,
-  "academicPeriodId": 5
-}
-```
-
-2. **اختبار الاتصال**:
-
-```bash
-openemis-api-bridge test-connection
-```
-
-3. **جلب بعض البيانات**:
-
-```bash
-# جلب جميع المؤسسات
-openemis-api-bridge get institutions
-
-# جلب فصول مؤسسة محددة
-openemis-api-bridge get institution-classes --institution-id 12345
-
-# جلب الطلاب في فصل معين
-openemis-api-bridge get institution-class-students --institution-class-id 67890
-```
-
----
-
-## 📖 التوثيق الكامل
-
-### الأوامر الأساسية
-
-| الأمر | الوصف |
-|-------|---------|
-| `openemis-api-bridge get <resource>` | جلب سجلات مورد معين |
-| `openemis-api-bridge create <resource>` | إنشاء سجل جديد |
-| `openemis-api-bridge update <resource>` | تحديث سجل موجود |
-| `openemis-api-bridge delete <resource>` | حذف سجل |
-| `openemis-api-bridge test-connection` | اختبار اتصال واجهة برمجة التطبيقات |
-| `openemis-api-bridge list-resources` | عرض جميع الموارد المتاحة |
-| `openemis-api-bridge repl` | بدء جلسة REPL تفاعلية |
-
-### الموارد المدعومة
-
-يدعم الجسر **جميع نقاط نهاية واجهة برمجة تطبيقات OpenEMIS Core العامة**، بما في ذلك:
-
-- **المؤسسات**: `institutions`, `institution-lands`, `institution-buildings`
-- **الأكاديمية**: `academic-periods`, `education-grades`, `education-subjects`
-- **الطلاب**: `students`, `student-admission`, `student-withdraw`
-- **الموظفين**: `staff`, `staff-position-profiles`
-- **الفصول**: `institution-classes`, `institution-class-students`
-- **التقييمات**: `assessment-items`, `assessment-grading-types`
-- **والمزيد** — استخدم `list-resources` للحصول على القائمة الكاملة.
-
-### الخيارات الشائعة
-
-| العلم | الوصف |
-|-------|---------|
-| `--config <path>` | مسار ملف التكوين (افتراضي: `./openemis-config.json`) |
-| `--output <format>` | تنسيق الإخراج (`json`, `table`, `csv`) |
-| `--filter <field=value>` | تصفية النتائج حسب الحقل |
-| `--fields <field1,field2>` | تحديد الحقول المراد إرجاعها |
-| `--limit <number>` | تحديد عدد السجلات |
-| `--page <number>` | رقم الصفحة للترقيم |
-| `--institution-id <id>` | تجاوز معرف المؤسسة من التكوين |
-| `--academic-period-id <id>` | تجاوز الفترة الأكاديمية من التكوين |
-| `--dry-run` | محاكاة العملية دون إجراء تغييرات فعلية |
-
----
-
-## 🔧 الاستخدام المتقدم
-
-### التكوين المتقدم
-
-```json
-{
-  "baseUrl": "https://openemis.example.com",
-  "username": "api_user",
-  "password": "secure_password",
-  "institutionId": 1001,
-  "academicPeriodId": 2024,
-  "timeout": 30000,
-  "maxRetries": 3,
-  "logLevel": "info",
-  "cacheTtl": 300,
-  "customHeaders": {
-    "X-Custom-Header": "Value"
-  }
-}
-```
-
-### أمثلة على سيناريوهات العالم الحقيقي
-
-#### 1. **ترحيل الطلاب من نظام قديم**
-
-```bash
-# 1. تصدير الطلاب من النظام القديم إلى CSV
-# 2. تحويل CSV إلى JSON متوافق مع OpenEMIS
-# 3. استيراد باستخدام الجسر
-
-openemis-api-bridge create students --file ./students-to-import.json --batch-size 50
-```
-
-#### 2. **تحديث درجات الطلاب بشكل جماعي**
-
-```bash
-# جلب جميع التقييمات لفترة أكاديمية
-openemis-api-bridge get assessments --academic-period-id 5 --output json > assessments.json
-
-# معالجة وتحديث الدرجات
-openemis-api-bridge update assessment-item-results --file ./updated-grades.json
-```
-
-#### 3. **إنشاء تقارير مخصصة**
-
-```bash
-# جلب بيانات متعددة ودمجها
-openemis-api-bridge get institutions --fields id,name,code > institutions.json
-openemis-api-bridge get institution-classes --institution-id 1001 > classes.json
-openemis-api-bridge get students --institution-id 1001 > students.json
-
-# استخدام jq لمعالجة JSON
-jq -s '.[0] as $inst | .[1] as $classes | .[2] as $students | ...' institutions.json classes.json students.json > report.json
-```
-
-#### 4. **أتمتة عمليات بداية العام الدراسي**
-
-```bash
-#!/bin/bash
-# سكريبت لإنشاء فصول جديدة لكل مؤسسة
-
-for INST_ID in 1001 1002 1003; do
-  echo "معالجة المؤسسة $INST_ID"
-  
-  # إنشاء فصول للصفوف 1-6
-  for GRADE in 1 2 3 4 5 6; do
-    openemis-api-bridge create institution-classes \
-      --institution-id $INST_ID \
-      --data "{\"name\": \"الصف $GRADE\", \"academic_period_id\": 2024, \"education_grade_id\": $GRADE}"
-  done
-done
-```
-
-### استخدام واجهة برمجة التطبيقات (API) مباشرة في Node.js
-
-```javascript
-const { OpenEMISClient } = require('openemis-api-bridge');
-
-async function main() {
-  const client = new OpenEMISClient({
-    baseUrl: 'https://your-openemis-instance.com',
-    username: 'api_user',
-    password: 'api_password'
-  });
-
-  await client.login();
-  
-  // جلب جميع المؤسسات
-  const institutions = await client.get('institutions');
-  
-  // إنشاء طالب جديد
-  const newStudent = await client.create('students', {
-    first_name: 'أحمد',
-    last_name: 'محمد',
-    gender_id: 1,
-    date_of_birth: '2015-03-15'
-  });
-  
-  // تحديث فصل
-  await client.update('institution-classes', 123, {
-    name: 'الصف العاشر - القسم أ'
-  });
-}
-
-main().catch(console.error);
-```
-
----
-
-## 🔐 الأمان وأفضل الممارسات
-
-### إدارة بيانات الاعتماد
-
-**⚠️ لا تخزن كلمات المرور في سكريبتات النسخ الاحتياطي أو نظام التحكم بالإصدارات!**
-
-1. **استخدام متغيرات البيئة**:
-```bash
-export OPENEMIS_URL="https://your-instance.com"
-export OPENEMIS_USERNAME="api_user"
-export OPENEMIS_PASSWORD="secret"
-openemis-api-bridge get institutions
-```
-
-2. **ملفات التكوين الآمنة**:
-```bash
-# تخزين ملف التكوين خارج مستودع الكود
-chmod 600 ~/.openemis-config.json
-openemis-api-bridge --config ~/.openemis-config.json get institutions
-```
-
-3. **استخدام أدوات إدارة الأسرار** (مثل `pass`, `1password`, `Hashicorp Vault`).
-
-### أذونات واجهة برمجة التطبيقات
-
-- أنشئ مستخدم واجهة برمجة تطبيقات مخصصًا في OpenEMIS مع **الحد الأدنى من الأذونات المطلوبة**.
-- استخدم أدوارًا مختلفة لمهام مختلفة (قراءة فقط للتقارير، كتابة للاستيراد).
-- راجع الأذونات بانتظام وأزل الوصول غير الضروري.
-
-### معالجة الأخطاء وإعادة المحاولة
-
-يتضمن الجسر معالجة أخطاء قوية:
-- **إعادة المحاولة التلقائية** لفشل الشبخة المؤقتة.
-- **التراجع** للعمليات المجمعة عند الفشل الجزئي.
-- **التسجيل** التفصيلي لوضع التصحيح.
-
-```bash
-# تمكين التسجيل المفصل
-openemis-api-bridge get institutions --log-level debug
-
-# تعطيل إعادة المحاولة (للفشل السريع)
-openemis-api-bridge get institutions --max-retries 0
-```
-
----
-
-## 🐛 استكشاف الأخطاء وإصلاحها
-
-### مشاكل الاتصال الشائعة
-
-| المشكلة | الحل المحتمل |
-|---------|---------------|
-| `ECONNREFUSED` أو مهلة | تحقق من عنوان URL وفتح المنافذ (عادة 443 لـ HTTPS) |
-| `401 Unauthorized` | تحقق من بيانات اعتماد المستخدم/كلمة المرور |
-| `403 Forbidden` | تحقق من أذونات مستخدم واجهة برمجة التطبيقات |
-| `404 Not Found` | تحقق من مسار مورد واجهة برمجة التطبيقات (قد يكون مختلفًا بين إصدارات OpenEMIS) |
-| `429 Too Many Requests` | تقليل التردد، إضافة تأخيرات بين الطلبات |
-
-### تمكين وضع التصحيح
-
-```bash
-# مستوى تسجيل عالٍ
-OPENEMIS_LOG_LEVEL=debug openemis-api-bridge get institutions
-
-# تسجيل طلبات/استجابات HTTP الخام
-OPENEMIS_DEBUG=http openemis-api-bridge test-connection
-```
-
-### التحقق من التوافق مع إصدار OpenEMIS
-
-```bash
-# جلب إصدار OpenEMIS
-openemis-api-bridge get system-version
-```
-
----
-
-## 🤝 المساهمة
-
-نرحب بالمساهمات! راجع [دليل المساهمة](CONTRIBUTING.md) للبدء.
-
-### طرق المساهمة
-
-1. **الإبلاغ عن الأخطاء** — استخدم [متعقب المشكلات](https://github.com/yourusername/openemis-api-bridge/issues).
-2. **طلب الميزات** — ما الذي تريد رؤيته في الإصدارات القادمة؟
-3. **إرسال طلبات السحب** — تحسينات التعليمات البرمجية، التوثيق، الأمثلة.
-4. **تحسين الترجمة** — المساعدة في ترجمة التوثيق للغات أخرى.
-5. **شارك حالات الاستخدام** — كيف تستخدم الجسر؟ قد يساعد الآخرين.
-
-### بيئة التطوير
-
-```bash
-# استنساخ المستودع
-git clone https://github.com/yourusername/openemis-api-bridge.git
-cd openemis-api-bridge
-
-# تثبيت التبعيات
-npm install
-
-# تشغيل الاختبارات
-npm test
-
-# بناء الحزمة
-npm run build
-
-# الربط العالمي للتطوير
-npm link
-```
-
----
-
-## 📊 مقارنة الميزات
-
-| الميزة | CLI الأساسي | CLI المتقدم | واجهة برمجة التطبيقات (API) الأساسية | واجهة برمجة التطبيقات (API) المتقدمة |
-|--------|-------------|--------------|-------------------|-------------------|
-| **القراءة فقط** (GET عمليات) | ✅ | ✅ | ✅ | ✅ |
-| **الكتابة** (POST/PUT/DELETE) | — | ✅ | — | ✅ |
-| **التكوين من ملف** | ✅ | ✅ | ✅ | ✅ |
-| **التكوين الديناميكي** (سطر الأوامر) | — | ✅ | ✅ | ✅ |
-| **الترقيم التلقائي** | ✅ | ✅ | ✅ | ✅ |
-| **التصفية/الفرز** | ✅ | ✅ | ✅ | ✅ |
-| **العمليات المجمعة** | — | ✅ | — | ✅ |
-| **وضع الجاف** (dry-run) | — | ✅ | — | ✅ |
-| **التسجيل/التصحيح** | أساسي | متقدم | أساسي | متقدم |
-| **التخزين المؤقت** | — | ✅ | — | ✅ |
-| **المصادقة المتقدمة** (OAuth2) | — | — | — | ✅ |
-| **المسارات المخصصة** | — | — | — | ✅ |
-| **المعالجة المسبقة/البعدية** | — | — | — | ✅ |
-| **التحقق من الصحة** | أساسي | متقدم | أساسي | متقدم |
-| **الترجمة** (توثيق) | — | ✅ | — | ✅ |
-| **البرامج النصية المنسقة + الترجمات** | ✅ | ✅ | ✅ | ✅ |
-| **وضع stdio** (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
+| **النطاق** | أي مستخدم | شخص واحد | مدرسة واحدة | وزارة / وطني |
+| **الترخيص** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
+| أدوات القراءة (جميع الموارد الـ 675، Core 5.10.0) | ✅ | ✅ | ✅ | ✅ |
+| 40 دليل إجراءات مختار (26 قراءة · 14 كتابة/مصادقة · 28 مع ترجمات) | ✅ | ✅ | ✅ | ✅ |
+| وضع stdio (Claude Code، Cursor، Cline) | ✅ | ✅ | ✅ | ✅ |
 | **وضع خادم HTTP** (تثبيت Oracle / VPS) | — | ✅ | ✅ | ✅ |
 | **محول OpenAPI** (ChatGPT Custom GPT، أي عميل REST) | — | ✅ | ✅ | ✅ |
-| **الكتابة المباشرة** — سجل واحد | — | ✅ | ✅ | ✅ |
-| **سجل تدقيق المؤسسة** | — | — | ✅ | ✅ |
-| **تنفيذ مسار سير العمل** | — | — | ✅ | ✅ |
-| **بوابة موافقة مدير المؤسسة** | — | — | ✅ | ✅ |
-| **العمليات المجمعة داخل مؤسسة واحدة** | — | — | ✅ | ✅ |
-| **العمليات المجمعة متعددة المؤسسات** | — | — | — | ✅ |
-| **بوابات موافقة الوزارة** | — | — | — | ✅ |
-| **الإشراف عبر المؤسسات** | — | — | — | ✅ |
-| **التراجع عند الفشل الجزئي** | — | — | — | ✅ |
+| الكتابة المباشرة — سجل واحد | — | ✅ | ✅ | ✅ |
+| سجل تدقيق المؤسسة | — | — | ✅ | ✅ |
+| تنفيذ مسار سير العمل | — | — | ✅ | ✅ |
+| بوابة موافقة مسؤول المؤسسة | — | — | ✅ | ✅ |
+| عمليات الدُفعات داخل مؤسسة واحدة | — | — | ✅ | ✅ |
+| عمليات الدُفعات متعددة المؤسسات | — | — | — | ✅ |
+| بوابات موافقة الوزارة | — | — | — | ✅ |
+| الإشراف عبر المؤسسات | — | — | — | ✅ |
+| التراجع عند الفشل الجزئي | — | — | — | ✅ |
 
 → **التسعير والوصول:** khindol.madraimov@gmail.com
 

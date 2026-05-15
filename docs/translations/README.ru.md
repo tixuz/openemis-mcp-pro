@@ -6,6 +6,8 @@
 
 **Естественно-языковой мост между агентами, поддерживающими MCP (Claude, Codex, Cursor и др.), и любым экземпляром OpenEMIS.**
 
+OpenEMIS — бесплатная открытая школьная информационная система от ЮНЕСКО и KORDIT, используется в детских садах, школах, средних профессиональных и высших учебных заведениях.
+
 Построен поверх опубликованного **API OpenEMIS Core** (справочная документация на [api.openemis.org/core](https://api.openemis.org/core)) и **полностью протестирован на публичном демо-сервере [demo.openemis.org/core](https://demo.openemis.org/core)** с реальными учетными данными, реальными данными и реальными циклами запросов.
 
 Задайте вопрос на английском:
@@ -18,13 +20,13 @@
 
 Вам не нужно писать ни строчки кода. Вы не видите JSON. Вы просто спрашиваете.
 
-> **Статус:** v0.3.0 — **полный CRUD** для ресурсов без workflow. Запросы на чтение работают для каждого ресурса OpenEMIS v5. Инструменты записи (создание/обновление/удаление) активны для всех ресурсов, которые не проходят через плагин CakePHP Workflow. Ресурсы, контролируемые workflow (посещаемость, отпуска сотрудников), блокируются на уровне инструмента и перенаправляют на соответствующий плейбук.
+> **Статус:** v1.0.0 — **полный CRUD** для ресурсов без workflow. Запросы на чтение работают для каждого ресурса OpenEMIS v5. Инструменты записи (создание/обновление/удаление) активны для всех ресурсов, которые не проходят через плагин CakePHP Workflow. Ресурсы, контролируемые workflow (посещаемость, отпуска сотрудников), блокируются на уровне инструмента и перенаправляют на соответствующий плейбук.
 
 ---
 
 ## Зачем это нужно
 
-REST API OpenEMIS Core обширен — только поверхность v5 предоставляет около **1350 эндпоинтов для ~670 ресурсов**. Ни один ИИ-агент не может удержать это в контексте, а сырая интроспекция в стиле Swagger заполняет диалог шумом, не имеющим ничего общего с реальным вопросом пользователя.
+REST API OpenEMIS Core обширен — только поверхность v5 предоставляет **3 355 эндпоинтов для 675 ресурсов** (Core 5.10.0). Ни один ИИ-агент не может удержать это в контексте, а сырая интроспекция в стиле Swagger заполняет диалог шумом, не имеющим ничего общего с реальным вопросом пользователя.
 
 Этот MCP решает проблему двумя способами:
 
@@ -42,7 +44,7 @@ REST API OpenEMIS Core обширен — только поверхность v5
 | `openemis_health` | v0.1 | Проверяет доступность настроенного экземпляра. Выполняет реальный цикл входа в систему — если он проходит, CRUD будет работать. |
 | `openemis_list_domains` | v0.1 | Перечисляет курируемые домены OpenEMIS — Посещаемость, Оценивание, Персонал, Ученики, Учреждение, Расписание, Экзамены, Отчеты — каждый с кратким описанием. Агент использует это, чтобы понять, *к какой области* относится вопрос. |
 | `openemis_discover` | v0.1 | Вход: строка темы. Выход: до 30 эндпоинтов, относящихся к этой теме, взятых из набора знаний о домене и манифеста конкретного экземпляра. Сохраняет диалоги небольшими независимо от размера базового API. |
-| `openemis_list_playbooks` | v0.2 | Перечисляет все 27 курируемых плейбуков workflow с id, названием, доменом и аудиторией. Агент использует это, чтобы найти правильное пошаговое руководство для задачи на уровне пользователя. |
+| `openemis_list_playbooks` | v0.2 | Перечисляет все 40 курируемых плейбуков workflow с id, названием, доменом и аудиторией. Агент использует это, чтобы найти правильное пошаговое руководство для задачи на уровне пользователя. |
 | `openemis_get_playbook` | v0.2 | Вход: id плейбука. Выход: полный плейбук — ресурсы, упорядоченные шаги, пояснения и примеры запросов. |
 | `openemis_get` | v0.1 | Унифицированный инструмент чтения. `{ resource, id?, params? }` — если присутствует `id`, извлекает одиночный объект; в противном случае выводит список с любой комбинацией `_fields`, `_conditions`, `orderby`, `order`, `page`, `limit`, плюс любой произвольный ключ фильтра. |
 | `openemis_create` | v0.3.0 | Создать новую запись. `{ resource, body }` — только для ресурсов без workflow. Ресурсы, контролируемые workflow (например, institution-staff-leave), блокируются и будут перенаправлять на соответствующий плейбук. |
@@ -232,7 +234,7 @@ curl http://your-server:3000/health
 │  • openemis_health     │
 │  • openemis_list_dom…  │  ← читает Domain-*.md из хранилища
 │  • openemis_discover   │  ← тема → ≤30 ограниченных эндпоинтов
-│  • openemis_list_play… │  ← перечисляет все 16 плейбуков workflow
+│  • openemis_list_play… │  ← перечисляет все 40 плейбуков workflow
 │  • openemis_get_playbk │  ← загружает плейбук по id
 │  • openemis_get / _create / _update / _delete   │
 └───────────┬────────────┘
@@ -254,12 +256,14 @@ curl http://your-server:3000/health
 
 ## Документация
 
--   [Справочник по ресурсам](docs/resources.md) — все 645 ресурсов с доступностью HTTP-методов и статусом записи
--   [Плейбуки](docs/playbooks/) — 27 курируемых руководств по workflow (24 чтение · 3 запись)
+-   [Справочник по ресурсам](docs/resources.md) — все 675 ресурсов с доступностью HTTP-методов и статусом записи (Core 5.10.0)
+-   [Плейбуки](docs/playbooks/) — 40 курируемых руководств по workflow (26 чтение · 14 запись/auth)
 -   [Руководство для учителя ChatGPT](docs/CHATGPT-TEACHER-GUIDE.md) — как позволить учителям отмечать посещаемость через ChatGPT Custom GPT
 -   [Процесс создания плейбуков](docs/PLAYBOOK-ROUTINE.md) — 4-шаговый процесс добавления новых плейбуков
 
 ### Плейбуки
+
+> **Новое в v1.1.0:** добавлено 9 новых плейбуков для OpenEMIS Core 5.10.0 — аккредитация / регистрация школ, бюджет учреждения, история отсутствий ученика, журнал аудита действий пользователя, состав класса, состояние очереди приёма / зачисления и общее объяснение системы workflow. Идентификаторы: `diagnose-alert-delivery`, `view-school-accreditation`, `view-school-registration`, `view-institution-budget`, `query-student-absence-history`, `query-user-activity-audit-log`, `view-class-roster`, `set-school-accreditation` ✏️, `set-school-registration` ✏️, `mark-student-meal-participation` ✏️, `view-admission-and-enrolment-queue-state`, `explain-workflow-system`. Доступны через `openemis_get_playbook` — пока только на английском; переводы и отдельные markdown-файлы выйдут позже.
 
 | # | Плейбук | Домен | Аудитория | Переводы |
 |---|---|---|---|---|
@@ -290,48 +294,6 @@ curl http://your-server:3000/health
 | 25 | [Добавить оборудование или активы ✏️](docs/playbooks/add-institution-asset.md) | Инфраструктура | администратор, бухгалтер, служба эксплуатации | [RU](docs/playbooks/add-institution-asset.ru.md) · [ES](docs/playbooks/add-institution-asset.es.md) · [HI](docs/playbooks/add-institution-asset.hi.md) · [AR](docs/playbooks/add-institution-asset.ar.md) |
 | 26 | [Записать ремонт инфраструктуры ✏️](docs/playbooks/record-infrastructure-repair.md) | Инфраструктура | администратор, бухгалтер, служба эксплуатации | [RU](docs/playbooks/record-infrastructure-repair.ru.md) · [ES](docs/playbooks/record-infrastructure-repair.es.md) · [HI](docs/playbooks/record-infrastructure-repair.hi.md) · [AR](docs/playbooks/record-infrastructure-repair.ar.md) |
 | 27 | [Добавить новую программу питания ✏️](docs/playbooks/add-meal-programme.md) | Питание | администратор, бухгалтер, диетолог | [RU](docs/playbooks/add-meal-programme.ru.md) · [ES](docs/playbooks/add-meal-programme.es.md) · [HI](docs/playbooks/add-meal-programme.hi.md) · [AR](docs/playbooks/add-meal-programme.ar.md) |
----
-
-## План развития
-
-### v0.4.0 — Аутентификация через браузер (запланировано)
-
-Сегодня учетные данные требуют вручную выданный `api_key` от администратора OpenEMIS. v0.4.0 добавит опциональный инструмент `openemis_browser_auth`, который устранит всю ручную настройку учетных данных:
-
-1.  Инструмент запускает локальный браузер Playwright — **целевой URL заранее не требуется**.
-2.  Пользователь переходит на свой экземпляр OpenEMIS и входит в систему обычным образом.
-3.  Playwright отслеживает весь сетевой трафик. Когда он видит ответ на **`POST */api/v5/login`** или **`POST */api/v4/login`** (оба возвращают идентичные JWT):
-    -   **Базовый URL** автоматически извлекается из URL запроса (например, `https://dev-demo.openemis.org/core/api/v5/login` → базовый `https://dev-demo.openemis.org/core`) — нет необходимости предварительно настраивать `OPENEMIS_BASE_URL`.
-    -   **JWT** извлекается из тела ответа.
-4.  Оба кэшируются в памяти и используются для всех последующих CRUD-вызовов.
-
-Это устраняет `OPENEMIS_BASE_URL`, `OPENEMIS_USERNAME`, `OPENEMIS_PASSWORD` и `OPENEMIS_API_KEY` как требования — пользователь просто открывает браузер и входит в систему. Работает с любым экземпляром OpenEMIS, любым доменом, любым поддоменом, включая dev, staging и production среды без какой-либо перенастройки.
-
-**Учетные данные на основе `.env` остаются полностью поддерживаемыми** — существующие настройки не изменяются. Аутентификация через браузер является опциональной через новый инструмент.
-
-### v0.5.0 — Панели управления рисками ✅
-
-`view-student-risks` и `view-institution-risks` — выпущены. Оценки рисков, разбивка по критериям, случаи социальной помощи, правила оповещений и журналы доставки.
-
-### v0.6.0 — Маршруты Workflow *(Institution Pro + Country Pro)*
-
-Текущие инструменты записи (`openemis_create`, `openemis_update`, `openemis_delete`) выполняют одну операцию за раз. Маршруты Workflow идут дальше: MCP **автоматически оркестрирует полный многошаговый плейбук**, перенося состояние от шага к шагу и применяя предварительную проверку на каждом этапе.
-
-**Новый инструмент:** `openemis_run_workflow { playbook_id, params, dry_run? }` — принимает ID плейбука и структурированные входные параметры, выполняет все шаги последовательно, возвращает структурированный журнал выполнения. В режиме dry-run сообщает, что изменится, ничего не записывая.
-
-Маршруты Workflow ограничены уровнем выше Individual Pro, потому что массовые записи ИИ в масштабе учреждения или страны требуют контроля. Учителю, отмечающему 30 учеников, нужна скорость; районному управлению, зачисляющему 500 учеников в 20 школах, нужен аудит и утверждение.
-
-| Функция | Individual Pro | Institution Pro | Country Pro |
-|---|---|---|---|
-| Прямая запись (одна запись) | ✅ | ✅ | ✅ |
-| Журнал аудита учреждения | — | ✅ | ✅ |
-| Выполнение маршрута workflow | — | ✅ | ✅ |
-| Шлюз утверждения администратором учреждения | — | ✅ | ✅ |
-| Пакетные операции в рамках одного учреждения | — | ✅ | ✅ |
-| Многоучрежденческие пакетные операции | — | — | ✅ |
-| Шлюзы утверждения министерством | — | — | ✅ |
-| Панель управления межучрежденческим контролем | — | — | ✅ |
-| Откат при частичном сбое | — | — | ✅ |
 
 ---
 
@@ -341,547 +303,17 @@ curl http://your-server:3000/health
 |---|---|---|---|---|
 | **Область действия** | Любой пользователь | Один человек | Одна школа | Министерство / национальный уровень |
 | **Лицензия** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
-| Инструменты чтения (все 645 ресурсов) | ✅ | ✅ | ✅ | ✅ |
-| 24 к
-# OpenEMIS API Bridge
-
-**Мощный, многоязычный, многорежимный мост для автоматизации OpenEMIS Core.**
-
-Этот инструмент позволяет вам **программно взаимодействовать с вашей установкой OpenEMIS Core** через его общедоступный REST API, используя знакомые языки (Python, JavaScript, Ruby, PHP) или любой HTTP-клиент. Он обрабатывает аутентификацию, сессии, сериализацию и логику повторных попыток, позволяя вам сосредоточиться на логике вашего приложения.
-
----
-
-## Возможности
-
-*   **Поддержка нескольких языков:** Python, JavaScript, Ruby, PHP.
-*   **Несколько режимов работы:**
-    *   **Интерактивный режим (CLI):** Запускайте команды напрямую из терминала.
-    *   **Режим сценариев (Playbooks):** Создавайте многоразовые, документированные сценарии автоматизации в формате YAML/JSON.
-    *   **Режим стандартного ввода-вывода (Stdio):** Интегрируйтесь с Claude Code, Cursor, Cline и другими инструментами с поддержкой AI.
-    *   **Режим HTTP-сервера:** Запускайте локальный сервер, который предоставляет REST API для управления OpenEMIS, идеально подходит для интеграции с другими системами или создания пользовательских интерфейсов.
-    *   **Адаптер OpenAPI:** Генерирует спецификацию OpenAPI для вашей установки OpenEMIS, позволяя легко импортировать её в ChatGPT Custom GPT, Postman, Insomnia или любой другой REST-клиент.
-*   **Безопасность:** Учётные данные хранятся локально, никогда не передаются на сторонние серверы.
-*   **Надёжность:** Встроенная обработка ошибок, логика повторных попыток и ведение журнала аудита.
-*   **Гибкость:** Поддерживает как простые операции с одной записью, так и сложные пакетные операции с несколькими учреждениями и рабочими процессами.
-
----
-
-## Установка
-
-### Требования
-*   Установка OpenEMIS Core (версия 6.x или выше) с включённым и доступным REST API.
-*   Учётная запись пользователя в OpenEMIS с соответствующими правами доступа к API.
-*   Python 3.9+ (для режима Python/CLI/Playbooks/HTTP-сервера).
-*   Node.js 18+ (для режима JavaScript).
-*   Ruby 3.0+ (для режима Ruby).
-*   PHP 8.1+ (для режима PHP).
-
-### Установка (Python / Основной режим)
-
-```bash
-# Клонируйте репозиторий
-git clone https://github.com/khindol/openemis-bridge.git
-cd openemis-bridge
-
-# Установите зависимости Python
-pip install -r requirements.txt
-
-# (Опционально) Установите зависимости для других языков, если планируете их использовать.
-# См. README в соответствующих каталогах (js/, ruby/, php/).
-```
-
----
-
-## Быстрый старт
-
-### 1. Настройка конфигурации
-
-Создайте файл конфигурации `config.yaml` в корневом каталоге проекта:
-
-```yaml
-openemis:
-  base_url: "https://your-openemis-instance.com"
-  username: "your_api_username"
-  password: "your_api_password" # Рекомендуется использовать переменные окружения
-  institution_id: 1 # ID вашего учреждения по умолчанию
-  academic_period_id: 102 # Текущий академический период
-  timeout: 30
-  max_retries: 3
-
-logging:
-  level: "INFO"
-  file: "openemis_bridge.log"
-  audit_file: "audit_trail.log"
-```
-
-**⚠️ ВАЖНО ПО БЕЗОПАСНОСТИ:** Никогда не фиксируйте файлы конфигурации с паролями в Git. Используйте переменные окружения:
-
-```bash
-export OPENEMIS_PASSWORD="your_actual_password"
-```
-
-А затем в `config.yaml`:
-```yaml
-password: "${OPENEMIS_PASSWORD}"
-```
-
-### 2. Запустите свою первую команду (CLI)
-
-```bash
-# Проверьте подключение и получите информацию о вашем пользователе
-python -m openemis_bridge.cli auth me
-
-# Получите список студентов в вашем учреждении
-python -m openemis_bridge.cli get institution-lands --institution_id 1
-
-# Создайте нового студента (данные из файла JSON)
-python -m openemis_bridge.cli create students --data @new_student.json
-```
-
-### 3. Создайте свой первый сценарий (Playbook)
-
-Создайте файл `enroll_student.yaml`:
-
-```yaml
-name: "Зачисление нового студента"
-description: "Создаёт запись студента и зачисляет его в указанный класс."
-version: "1.0"
-author: "Ваше имя"
-
-vars:
-  institution_id: 1
-  academic_period_id: 102
-  class_id: 45
-
-steps:
-  - name: "Создать студента"
-    action: "create"
-    resource: "students"
-    data:
-      first_name: "Алексей"
-      last_name: "Петров"
-      date_of_birth: "2015-03-22"
-      gender_id: 1 # Мужской
-      institution_id: "{{ institution_id }}"
-    register: new_student # Сохраняет результат для использования в следующих шагах
-
-  - name: "Зачислить студента в класс"
-    action: "create"
-    resource: "institution-class-students"
-    data:
-      student_id: "{{ new_student.id }}"
-      institution_class_id: "{{ class_id }}"
-      institution_id: "{{ institution_id }}"
-      academic_period_id: "{{ academic_period_id }}"
-      education_grade_id: 5
-      student_status_id: 1 # Текущий
-```
-
-Запустите сценарий:
-```bash
-python -m openemis_bridge.playbook run enroll_student.yaml
-```
-
----
-
-## Режимы работы
-
-### 📌 Интерактивный режим (CLI)
-
-Полнофункциональный интерфейс командной строки для прямого взаимодействия с API OpenEMIS.
-
-```bash
-# Получить справку
-python -m openemis_bridge.cli --help
-
-# CRUD операции
-python -m openemis_bridge.cli get <ресурс> [параметры]
-python -m openemis_bridge.cli create <ресурс> --data '{"field": "value"}'
-python -m openemis_bridge.cli update <ресурс> <id> --data '{"field": "new_value"}'
-python -m openemis_bridge.cli delete <ресурс> <id>
-
-# Пример: Поиск пользователей по имени
-python -m openemis_bridge.cli get security-users --filter '{"OR": [{"first_name.like": "%john%"}, {"last_name.like": "%john%"}]}'
-```
-
-### 📌 Режим сценариев (Playbooks)
-
-Автоматизируйте сложные рабочие процессы с помощью декларативных YAML/JSON сценариев.
-
-**Особенности:**
-*   Поддержка переменных и шаблонов
-*   Условная логика (`when:` условия)
-*   Циклы (`loop:` по массивам)
-*   Обработка ошибок и повторные попытки
-*   Ведение журнала аудита для каждого запуска
-
-```yaml
-# Пример: Пакетное создание пользователей
-name: "Импорт новых учителей"
-vars:
-  institution_id: 1
-  teachers_file: "data/new_teachers.csv"
-
-steps:
-  - name: "Загрузить данные учителей"
-    action: "read_csv"
-    file: "{{ teachers_file }}"
-    register: teachers
-
-  - name: "Создать учётные записи учителей"
-    action: "create"
-    resource: "security-users"
-    loop: "{{ teachers }}"
-    data:
-      username: "{{ item.email }}"
-      first_name: "{{ item.first_name }}"
-      last_name: "{{ item.last_name }}"
-      email: "{{ item.email }}"
-      institution_id: "{{ institution_id }}"
-    register: user_results
-```
-
-### 📌 Режим стандартного ввода-вывода (Stdio)
-
-Позволяет AI-инструментам, таким как Claude Code, Cursor и Cline, напрямую взаимодействовать с OpenEMIS через естественный язык.
-
-```bash
-# Запустите мост в режиме stdio
-python -m openemis_bridge.stdio
-
-# Затем в вашем AI-инструменте вы можете сказать:
-# "Получи список всех классов в учреждении с ID 3"
-# И инструмент отправит соответствующую команду JSON-RPC через stdio.
-```
-
-### 📌 Режим HTTP-сервера
-
-Запускает локальный REST API сервер, который выступает в качестве прокси для вашей установки OpenEMIS.
-
-```bash
-# Запустите сервер
-python -m openemis_bridge.server
-
-# Сервер будет доступен на http://localhost:8080
-# Теперь вы можете отправлять запросы к вашему локальному серверу:
-curl -X GET "http://localhost:8080/api/institution-lands?institution_id=1" \
-  -H "Authorization: Bearer ваш_токен_аутентификации"
-```
-
-**Особенности сервера:**
-*   Аутентификация на основе JWT токенов
-*   Полная прокси-поддержка всех конечных точек OpenEMIS
-*   Кэширование для повышения производительности
-*   Промежуточное ПО CORS для веб-интеграции
-*   Документация Swagger UI на `/docs`
-
-### 📌 Адаптер OpenAPI
-
-Генерирует спецификацию OpenAPI (Swagger) для вашей установки OpenEMIS, что позволяет легко импортировать её в различные инструменты.
-
-```bash
-# Сгенерируйте спецификацию OpenAPI
-python -m openemis_bridge.openapi generate --output openemis-openapi.yaml
-
-# Эта спецификация может быть импортирована в:
-# - ChatGPT Custom GPT (как пользовательское действие)
-# - Postman или Insomnia (для тестирования API)
-# - Любой другой клиент, поддерживающий OpenAPI
-```
-
-**Интеграция с ChatGPT Custom GPT:**
-1.  Сгенерируйте файл `openapi.yaml`
-2.  В настройках Custom GPT загрузите его как схему OpenAPI
-3.  Настройте аутентификацию (обычно Bearer Token)
-4.  Теперь ваш GPT может делать такие запросы, как: "Сколько студентов в учреждении 5?" или "Зачисли нового студента по имени Мария"
-
----
-
-## Использование в коде (Библиотека)
-
-### Python
-
-```python
-from openemis_bridge import OpenEMISClient
-
-# Инициализация клиента
-client = OpenEMISClient(
-    base_url="https://your-openemis.com",
-    username="api_user",
-    password="api_pass"
-)
-
-# Получить данные
-students = client.get("institution-lands", params={"institution_id": 1})
-print(f"Найдено студентов: {len(students['data'])}")
-
-# Создать запись
-new_user = client.create("security-users", data={
-    "username": "newteacher",
-    "first_name": "Анна",
-    "last_name": "Сидорова",
-    "email": "anna@school.edu",
-    "institution_id": 1
-})
-
-# Обновить запись
-client.update("security-users", new_user["id"], data={
-    "email": "anna.new@school.edu"
-})
-
-# Выполнить пользовательский запрос
-client.request("POST", "custom-endpoint", json={"action": "bulk_import"})
-```
-
-### JavaScript (Node.js)
-
-```javascript
-const { OpenEMISClient } = require('./js/openemis-bridge');
-
-const client = new OpenEMISClient({
-  baseURL: 'https://your-openemis.com',
-  username: 'api_user',
-  password: 'api_pass'
-});
-
-async function getStudents() {
-  try {
-    const response = await client.get('institution-lands', {
-      params: { institution_id: 1 }
-    });
-    console.log(`Найдено студентов: ${response.data.data.length}`);
-  } catch (error) {
-    console.error('Ошибка:', error.message);
-  }
-}
-```
-
-### Ruby
-
-```ruby
-require_relative 'ruby/openemis_bridge'
-
-client = OpenEMIS::Client.new(
-  base_url: 'https://your-openemis.com',
-  username: 'api_user',
-  password: 'api_pass'
-)
-
-# Получить данные
-students = client.get('institution-lands', { institution_id: 1 })
-puts "Найдено студентов: #{students['data'].length}"
-
-# Создать запись
-new_user = client.create('security-users', {
-  username: 'newteacher',
-  first_name: 'Анна',
-  last_name: 'Сидорова',
-  email: 'anna@school.edu',
-  institution_id: 1
-})
-```
-
-### PHP
-
-```php
-require_once 'php/OpenEMISClient.php';
-
-$client = new OpenEMISClient(
-    'https://your-openemis.com',
-    'api_user',
-    'api_pass'
-);
-
-// Получить данные
-$students = $client->get('institution-lands', ['institution_id' => 1]);
-echo "Найдено студентов: " . count($students['data']) . "\n";
-
-// Создать запись
-$newUser = $client->create('security-users', [
-    'username' => 'newteacher',
-    'first_name' => 'Анна',
-    'last_name' => 'Сидорова',
-    'email' => 'anna@school.edu',
-    'institution_id' => 1
-]);
-```
-
----
-
-## Ресурсы и конечные точки
-
-Мост поддерживает все стандартные конечные точки OpenEMIS Core API. Вот некоторые из наиболее часто используемых:
-
-| Ресурс | Описание | Типичные операции |
-|--------|----------|-------------------|
-| `institution-lands` | Студенты в учреждении | Получить, создать, обновить |
-| `security-users` | Пользователи системы | CRUD, управление ролями |
-| `institution-classes` | Классы в учреждении | Получить, создать, управление студентами |
-| `institution-class-students` | Зачисления студентов в классы | Зачислить, отчислить, перевести |
-| `academic-periods` | Академические периоды | Получить, установить текущий |
-| `education-grades` | Уровни образования | Получить, справочник |
-| `institution-subjects` | Предметы в учреждении | Получить, назначить учителей |
-| `institution-staff` | Персонал учреждения | Получить, назначить должности |
-
-**Полный список конечных точек:**
-```bash
-# Получить список всех доступных ресурсов
-python -m openemis_bridge.cli meta resources
-```
-
----
-
-## Аутентификация и безопасность
-
-### Методы аутентификации
-
-1.  **Базовая аутентификация (по умолчанию):** Имя пользователя/пароль OpenEMIS.
-2.  **Аутентификация по токену:** Используйте предварительно полученный токен доступа.
-3.  **Сессионные куки:** Поддерживается для веб-интеграций.
-
-### Рекомендации по безопасности
-
-*   **НИКОГДА** не храните пароли в коде или файлах конфигурации, зафиксированных в Git.
-*   Используйте переменные окружения или секреты для конфиденциальных данных.
-*   Регулярно обновляйте пароли и токены доступа.
-*   Используйте роли и права доступа OpenEMIS для ограничения доступа API к минимально необходимым.
-*   Включайте ведение журнала аудита для отслеживания всех операций.
-
-### Журнал аудита
-
-Мост поддерживает подробное ведение журнала аудита для всех операций:
-
-```bash
-# Просмотр журнала аудита
-tail -f audit_trail.log
-
-# Пример записи журнала:
-# [2024-01-15 14:30:22] USER: api_user | ACTION: CREATE | RESOURCE: students |
-# DATA: {"first_name": "Алексей", "last_name": "Петров"} | STATUS: success
-```
-
----
-
-## Расширенные возможности
-
-### Пакетные операции
-
-```python
-# Пакетное создание нескольких записей
-students_data = [
-    {"first_name": "Иван", "last_name": "Иванов", "institution_id": 1},
-    {"first_name": "Мария", "last_name": "Петрова", "institution_id": 1},
-    {"first_name": "Алексей", "last_name": "Сидоров", "institution_id": 1}
-]
-
-results = client.batch_create("institution-lands", students_data)
-```
-
-### Рабочие процессы и утверждения
-
-```yaml
-# Сценарий с этапами утверждения
-name: "Запрос на новый курс"
-steps:
-  - name: "Создать запрос на курс"
-    action: "create"
-    resource: "course-requests"
-    data:
-      title: "Новый курс программирования"
-      description: "Предлагаю ввести курс Python для 10-11 классов"
-      requested_by: "{{ user_id }}"
-      institution_id: 1
-    register: request
-
-  - name: "Отправить на утверждение завучу"
-    action: "execute_workflow"
-    workflow: "course_approval"
-    record_id: "{{ request.id }}"
-    action_name: "submit_for_review"
-```
-
-### Операции с несколькими учреждениями
-
-```python
-# Выполнение операций в нескольких учреждениях
-institution_ids = [1, 3, 7, 12]
-
-for inst_id in institution_ids:
-    # Установите контекст учреждения
-    client.set_institution_context(inst_id)
-    
-    # Выполните операции для этого учреждения
-    students = client.get("institution-lands")
-    print(f"Учреждение {inst_id}: {len(students['data'])} студентов")
-```
-
----
-
-## Устранение неполадок
-
-### Распространённые проблемы
-
-1.  **Ошибка аутентификации:**
-    ```
-    ERROR: Authentication failed (401)
-    ```
-    **Решение:** Проверьте правильность имени пользователя и пароля. Убедитесь, что у пользователя есть права доступа к API.
-
-2.  **Ошибка "Ресурс не найден":**
-    ```
-    ERROR: Resource 'institution-lands' not found (404)
-    ```
-    **Решение:** Убедитесь, что вы используете правильное имя ресурса. Используйте `python -m openemis_bridge.cli meta resources` для получения списка доступных ресурсов.
-
-3.  **Ошибка тайм-аута:**
-    ```
-    ERROR: Request timed out after 30 seconds
-    ```
-    **Решение:** Увеличьте значение `timeout` в конфигурации или проверьте сетевое подключение к вашему серверу OpenEMIS.
-
-4.  **Ошибки проверки данных:**
-    ```
-    ERROR: Validation failed: {"field": ["Это поле обязательно."]}
-    ```
-    **Решение:** Проверьте обязательные поля для ресурса. Используйте `python -m openemis_bridge.cli meta schema <ресурс>` для получения схемы ресурса.
-
-### Включение подробного журналирования
-
-```yaml
-# В config.yaml
-logging:
-  level: "DEBUG"  # Измените с INFO на DEBUG
-  file: "openemis_bridge_debug.log"
-```
-
-### Тестирование подключения
-
-```bash
-# Проверьте базовое подключение
-python -m openemis_bridge.cli auth test
-
-# Проверьте права доступа к конкретному ресурсу
-python -m openemis_bridge.cli auth can_access --resource institution-lands --action create
-```
-
----
-
-## Дорожная карта и версии
-
-| Возможность | Базовая | Профессиональная | Корпоративная | Министерская |
-|-------------|---------|------------------|---------------|--------------|
-| **Основные языки** (Python, JS, Ruby, PHP) | ✅ | ✅ | ✅ | ✅ |
-| **CLI + интерактивный режим** | ✅ | ✅ | ✅ | ✅ |
-| **Сценарии (Playbooks)** + переводы | ✅ | ✅ | ✅ | ✅ |
-| **Режим stdio** (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
-| **Режим HTTP-сервера** (установка на Oracle / VPS) | — | ✅ | ✅ | ✅ |
+| Инструменты чтения (все 675 ресурсов, Core 5.10.0) | ✅ | ✅ | ✅ | ✅ |
+| 40 курируемых плейбуков (26 чтение · 14 запись/auth · 28 с переводами) | ✅ | ✅ | ✅ | ✅ |
+| Режим stdio (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
+| **Режим HTTP-сервера** (Oracle / VPS) | — | ✅ | ✅ | ✅ |
 | **Адаптер OpenAPI** (ChatGPT Custom GPT, любой REST-клиент) | — | ✅ | ✅ | ✅ |
 | Прямая запись — одна запись | — | ✅ | ✅ | ✅ |
-| Журнал аудита учреждения | — | — | ✅ | ✅ |
-| Выполнение маршрута рабочего процесса | — | — | ✅ | ✅ |
+| Аудит действий по учреждению | — | — | ✅ | ✅ |
+| Выполнение маршрута workflow | — | — | ✅ | ✅ |
 | Шлюз утверждения администратором учреждения | — | — | ✅ | ✅ |
 | Пакетные операции в одном учреждении | — | — | ✅ | ✅ |
-| Пакетные операции в нескольких учреждениях | — | — | — | ✅ |
+| Многоучрежденческие пакетные операции | — | — | — | ✅ |
 | Шлюзы утверждения министерством | — | — | — | ✅ |
 | Межучрежденческий контроль | — | — | — | ✅ |
 | Откат при частичном сбое | — | — | — | ✅ |

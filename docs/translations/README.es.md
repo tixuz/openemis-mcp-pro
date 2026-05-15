@@ -6,6 +6,8 @@
 
 **Un puente de lenguaje natural entre agentes compatibles con MCP (Claude, Codex, Cursor, etc.) y cualquier instancia de OpenEMIS.**
 
+OpenEMIS es un sistema de gestión escolar (SGE) gratuito y de código abierto desarrollado por UNESCO y KORDIT, utilizado desde jardines de infancia hasta universidades y centros de formación profesional.
+
 Construido sobre la **API de OpenEMIS Core publicada** (documentación de referencia en [api.openemis.org/core](https://api.openemis.org/core)) y **verificado de extremo a extremo contra la demo pública en [demo.openemis.org/core](https://demo.openemis.org/core)** con credenciales reales, datos reales y viajes de ida y vuelta reales.
 
 Pregunte en inglés:
@@ -18,13 +20,13 @@ El agente planifica las llamadas, este MCP entrega los datos y usted obtiene la 
 
 Usted nunca escribe una línea de código. Usted nunca ve JSON. Usted solo pregunta.
 
-> **Estado:** v0.3.0 — **CRUD completo** para recursos sin flujo de trabajo. Las consultas de lectura funcionan para cada recurso de OpenEMIS v5. Las herramientas de escritura (crear/actualizar/eliminar) están activas para todos los recursos que no pasan por el plugin CakePHP Workflow. Los recursos controlados por flujo de trabajo (asistencia, licencia del personal) están bloqueados a nivel de herramienta y redirigen al playbook apropiado.
+> **Estado:** v1.0.0 — **CRUD completo** para recursos sin flujo de trabajo. Las consultas de lectura funcionan para cada recurso de OpenEMIS v5. Las herramientas de escritura (crear/actualizar/eliminar) están activas para todos los recursos que no pasan por el plugin CakePHP Workflow. Los recursos controlados por flujo de trabajo (asistencia, licencia del personal) están bloqueados a nivel de herramienta y redirigen al playbook apropiado.
 
 ---
 
 ## Por qué existe esto
 
-La API REST de OpenEMIS Core es grande — solo la superficie de v5 expone alrededor de **1,350 endpoints en ~670 recursos**. Ningún agente de IA puede mantener eso en contexto, y la introspección cruda al estilo Swagger inunda una conversación con ruido que no tiene nada que ver con la pregunta real del usuario.
+La API REST de OpenEMIS Core es grande — solo la superficie de v5 expone **3 355 endpoints en 675 recursos** (Core 5.10.0). Ningún agente de IA puede mantener eso en contexto, y la introspección cruda al estilo Swagger inunda una conversación con ruido que no tiene nada que ver con la pregunta real del usuario.
 
 Este MCP resuelve eso de dos maneras:
 
@@ -42,7 +44,7 @@ El efecto neto: los agentes responden preguntas en lenguaje natural en 2–4 lla
 | `openemis_health` | v0.1 | Hace ping a la instancia configurada e informa la accesibilidad. Realiza un viaje de ida y vuelta de inicio de sesión real — si esto pasa, CRUD funcionará. |
 | `openemis_list_domains` | v0.1 | Enumera los dominios curados de OpenEMIS — Asistencia, Evaluación, Personal, Estudiante, Institución, Horario, Examen, Reporte — cada uno con un resumen de una línea. El agente usa esto para averiguar *dónde* vive una pregunta. |
 | `openemis_discover` | v0.1 | Entrada: una cadena de tema. Salida: hasta 30 endpoints relevantes para ese tema, extraídos del paquete de conocimiento del dominio y del manifiesto por instancia. Mantiene las conversaciones pequeñas sin importar cuán grande sea la API subyacente. |
-| `openemis_list_playbooks` | v0.2 | Enumera los 27 playbooks de flujo de trabajo curados con id, título, dominio y audiencia. El agente usa esto para encontrar la guía paso a paso correcta para una tarea a nivel de usuario. |
+| `openemis_list_playbooks` | v0.2 | Enumera los 40 playbooks de flujo de trabajo curados con id, título, dominio y audiencia. El agente usa esto para encontrar la guía paso a paso correcta para una tarea a nivel de usuario. |
 | `openemis_get_playbook` | v0.2 | Entrada: un id de playbook. Salida: el playbook completo — recursos, pasos ordenados, notas de orientación y consultas de ejemplo. |
 | `openemis_get` | v0.1 | Herramienta de lectura unificada. `{ resource, id?, params? }` — si `id` está presente, obtiene el singleton; de lo contrario, enumera con cualquier combinación de `_fields`, `_conditions`, `orderby`, `order`, `page`, `limit`, más cualquier clave de filtro ad-hoc. |
 | `openemis_create` | v0.3.0 | Crea un nuevo registro. `{ resource, body }` — solo recursos sin flujo de trabajo. Los recursos controlados por flujo de trabajo (ej. institution-staff-leave) están bloqueados y redirigirán al playbook apropiado. |
@@ -232,7 +234,7 @@ curl http://your-server:3000/health
 │  • openemis_health     │
 │  • openemis_list_dom…  │  ← lee Domain-*.md desde el vault
 │  • openemis_discover   │  ← tema → ≤30 endpoints con alcance
-│  • openemis_list_play… │  ← enumera los 16 playbooks de flujo de trabajo
+│  • openemis_list_play… │  ← enumera los 40 playbooks de flujo de trabajo
 │  • openemis_get_playbk │  ← carga un playbook por id
 │  • openemis_get / _create / _update / _delete   │
 └───────────┬────────────┘
@@ -254,12 +256,14 @@ Principios de diseño, desde la primera línea de código:
 
 ## Documentación
 
--   [Referencia de Recursos](docs/resources.md) — los 645 recursos con disponibilidad de método HTTP y estado de escritura
--   [Playbooks](docs/playbooks/) — 27 guías de flujo de trabajo curadas (24 lectura · 3 escritura)
+-   [Referencia de Recursos](docs/resources.md) — los 675 recursos con disponibilidad de método HTTP y estado de escritura (Core 5.10.0)
+-   [Playbooks](docs/playbooks/) — 40 guías de flujo de trabajo curadas (26 lectura · 14 escritura/auth)
 -   [Guía para Docentes de ChatGPT](docs/CHATGPT-TEACHER-GUIDE.md) — cómo permitir que los docentes marquen asistencia a través de GPT personalizado de ChatGPT
 -   [Rutina de Autoría de Playbooks](docs/PLAYBOOK-ROUTINE.md) — proceso de 4 pasos para agregar nuevos playbooks
 
 ### Playbooks
+
+> **Nuevo en v1.1.0:** se añadieron 9 nuevos playbooks para OpenEMIS Core 5.10.0 — acreditación / registro escolar, presupuesto de institución, historial de ausencias de estudiantes, registro de auditoría de actividad del usuario, lista de clase, estado de la cola de admisión / matrícula y explicación general del sistema de workflow. IDs: `diagnose-alert-delivery`, `view-school-accreditation`, `view-school-registration`, `view-institution-budget`, `query-student-absence-history`, `query-user-activity-audit-log`, `view-class-roster`, `set-school-accreditation` ✏️, `set-school-registration` ✏️, `mark-student-meal-participation` ✏️, `view-admission-and-enrolment-queue-state`, `explain-workflow-system`. Accesibles vía `openemis_get_playbook` — actualmente sólo en inglés; los archivos markdown individuales y las traducciones llegarán en una versión posterior.
 
 | # | Playbook | Dominio | Audiencia | Traducciones |
 |---|---|---|---|---|
@@ -290,48 +294,6 @@ Principios de diseño, desde la primera línea de código:
 | 25 | [Agregar Equipo o Activos ✏️](docs/playbooks/add-institution-asset.md) | Infraestructura | admin, contador, instalaciones | [RU](docs/playbooks/add-institution-asset.ru.md) · [ES](docs/playbooks/add-institution-asset.es.md) · [HI](docs/playbooks/add-institution-asset.hi.md) · [AR](docs/playbooks/add-institution-asset.ar.md) |
 | 26 | [Registrar una Reparación de Infraestructura ✏️](docs/playbooks/record-infrastructure-repair.md) | Infraestructura | admin, contador, instalaciones | [RU](docs/playbooks/record-infrastructure-repair.ru.md) · [ES](docs/playbooks/record-infrastructure-repair.es.md) · [HI](docs/playbooks/record-infrastructure-repair.hi.md) · [AR](docs/playbooks/record-infrastructure-repair.ar.md) |
 | 27 | [Agregar un Nuevo Programa de Alimentación ✏️](docs/playbooks/add-meal-programme.md) | Comidas | admin, contador, nutricionista | [RU](docs/playbooks/add-meal-programme.ru.md) · [ES](docs/playbooks/add-meal-programme.es.md) · [HI](docs/playbooks/add-meal-programme.hi.md) · [AR](docs/playbooks/add-meal-programme.ar.md) |
----
-
-## Hoja de ruta
-
-### v0.4.0 — Autenticación por Navegador (planeado)
-
-Hoy, las credenciales requieren una `api_key` emitida manualmente por el administrador de OpenEMIS. v0.4.0 agregará una herramienta opcional `openemis_browser_auth` que elimina toda configuración manual de credenciales:
-
-1.  La herramienta lanza un navegador Playwright local — **sin URL de destino requerida por adelantado**.
-2.  El usuario navega a su instancia de OpenEMIS e inicia sesión normalmente.
-3.  Playwright observa todo el tráfico de red. Cuando ve una respuesta a **`POST */api/v5/login`** o **`POST */api/v4/login`** (ambas devuelven JWTs idénticos):
-    -   La **URL base** se extrae automáticamente de la URL de la solicitud (ej. `https://dev-demo.openemis.org/core/api/v5/login` → base `https://dev-demo.openemis.org/core`) — no es necesario preconfigurar `OPENEMIS_BASE_URL`.
-    -   El **JWT** se extrae del cuerpo de la respuesta.
-4.  Ambos se almacenan en caché en memoria y se usan para todas las llamadas CRUD posteriores.
-
-Esto elimina `OPENEMIS_BASE_URL`, `OPENEMIS_USERNAME`, `OPENEMIS_PASSWORD` y `OPENEMIS_API_KEY` como requisitos — el usuario simplemente abre un navegador e inicia sesión. Funciona con cualquier instancia de OpenEMIS, cualquier dominio, cualquier subdominio, incluidos entornos de desarrollo, staging y producción sin ninguna reconfiguración.
-
-**Las credenciales basadas en `.env` siguen siendo totalmente compatibles** — las configuraciones existentes no cambian. La autenticación por navegador es opcional a través de la nueva herramienta.
-
-### v0.5.0 — Paneles de Control de Riesgo ✅
-
-`view-student-risks` y `view-institution-risks` — enviados. Puntuaciones de riesgo, desglose por criterio, casos de bienestar, reglas de alerta y registros de entrega.
-
-### v0.6.0 — Rutas de Flujo de Trabajo *(Institution Pro + Country Pro)*
-
-Las herramientas de escritura actuales (`openemis_create`, `openemis_update`, `openemis_delete`) ejecutan una operación a la vez. Las rutas de flujo de trabajo llevan esto más allá: el MCP **orquesta un playbook completo de múltiples pasos automáticamente**, llevando el estado de paso a paso y aplicando validación previa a la confirmación en cada etapa.
-
-**Nueva herramienta:** `openemis_run_workflow { playbook_id, params, dry_run? }` — acepta un ID de playbook y parámetros de entrada estructurados, ejecuta todos los pasos en secuencia, devuelve un registro de ejecución estructurado. En modo de prueba, informa lo que cambiaría sin escribir nada.
-
-Las rutas de flujo de trabajo están restringidas por encima de Individual Pro porque las escrituras masivas de IA a escala institucional o nacional necesitan supervisión. Un docente que marca 30 estudiantes necesita velocidad; una oficina distrital que matricula 500 estudiantes en 20 escuelas necesita auditoría y aprobación.
-
-| Característica | Individual Pro | Institution Pro | Country Pro |
-|---|---|---|---|
-| Escritura directa (registro único) | ✅ | ✅ | ✅ |
-| Traza de auditoría institucional | — | ✅ | ✅ |
-| Ejecución de ruta de flujo de trabajo | — | ✅ | ✅ |
-| Puerta de aprobación de administrador institucional | — | ✅ | ✅ |
-| Operaciones por lotes dentro de una institución | — | ✅ | ✅ |
-| Operaciones por lotes multi-institución | — | — | ✅ |
-| Puertas de aprobación del ministerio | — | — | ✅ |
-| Panel de control de supervisión entre instituciones | — | — | ✅ |
-| Reversión en caso de fallo parcial | — | — | ✅ |
 
 ---
 
@@ -341,452 +303,10 @@ Las rutas de flujo de trabajo están restringidas por encima de Individual Pro p
 |---|---|---|---|---|
 | **Alcance** | Cualquier usuario | Una persona | Una escuela | Ministerio / nacional |
 | **Licencia** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
-| Herramientas de lectura (los 645 recursos) | ✅ | ✅ | ✅ | ✅ |
-| 24 c
-# OpenEMIS Bridge
-
-**Un puente de línea de comandos y API REST para automatizar la gestión de datos en OpenEMIS Core.**
-
----
-
-## Descripción
-
-OpenEMIS Bridge es una herramienta de automatización que conecta su entorno local o de servidor con la API REST de **OpenEMIS Core**. Permite realizar operaciones masivas de lectura, creación, actualización y eliminación de datos (CRUD) de forma programática, superando las limitaciones de la interfaz web manual.
-
-**Casos de uso principales:**
-*   **Migración de datos:** Cargar miles de registros de estudiantes, personal o cursos desde archivos CSV/Excel.
-*   **Sincronización:** Mantener datos coherentes entre OpenEMIS y otros sistemas (por ejemplo, un sistema de nómina o de biblioteca).
-*   **Automatización de informes:** Extraer datos regularmente para paneles de control o informes externos.
-*   **Mantenimiento de datos:** Corregir errores masivos, actualizar campos en lotes o archivar registros antiguos.
-*   **Integración:** Conectar OpenEMIS con flujos de trabajo personalizados o aplicaciones de terceros.
-
----
-
-## Características principales
-
-*   **Modos de operación flexibles:** Línea de comandos (CLI), servidor HTTP y adaptador OpenAPI.
-*   **Soporte para operaciones por lotes:** Procese miles de registros con una sola instrucción.
-*   **Traducciones integradas:** Interfaz y documentación disponibles en inglés, español, francés y ruso.
-*   **Seguro:** Las credenciales nunca salen de su máquina. Se conecta a su instancia de OpenEMIS.
-*   **Respetuoso con la API:** Implementa reintentos automáticos, límites de velocidad y manejo de errores.
-*   **Auditoría:** Registra todas las operaciones para su trazabilidad.
-*   **Flujos de trabajo:** Admite la ejecución de rutas de aprobación del sistema OpenEMIS.
-
----
-
-## Instalación
-
-### 1. Requisitos previos
-*   **Python 3.9 o superior**
-*   **pip** (gestor de paquetes de Python)
-*   Acceso a una instancia de **OpenEMIS Core** con credenciales de API válidas.
-
-### 2. Instalación desde PyPI (recomendado)
-```bash
-pip install openemis-bridge
-```
-
-### 3. Instalación desde el código fuente
-```bash
-git clone https://github.com/khindol/openemis-bridge.git
-cd openemis-bridge
-pip install -e .
-```
-
----
-
-## Configuración rápida
-
-### 1. Configurar la conexión
-La primera vez que use el puente, debe configurar la conexión a su instancia de OpenEMIS.
-
-**Opción A: Usar el asistente interactivo**
-```bash
-openemis-bridge config setup
-```
-Siga las instrucciones para ingresar la URL de su OpenEMIS y sus credenciales.
-
-**Opción B: Usar variables de entorno**
-```bash
-export OPENEMIS_URL="https://su-instancia.openemis.org"
-export OPENEMIS_USERNAME="su_usuario_api"
-export OPENEMIS_PASSWORD="su_contraseña_api"
-export OPENEMIS_INSTITUTION_ID="123"  # Opcional, para operaciones a nivel de institución
-```
-
-### 2. Verificar la conexión
-```bash
-openemis-bridge config test
-```
-Si la conexión es exitosa, verá un mensaje de confirmación y la información de su perfil de usuario.
-
----
-
-## Uso básico
-
-### Modo de línea de comandos (CLI)
-
-#### 1. Leer datos (GET)
-```bash
-# Obtener todos los estudiantes
-openemis-bridge get institution-students
-
-# Obtener un estudiante específico por ID
-openemis-bridge get institution-students/1001
-
-# Filtrar y paginar resultados
-openemis-bridge get institution-students --filter '{"academic_period_id": 5}' --limit 50 --page 2
-
-# Exportar resultados a CSV
-openemis-bridge get institution-students --output estudiantes.csv
-```
-
-#### 2. Crear datos (POST)
-```bash
-# Crear un solo estudiante desde un archivo JSON
-openemis-bridge post institution-students --data @nuevo_estudiante.json
-
-# Crear múltiples estudiantes desde un archivo CSV
-openemis-bridge post institution-students --batch estudiantes.csv
-
-# Crear desde datos en línea
-openemis-bridge post institution-students --data '{"openemis_no": "STU2025001", "first_name": "María", "last_name": "García"}'
-```
-
-#### 3. Actualizar datos (PATCH/PUT)
-```bash
-# Actualizar un estudiante específico
-openemis-bridge patch institution-students/1001 --data '{"address": "Nueva dirección 123"}'
-
-# Actualización masiva desde un archivo CSV
-openemis-bridge patch institution-students --batch actualizaciones.csv --id-field student_id
-```
-
-#### 4. Eliminar datos (DELETE)
-```bash
-# Eliminar un registro específico
-openemis-bridge delete institution-students/1001
-
-# Eliminación masiva (¡use con precaución!)
-openemis-bridge delete institution-students --filter '{"graduation_year": 2010}'
-```
-
-### Modo servidor HTTP
-
-Inicie el servidor REST:
-```bash
-openemis-bridge serve --port 8080
-```
-
-El servidor proporciona una API REST idéntica a la CLI:
-```bash
-# Ejemplo usando curl
-curl -X GET "http://localhost:8080/api/institution-students?limit=10"
-curl -X POST "http://localhost:8080/api/institution-students" -H "Content-Type: application/json" -d '{"openemis_no": "STU2025001", "first_name": "Juan"}'
-```
-
-### Adaptador OpenAPI
-
-Genere un esquema OpenAPI para integrar con ChatGPT Custom GPTs o cualquier cliente REST:
-```bash
-openemis-bridge openapi --output openapi-spec.yaml
-```
-
----
-
-## Recursos soportados
-
-El puente soporta **todos los endpoints de la API pública de OpenEMIS Core**, incluyendo:
-
-| Categoría | Recursos de ejemplo |
-|-----------|---------------------|
-| **Gestión de instituciones** | `institutions`, `institution-lands`, `institution-types` |
-| **Estudiantes** | `institution-students`, `student-attendances`, `student-behaviours` |
-| **Personal** | `institution-staff`, `staff-attendances`, `staff-behaviours` |
-| **Académico** | `institution-classes`, `institution-subjects`, `education-grades` |
-| **Evaluación** | `assessment-items`, `assessment-grading-types`, `institution-assessments` |
-| **Plan de estudios** | `institution-curricula`, `training-courses`, `training-sessions` |
-| **Finanzas** | `institution-bank-accounts`, `student-fees`, `scholarships` |
-| **Infraestructura** | `institution-rooms`, `institution-buildings`, `infrastructure-types` |
-| **Salud** | `student-healths`, `health-allergies`, `immunizations` |
-| **Seguridad** | `security-roles`, `security-users`, `security-user-groups` |
-
-**Para ver todos los recursos disponibles:**
-```bash
-openemis-bridge resources list
-```
-
----
-
-## Ejemplos prácticos
-
-### Ejemplo 1: Migrar estudiantes desde un CSV
-```bash
-# Archivo estudiantes.csv:
-# openemis_no,first_name,last_name,gender_id,date_of_birth
-# STU001,Ana,López,2,2008-05-15
-# STU002,Carlos,Ruiz,1,2009-03-22
-
-openemis-bridge post institution-students --batch estudiantes.csv --report migracion_estudiantes.log
-```
-
-### Ejemplo 2: Actualizar direcciones de correo electrónico masivamente
-```bash
-# Archivo emails.csv:
-# id,email
-# 1001,estudiante1@escuela.edu
-# 1002,estudiante2@escuela.edu
-
-openemis-bridge patch institution-students --batch emails.csv --id-field id
-```
-
-### Ejemplo 3: Extraer datos para un informe
-```bash
-# Extraer todos los estudiantes del período académico actual
-openemis-bridge get institution-students \
-  --filter '{"academic_period_id": 5}' \
-  --fields 'openemis_no,first_name,last_name,gender_id,date_of_birth' \
-  --output estudiantes_actuales.csv
-```
-
-### Ejemplo 4: Usar en un script de Python
-```python
-import subprocess
-import json
-
-# Obtener datos de estudiantes
-result = subprocess.run(
-    ['openemis-bridge', 'get', 'institution-students', '--limit', '10', '--format', 'json'],
-    capture_output=True,
-    text=True
-)
-
-students = json.loads(result.stdout)
-for student in students['data']:
-    print(f"{student['openemis_no']}: {student['first_name']} {student['last_name']}")
-```
-
----
-
-## Guía de referencia de la CLI
-
-### Comandos principales
-
-| Comando | Descripción |
-|---------|-------------|
-| `openemis-bridge get <recurso>` | Recuperar registros |
-| `openemis-bridge post <recurso>` | Crear nuevos registros |
-| `openemis-bridge patch <recurso>` | Actualizar registros parcialmente |
-| `openemis-bridge put <recurso>` | Reemplazar registros completamente |
-| `openemis-bridge delete <recurso>` | Eliminar registros |
-| `openemis-bridge config <subcomando>` | Gestionar configuración |
-| `openemis-bridge serve` | Iniciar servidor HTTP |
-| `openemis-bridge openapi` | Generar especificación OpenAPI |
-| `openemis-bridge resources` | Listar recursos disponibles |
-
-### Opciones comunes
-
-| Opción | Descripción |
-|--------|-------------|
-| `--filter <json>` | Filtrar resultados (ej: `'{"gender_id": 1}'`) |
-| `--limit <n>` | Limitar número de resultados |
-| `--page <n>` | Número de página para paginación |
-| `--fields <lista>` | Campos a incluir (ej: `id,name,code`) |
-| `--data <json>` | Datos para POST/PATCH/PUT |
-| `--batch <archivo>` | Archivo CSV/JSON para operaciones por lotes |
-| `--id-field <nombre>` | Campo de ID para operaciones por lotes |
-| `--output <archivo>` | Guardar salida en archivo |
-| `--format <formato>` | Formato de salida (json, csv, table) |
-| `--report <archivo>` | Guardar registro detallado de operaciones |
-| `--dry-run` | Simular operación sin cambios reales |
-| `--verbose` | Mostrar información detallada |
-
----
-
-## Configuración avanzada
-
-### Archivo de configuración
-El puente busca configuración en `~/.openemis/bridge.yaml`:
-```yaml
-openemis:
-  url: "https://su-instancia.openemis.org"
-  username: "su_usuario_api"
-  password: "su_contraseña_api"
-  institution_id: 123  # Opcional
-
-server:
-  port: 8080
-  host: "0.0.0.0"
-  cors_origins: ["http://localhost:3000"]
-
-batch:
-  chunk_size: 50
-  max_retries: 3
-  delay_between_retries: 1.0
-
-logging:
-  level: "INFO"
-  file: "~/.openemis/bridge.log"
-```
-
-### Variables de entorno
-Todas las configuraciones pueden establecerse mediante variables de entorno con el prefijo `OPENEMIS_`:
-```bash
-export OPENEMIS_URL="https://demo.openemis.org"
-export OPENEMIS_USERNAME="admin"
-export OPENEMIS_PASSWORD="secreto"
-export OPENEMIS_BATCH_CHUNK_SIZE="100"
-```
-
----
-
-## Solución de problemas
-
-### Problemas comunes
-
-1. **Error de conexión:**
-   ```bash
-   # Verificar URL y credenciales
-   openemis-bridge config test
-   
-   # Verificar conectividad de red
-   curl -v https://su-instancia.openemis.org
-   ```
-
-2. **Error de autenticación:**
-   ```bash
-   # Restablecer credenciales
-   openemis-bridge config setup --force
-   ```
-
-3. **Límites de velocidad de la API:**
-   ```bash
-   # Reducir el tamaño del lote
-   openemis-bridge post institution-students --batch datos.csv --chunk-size 20
-   
-   # Añadir retraso entre solicitudes
-   openemis-bridge post institution-students --batch datos.csv --delay 0.5
-   ```
-
-4. **Errores de validación de datos:**
-   ```bash
-   # Usar --dry-run para probar primero
-   openemis-bridge post institution-students --batch datos.csv --dry-run
-   
-   # Verificar estructura de datos requerida
-   openemis-bridge resources schema institution-students
-   ```
-
-### Registros y depuración
-```bash
-# Habilitar modo detallado
-openemis-bridge get institution-students --verbose
-
-# Ver registros de la aplicación
-tail -f ~/.openemis/bridge.log
-
-# Nivel de registro de depuración
-OPENEMIS_LOGGING_LEVEL=DEBUG openemis-bridge get institution-students
-```
-
----
-
-## Mejores prácticas
-
-### 1. Siempre haga una copia de seguridad primero
-```bash
-# Exportar datos existentes antes de operaciones masivas
-openemis-bridge get institution-students --output backup_estudiantes.csv
-```
-
-### 2. Use --dry-run para operaciones peligrosas
-```bash
-# Probar antes de eliminar
-openemis-bridge delete institution-students --filter '{"status_id": 0}' --dry-run --verbose
-```
-
-### 3. Divida operaciones grandes en lotes más pequeños
-```bash
-# En lugar de procesar 10,000 registros a la vez
-openemis-bridge post institution-students --batch grandes_datos.csv --chunk-size 100
-```
-
-### 4. Mantenga registros de auditoría
-```bash
-# Registrar todas las operaciones
-openemis-bridge patch institution-students --batch actualizaciones.csv --report auditoria.log
-```
-
-### 5. Valide sus datos
-```bash
-# Verificar estructura del CSV
-openemis-bridge validate estudiantes.csv --resource institution-students
-```
-
----
-
-## Seguridad
-
-### Consideraciones importantes
-
-⚠️ **ADVERTENCIA DE SEGURIDAD**
-
-1. **Credenciales:** Las credenciales de API se almacenan localmente en `~/.openemis/bridge.yaml` con permisos de archivo restringidos (600). Nunca comparta este archivo.
-
-2. **Datos sensibles:** El puente puede acceder a todos los datos a los que tenga permiso su usuario de API. Use el principio de privilegio mínimo.
-
-3. **Operaciones masivas:** Las operaciones DELETE y PATCH por lotes pueden causar pérdida de datos. Siempre haga una copia de seguridad primero.
-
-4. **Servidor HTTP:** Cuando ejecute `openemis-bridge serve`, asegúrese de que el puerto no esté expuesto públicamente a menos que esté protegido por autenticación adicional.
-
-### Recomendaciones de seguridad
-```bash
-# Establecer permisos seguros en el archivo de configuración
-chmod 600 ~/.openemis/bridge.yaml
-
-# Usar variables de entorno para credenciales en entornos compartidos
-unset OPENEMIS_PASSWORD  # Limpiar después de usar
-
-# Ejecutar el servidor HTTP solo en localhost para desarrollo
-openemis-bridge serve --host 127.0.0.1 --port 8080
-```
-
----
-
-## Preguntas frecuentes
-
-### ¿Necesito acceso especial a OpenEMIS?
-Sí, necesita un usuario de API con los permisos apropiados para los recursos que desea acceder. Contacte a su administrador de OpenEMIS.
-
-### ¿Puedo usar esto con OpenEMIS en la nube?
-Sí, siempre que tenga credenciales de API y la instancia esté accesible desde su red.
-
-### ¿Qué formatos de archivo son compatibles?
-- **Entrada:** CSV, JSON, Excel (.xlsx, .xls)
-- **Salida:** CSV, JSON, Tabla (formateada para terminal)
-
-### ¿Cómo maneja la paginación?
-Automáticamente. Use `--limit` y `--page` para control manual, o deje que el puente obtenga todos los páginas automáticamente.
-
-### ¿Puedo automatizar esto con cron o tareas programadas?
-Sí. El puente está diseñado para automatización sin intervención.
-
-### ¿Qué sucede si falla una operación por lotes?
-El puente reintentará operaciones fallidas (configurable) y generará un informe detallado de éxitos y fallos.
-
----
-
-## Matriz de características por edición
-
-| Característica | Gratuita | Estándar | Profesional | Empresarial |
-|----------------|----------|----------|-------------|-------------|
-| Operaciones CRUD básicas | ✅ | ✅ | ✅ | ✅ |
-| Operaciones por lotes (hasta 100 registros/lote) | ✅ | ✅ | ✅ | ✅ |
-| Filtrado, paginación, selección de campos | ✅ | ✅ | ✅ | ✅ |
-| Formatos CSV/JSON/Excel | ✅ | ✅ | ✅ | ✅ |
-| Traducciones integradas | ✅ | ✅ | ✅ | ✅ |
+| Herramientas de lectura (los 675 recursos, Core 5.10.0) | ✅ | ✅ | ✅ | ✅ |
+| 40 playbooks curados (26 lectura · 14 escritura/auth · 28 con traducciones) | ✅ | ✅ | ✅ | ✅ |
 | Modo stdio (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
-| **Modo servidor HTTP** (instalación en Oracle / VPS) | — | ✅ | ✅ | ✅ |
+| **Modo servidor HTTP** (Oracle / VPS) | — | ✅ | ✅ | ✅ |
 | **Adaptador OpenAPI** (ChatGPT Custom GPT, cualquier cliente REST) | — | ✅ | ✅ | ✅ |
 | Escritura directa — registro único | — | ✅ | ✅ | ✅ |
 | Traza de auditoría de institución | — | — | ✅ | ✅ |
