@@ -1,4 +1,16 @@
-# OpenEMIS MCP — Resource Reference
+---
+title: OpenEMIS MCP Pro — Resource Reference for School Management
+description: Complete reference of all 675 OpenEMIS resources with HTTP method availability and write status for the pro read+write MCP server (Core 5.10.0).
+keywords:
+  - OpenEMIS
+  - school management system
+  - education management
+  - student attendance
+  - student risks
+  - resource reference
+---
+
+# OpenEMIS MCP Pro — Resource Reference for School Management
 
 > **675 resources** · **3355 endpoints** · v1.1.0 · OpenEMIS Core 5.10.0
 >

@@ -1,4 +1,15 @@
-# View Class-Level Report Card Overview for a Grade
+---
+title: View Class-Level Report Card Overview for a Grade in OpenEMIS
+description: This OpenEMIS playbook explains how to retrieve report card configuration, subjects, and assessment results for all students in a class and grade from the school management system.
+keywords:
+  - OpenEMIS
+  - school management system
+  - exam marks
+  - education management
+  - report card
+---
+
+# View Class-Level Report Card Overview for a Grade in OpenEMIS
 
 **Domain:** Report · **Audience:** teacher, admin
 
@@ -46,3 +57,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "show the report card overview for a class" or "list all student marks for a grade and period" when a teacher or admin needs a class-level assessment summary from the OpenEMIS school management system.*

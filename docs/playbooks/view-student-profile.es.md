@@ -1,4 +1,14 @@
-# Ver perfil del estudiante, contactos de tutores e historial de ausencias
+---
+title: Ver perfil del estudiante en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar el registro de inscripción completo de un estudiante, los contactos de tutores y el historial de asistencia de estudiantes del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - asistencia de estudiantes
+  - gestión educativa
+---
+
+# Ver perfil del estudiante en OpenEMIS, contactos de tutores e historial de ausencias
 
 **Dominio:** Estudiante · **Audiencia:** docente, administrador
 

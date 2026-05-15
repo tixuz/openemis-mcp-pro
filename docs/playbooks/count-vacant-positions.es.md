@@ -1,4 +1,13 @@
-# Contar Puestos Vacantes (por institución o a nivel de sistema, opcionalmente filtrado por rol)
+---
+title: Contar puestos vacantes en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo contar los puestos vacantes en una institución o en todo el sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Contar Puestos Vacantes en OpenEMIS (por institución o a nivel de sistema)
 
 
 **Dominio:** Personal · **Audiencia:** admin, hr

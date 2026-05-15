@@ -1,4 +1,15 @@
-# Mark Staff Attendance (Present) OR Request Leave (Absent)
+---
+title: Mark Staff Attendance or Request Leave in OpenEMIS
+description: This OpenEMIS playbook explains how to mark staff attendance as present or submit a leave request in the school management system using openemis-mcp-pro write tools.
+keywords:
+  - OpenEMIS
+  - school management system
+  - staff attendance
+  - education management
+  - leave request
+---
+
+# Mark Staff Attendance (Present) OR Request Leave (Absent) in OpenEMIS
 
 **Domain:** Staff · **Audience:** admin, hr, teacher
 
@@ -51,5 +62,7 @@ The agent will:
 - There is no v5 alias `staff-leaves` — use `institution-staff-leave` (singular, institution-prefixed).
 - LEAVE and ATTENDANCE ARE FULLY DECOUPLED: creating a leave row does NOT auto-insert an "absent" row into institution-staff-attendances, and posting an attendance record does NOT check for overlapping leave. Before posting attendance, check institution-staff-leave for that date to avoid conflicts.
 - To read a staff member's full attendance picture, you must union institution-staff-attendances and institution-staff-leave on the client side — the backend does not join them.
+
+*When to use: ask "mark a staff member present" or "submit a leave request" when recording staff attendance or leave in the OpenEMIS school management system.*
 - For historical or migrated leave records, see `historical-staff-leave` and `institution-staff-leave-archived` — these are read-only reference resources.
 - WORKFLOW WRITE WARNING: institution-staff-leave is workflow-controlled. The MCP must NOT create, update, or delete leave requests. Reading leave via openemis_get is always safe.

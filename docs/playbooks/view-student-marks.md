@@ -1,4 +1,15 @@
-# Look Up a Student's Marks and Assessment Results for a Subject or Period
+---
+title: View a Student's Marks and Assessment Results in OpenEMIS
+description: This OpenEMIS playbook explains how to look up a student's exam marks and assessment results for a subject or academic period in the school management system.
+keywords:
+  - OpenEMIS
+  - school management system
+  - exam marks
+  - education management
+  - assessment
+---
+
+# Look Up a Student's Marks and Assessment Results in OpenEMIS (Subject or Period)
 
 **Domain:** Assessment · **Audience:** teacher, admin, parent
 
@@ -54,3 +65,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "what are this student's grades" or "show marks for a subject and period" when a teacher, admin, or parent wants exam marks and assessment results from the OpenEMIS school management system.*

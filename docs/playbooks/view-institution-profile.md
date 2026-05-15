@@ -1,4 +1,14 @@
-# View Full Institution Profile
+---
+title: View Full Institution Profile in OpenEMIS
+description: This OpenEMIS playbook explains how to retrieve a complete institution profile from the school management system, including type, location, contacts, and accreditation.
+keywords:
+  - OpenEMIS
+  - school management system
+  - institution
+  - education management
+---
+
+# View Full Institution Profile in OpenEMIS
 
 **Domain:** Institution  
 **Audience:** admin, parent, public  
@@ -65,3 +75,5 @@ Filter by `institution_id`. A record with `preferred=1` is the primary contact (
 2. `openemis_get { resource: "institution-grades", params: { institution_id: 6, academic_period_id: 1 } }` → grades 1–6
 3. `openemis_get { resource: "institution-localities" }` → match locality_id=2 → "Selangor"
 4. `openemis_get { resource: "institution-contact-persons", params: { institution_id: 6 } }` → Jane Doe, Principal
+
+*When to use: ask "tell me about this school" or "what type of institution is this and where is it" when an admin, parent, or public user needs the full profile of an OpenEMIS school management institution.*

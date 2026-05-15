@@ -1,4 +1,15 @@
-# Playbook Authoring Routine
+---
+title: OpenEMIS MCP Pro — Playbook Authoring Routine for School Management Workflows
+description: Standard 4-step procedure for creating, translating, and publishing new OpenEMIS playbooks that guide AI agents through school management tasks.
+keywords:
+  - OpenEMIS
+  - school management system
+  - education management
+  - playbook
+  - MCP
+---
+
+# OpenEMIS MCP Pro — Playbook Authoring Routine for School Management Workflows
 
 Standard procedure for every new playbook added to openemis-mcp-pro.
 
@@ -137,3 +148,7 @@ One sub-section per non-trivial step. Include exact POST/PUT body examples.
 - [ ] grouped-manifest.json updated
 - [ ] README table updated with translation links
 - [ ] Free repo updated (read-only playbooks only, with memo)
+
+---
+
+**Related docs:** [Glossary](GLOSSARY.md) · [FAQ](FAQ.md) · [Playbooks index](playbooks/) · [Resource Reference](resources.md)

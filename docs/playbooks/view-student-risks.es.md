@@ -1,4 +1,14 @@
-# Ver el Perfil de Riesgo y Casos de Bienestar de un Estudiante
+---
+title: Ver el perfil de riesgo del estudiante en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar puntuaciones de riesgos de estudiantes, indicadores de alerta temprana y casos de bienestar del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - riesgos de estudiantes
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver el Perfil de Riesgo del Estudiante en OpenEMIS y Casos de Bienestar
 
 **Dominio:** Estudiante  
 **Audiencia:** administrador, consejero, profesor  

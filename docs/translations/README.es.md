@@ -1,12 +1,24 @@
+---
+title: openemis-mcp-pro — Servidor MCP de lectura y escritura para el sistema de gestión escolar OpenEMIS
+description: openemis-mcp-pro es el servidor MCP de lectura y escritura que conecta asistentes de IA al sistema de gestión escolar OpenEMIS — 675 recursos, 3355 endpoints, 40 playbooks.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+  - asistencia de estudiantes
+  - riesgos de estudiantes
+  - servidor MCP
+---
+
 <p align="center">
-  <img src="assets/logo.png" alt="openemis-mcp logo" width="320">
+  <img src="assets/logo.png" alt="openemis-mcp-pro logo — puente de IA de lectura y escritura para el sistema de gestión escolar OpenEMIS" width="320">
 </p>
 
-# openemis-mcp
+# openemis-mcp-pro — Puente de IA de lectura y escritura para el sistema de gestión escolar OpenEMIS
 
-**Un puente de lenguaje natural entre agentes compatibles con MCP (Claude, Codex, Cursor, etc.) y cualquier instancia de OpenEMIS.**
+**Un puente de lenguaje natural entre agentes compatibles con MCP (Claude, Codex, Cursor, etc.) y cualquier instancia de OpenEMIS — con acceso completo de lectura y escritura.**
 
-OpenEMIS es un sistema de gestión escolar (SGE) gratuito y de código abierto desarrollado por UNESCO y KORDIT, utilizado desde jardines de infancia hasta universidades y centros de formación profesional.
+OpenEMIS es un sistema de gestión escolar gratuito y de código abierto desarrollado por UNESCO y KORDIT, utilizado desde jardines de infancia hasta universidades y centros de formación profesional.
 
 Construido sobre la **API de OpenEMIS Core publicada** (documentación de referencia en [api.openemis.org/core](https://api.openemis.org/core)) y **verificado de extremo a extremo contra la demo pública en [demo.openemis.org/core](https://demo.openemis.org/core)** con credenciales reales, datos reales y viajes de ida y vuelta reales.
 
@@ -260,6 +272,8 @@ Principios de diseño, desde la primera línea de código:
 -   [Playbooks](docs/playbooks/) — 40 guías de flujo de trabajo curadas (26 lectura · 14 escritura/auth)
 -   [Guía para Docentes de ChatGPT](docs/CHATGPT-TEACHER-GUIDE.md) — cómo permitir que los docentes marquen asistencia a través de GPT personalizado de ChatGPT
 -   [Rutina de Autoría de Playbooks](docs/PLAYBOOK-ROUTINE.md) — proceso de 4 pasos para agregar nuevos playbooks
+-   [Glosario](docs/GLOSSARY.es.md) — definiciones de términos clave de OpenEMIS y gestión educativa
+-   [Preguntas frecuentes](docs/FAQ.es.md) — preguntas frecuentes sobre OpenEMIS y este servidor MCP
 
 ### Playbooks
 

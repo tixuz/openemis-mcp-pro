@@ -1,4 +1,15 @@
-# View Timetable for a Class or Teacher
+---
+title: View Timetable for a Class or Teacher in OpenEMIS
+description: This OpenEMIS playbook explains how to retrieve the weekly class or teacher timetable for the current academic period from the school management system.
+keywords:
+  - OpenEMIS
+  - school management system
+  - timetable
+  - education management
+  - schedule
+---
+
+# View Timetable for a Class or Teacher in OpenEMIS
 
 **Domain:** Schedule · **Audience:** teacher, admin, student
 
@@ -41,3 +52,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "show the weekly schedule for class 9A" or "what subjects does a teacher teach and when" when an admin, teacher, or student needs a class timetable from the OpenEMIS school management system.*

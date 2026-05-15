@@ -1,4 +1,13 @@
-# Ver perfil completo de la clase
+---
+title: Ver el perfil completo de la clase en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar el perfil completo de una clase, incluyendo estudiantes, lista de docentes y asignaciones de materias del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver el Perfil Completo de la Clase en OpenEMIS
 
 **Dominio:** Estudiante  
 **Audiencia:** docente, administrador  

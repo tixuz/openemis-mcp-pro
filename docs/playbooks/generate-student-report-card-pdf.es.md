@@ -1,4 +1,13 @@
-# Generar el boletín de calificaciones del estudiante (PDF)
+---
+title: Generar el boletín de calificaciones del estudiante en OpenEMIS (PDF)
+description: Este playbook de OpenEMIS explica cómo iniciar la generación de un boletín de calificaciones PDF y obtener el enlace de descarga del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Generar el boletín de calificaciones del estudiante en OpenEMIS (PDF)
 
 
 **Dominio:** Informe · **Audiencia:** profesor, administrador

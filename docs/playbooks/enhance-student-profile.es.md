@@ -1,4 +1,13 @@
-# Ampliar el Perfil del Estudiante con Contactos, Nacionalidad y Necesidades Especiales
+---
+title: Ampliar el perfil del estudiante en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo agregar o actualizar información de contacto, nacionalidad y necesidades especiales en el registro de un estudiante del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ampliar el Perfil del Estudiante en OpenEMIS con Contactos, Nacionalidad y Necesidades Especiales
 
 
 **Dominio:** Estudiante  

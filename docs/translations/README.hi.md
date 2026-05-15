@@ -1,8 +1,20 @@
+---
+title: openemis-mcp-pro — OpenEMIS स्कूल प्रबंधन प्रणाली के लिए पढ़ने और लिखने का MCP सर्वर
+description: openemis-mcp-pro एक MCP सर्वर है जो AI असिस्टेंट को OpenEMIS स्कूल प्रबंधन प्रणाली से जोड़ता है — 675 संसाधन, 3355 एंडपॉइंट, 40 प्लेबुक्स।
+keywords:
+  - OpenEMIS
+  - स्कूल प्रबंधन प्रणाली
+  - शिक्षा प्रबंधन
+  - छात्र उपस्थिति
+  - छात्र जोखिम
+  - MCP सर्वर
+---
+
 <p align="center">
-  <img src="assets/logo.png" alt="openemis-mcp logo" width="320">
+  <img src="assets/logo.png" alt="openemis-mcp-pro लोगो — OpenEMIS स्कूल प्रबंधन के लिए AI ब्रिज" width="320">
 </p>
 
-# openemis-mcp
+# openemis-mcp-pro — OpenEMIS स्कूल प्रबंधन प्रणाली के लिए पढ़ने और लिखने का AI ब्रिज
 
 **MCP-सक्षम एजेंटों (Claude, Codex, Cursor, आदि) और किसी भी OpenEMIS इंस्टेंस के बीच एक प्राकृतिक-भाषा पुल।**
 
@@ -260,6 +272,8 @@ curl http://your-server:3000/health
 - [प्लेबुक्स](docs/playbooks/) — 40 क्यूरेटेड वर्कफ़्लो गाइड्स (26 पढ़ें · 14 लिखें/auth)
 - [ChatGPT शिक्षक गाइड](docs/CHATGPT-TEACHER-GUIDE.md) — शिक्षकों को ChatGPT कस्टम GPT के माध्यम से उपस्थिति चिह्नित करने की अनुमति कैसे दें
 - [प्लेबुक लेखन दिनचर्या](docs/PLAYBOOK-ROUTINE.md) — नए प्लेबुक्स जोड़ने के लिए 4-चरण प्रक्रिया
+- [शब्दकोष](docs/GLOSSARY.hi.md) — OpenEMIS और शिक्षा प्रबंधन के प्रमुख शब्दों की परिभाषाएं
+- [सामान्य प्रश्न](docs/FAQ.hi.md) — OpenEMIS और इस MCP सर्वर के बारे में अक्सर पूछे जाने वाले प्रश्न
 
 ### प्लेबुक्स
 

@@ -1,4 +1,15 @@
-# Record a Student Behaviour Incident
+---
+title: Record a Student Behaviour Incident in OpenEMIS
+description: This OpenEMIS playbook explains how to log a student behaviour incident in the school management system, including category lookup and severity classification.
+keywords:
+  - OpenEMIS
+  - school management system
+  - student risks
+  - behaviour incident
+  - education management
+---
+
+# Record a Student Behaviour Incident in OpenEMIS
 
 **Domain:** Student · **Audience:** teacher, admin
 
@@ -42,3 +53,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "log a behaviour incident" or "record a disciplinary event for a student" when a teacher or admin needs to document a student behaviour incident in the OpenEMIS school management system.*

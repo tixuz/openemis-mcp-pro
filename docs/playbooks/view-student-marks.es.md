@@ -1,4 +1,13 @@
-# Consultar las calificaciones y resultados de evaluación de un estudiante para una asignatura o período
+---
+title: Ver las calificaciones y resultados de evaluación de un estudiante en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar las calificaciones de un estudiante por asignatura o período académico del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver las calificaciones y resultados de evaluación de un estudiante en OpenEMIS (asignatura o período)
 
 **Dominio:** Evaluación · **Audiente:** docente, administrador, padre/madre
 

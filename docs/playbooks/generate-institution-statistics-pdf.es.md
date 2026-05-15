@@ -1,4 +1,13 @@
-# Generar Informe PDF de Estadísticas Institucionales
+---
+title: Generar informe PDF de estadísticas de la institución en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo compilar datos y descargar un informe PDF de estadísticas de la institución del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Generar Informe PDF de Estadísticas de la Institución en OpenEMIS
 
 
 **Dominio:** Reporte · **Audiencia:** admin

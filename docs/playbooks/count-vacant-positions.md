@@ -1,4 +1,15 @@
-# Count Vacant Positions (by institution or system-wide, optionally filtered by role)
+---
+title: Count Vacant Staff Positions in OpenEMIS
+description: This OpenEMIS playbook explains how to count vacant staff positions at an institution or system-wide using the openemis-mcp education management tools.
+keywords:
+  - OpenEMIS
+  - school management system
+  - staff
+  - vacant positions
+  - education management
+---
+
+# Count Vacant Staff Positions in OpenEMIS
 
 **Domain:** Staff · **Audience:** admin, hr
 
@@ -54,3 +65,5 @@ The agent will:
 - FTE is a string like `'1.00'` in the API response — parse to float before summing.
 - Only consider `institution_staff` rows that are currently active — typically `staff_status_id` corresponds to an "Assigned" or "Current" code.
 - Do NOT include end-dated or resigned staff in the FTE sum (they free up the position).
+
+*When to use: ask "how many vacant positions" or "are there unfilled teaching roles" when analysing school management staffing gaps across one institution or the whole system.*

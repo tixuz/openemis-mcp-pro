@@ -1,4 +1,13 @@
-# Información básica de la institución — Conteos de estudiantes, personal y puestos vacantes
+---
+title: Resumen de la institución en OpenEMIS — estudiantes, personal y puestos vacantes
+description: Este playbook de OpenEMIS explica cómo obtener un resumen rápido de una institución incluyendo el conteo de estudiantes, personal y puestos vacantes del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Resumen de la institución en OpenEMIS — Conteos de estudiantes, personal y puestos vacantes
 
 **Dominio:** Institución · **Audiencia:** administrador, padre
 

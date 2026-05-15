@@ -1,4 +1,13 @@
-# Agregar Equipos o Activos a una Institución
+---
+title: Agregar equipos o activos a una institución en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo registrar nuevos equipos o activos en una institución usando las herramientas de escritura del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Agregar Equipos o Activos a una Institución en OpenEMIS
 
 **Dominio:** Infraestructura  
 **Audiencia:** administrador, contador, instalaciones  

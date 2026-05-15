@@ -1,4 +1,15 @@
-# Record an Infrastructure Repair or Restoration
+---
+title: Record an Infrastructure Repair or Restoration in OpenEMIS
+description: This OpenEMIS playbook explains how to log an infrastructure repair or restoration event at a school management institution using the openemis-mcp-pro write tools.
+keywords:
+  - OpenEMIS
+  - school management system
+  - institution
+  - education management
+  - infrastructure repair
+---
+
+# Record an Infrastructure Repair or Restoration in OpenEMIS
 
 **Domain:** Infrastructure  
 **Audience:** admin, accountant, facilities  
@@ -104,3 +115,5 @@ PUT /institution-needs/{id}
 
 1. `openemis_get { resource: "institution-buildings", params: { institution_id: 6 } }` → "Girls' Sanitation Block" (id: 14)
 2. `openemis_create { resource: "infrastructure-needs", body: { name: "Girls' Sanitation Block — 2 Toilets Restored", description: "Replaced cisterns and flush fittings in 2 female toilets. Block identified as Building 14.", date_determined: "2025-04-01", date_started: "2025-04-10", date_completed: "2025-04-15" } }`
+
+*When to use: ask "log an infrastructure repair" or "record a restoration completed at this school" when an admin, accountant, or facilities manager needs to create a maintenance record in the OpenEMIS school management system.*

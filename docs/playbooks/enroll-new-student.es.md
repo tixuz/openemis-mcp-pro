@@ -1,4 +1,13 @@
-# Matricular a un Nuevo Estudiante en una Institución
+---
+title: Matricular a un nuevo estudiante en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo matricular a un nuevo estudiante en una institución usando las herramientas de escritura del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Matricular a un Nuevo Estudiante en una Institución OpenEMIS
 
 
 **Dominio:** Estudiante · **Audiencia:** administrador, registrador

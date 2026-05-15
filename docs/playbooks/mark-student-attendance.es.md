@@ -1,4 +1,14 @@
-# Registrar Asistencia del Estudiante para una Clase (Lista de Asistencia por Periodo)
+---
+title: Registrar asistencia de estudiantes en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo registrar la asistencia de estudiantes para una clase usando las herramientas de escritura del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - asistencia de estudiantes
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Registrar Asistencia de Estudiantes en OpenEMIS (Lista de Asistencia por Periodo)
 
 > 📖 **Servidor de solo lectura.** Los Playbooks que crean o actualizan registros requieren **[openemis-mcp-pro](https://github.com/tixuz/openemis-mcp-pro)**.
 

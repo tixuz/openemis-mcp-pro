@@ -1,4 +1,14 @@
-# Leer estadísticas de asistencia para una clase — Hoy / Semana / Ausentes crónicos
+---
+title: Ver la asistencia de estudiantes más reciente en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo obtener estadísticas de asistencia de estudiantes de hoy, de la semana y de ausentes crónicos del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - asistencia de estudiantes
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver la asistencia de estudiantes más reciente en OpenEMIS — Hoy / Semana / Ausentes crónicos
 
 **Dominio:** Asistencia · **Audiente:** docente, administrador, padre
 

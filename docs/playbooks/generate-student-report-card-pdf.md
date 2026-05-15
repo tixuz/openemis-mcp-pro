@@ -1,4 +1,15 @@
-# Generate a Student's Report Card (PDF)
+---
+title: Generate a Student Report Card PDF in OpenEMIS
+description: This OpenEMIS playbook explains how to trigger and download a student report card PDF through the school management system's asynchronous report generator.
+keywords:
+  - OpenEMIS
+  - school management system
+  - student report card
+  - education management
+  - exam marks
+---
+
+# Generate a Student Report Card PDF in OpenEMIS
 
 **Domain:** Report · **Audience:** teacher, admin
 
@@ -50,3 +61,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "generate a report card PDF" or "download the student's results" when a teacher or admin needs a printable report card from the OpenEMIS school management system.*

@@ -1,4 +1,15 @@
-# Add a New Meal Programme to an Institution
+---
+title: Add a New Meal Programme to an OpenEMIS Institution
+description: This OpenEMIS playbook explains how to create a new meal programme at a school management institution using the openemis-mcp-pro write tools.
+keywords:
+  - OpenEMIS
+  - school management system
+  - institution
+  - education management
+  - meal programme
+---
+
+# Add a New Meal Programme to an OpenEMIS Institution
 
 **Domain:** Meals  
 **Audience:** admin, accountant, nutritionist  
@@ -115,6 +126,8 @@ Repeat for each nutritional component. Resolve `nutritional_content_id` via `GET
 - **`meal-implementers` has FieldOption fields** (`visible`, `order`, `default`) — include them on PUT to avoid null reset.
 - **No workflow plugin** — meal writes are direct and do not require approval or workflow steps.
 - **409 on duplicate delivery** — the unique constraint is `(institution_id, date_received, meal_programmes_id)`, not period-based.
+
+*When to use: ask "create a new meal programme at this school" or "add a feeding scheme for an academic period" when an admin, accountant, or nutritionist needs to set up a new meal programme in the OpenEMIS school management system.*
 
 ---
 

@@ -1,4 +1,15 @@
-# View Institution Risk Summary and Alert Rules
+---
+title: View Institution Risk Summary and Alert Rules in OpenEMIS
+description: This OpenEMIS playbook explains how to retrieve the institution-level student risk summary and alert rule configuration from the school management system.
+keywords:
+  - OpenEMIS
+  - student risks
+  - school management system
+  - education management
+  - early-warning
+---
+
+# View Institution Risk Summary and Alert Rules in OpenEMIS
 
 **Domain:** Institution  
 **Audience:** admin, ministry  
@@ -84,3 +95,5 @@ No `institution_id` or `academic_period_id` filter. Filter by `feature` to scope
 3. `openemis_get { resource: "alerts" }` → 3 alert definitions (names: "LowAttendance", "HighAbsence", "FailingGrade")
 4. `openemis_get { resource: "alert-rules", params: { } }` → "LowAttendance" rule: enabled=1, method=Email, threshold=75
 5. `openemis_get { resource: "alert-logs", params: { feature: "LowAttendance" } }` → 4 emails sent (status=1), 1 failed (status=-1) last week
+
+*When to use: ask "what student risk alerts are configured for this school" or "have any early-warning alerts fired recently" when an admin or ministry user needs institution-level student risk and alert data from the OpenEMIS school management system.*

@@ -1,4 +1,15 @@
-# Parent/Student Dashboard — Latest Attendance, Behavior, Marks
+---
+title: Parent and Student Dashboard in OpenEMIS — Attendance, Behaviour, Marks
+description: This OpenEMIS playbook explains how to aggregate a student's latest attendance, behaviour incidents, and assessment marks into a single school management dashboard view.
+keywords:
+  - OpenEMIS
+  - student attendance
+  - school management system
+  - student risks
+  - education management
+---
+
+# Parent/Student Dashboard in OpenEMIS — Latest Attendance, Behaviour, Marks
 
 **Domain:** Student · **Audience:** parent, student
 
@@ -42,6 +53,8 @@ Aggregate the three things parents ask about most: how often has my child been a
 ## Example query
 
 > "How has Mariam been doing this term — attendance, behavior, and marks?"
+
+*When to use: ask "give me a summary for this student" or "how is my child doing" when a parent or student wants a combined view of attendance, behaviour, and marks from the OpenEMIS school management system.*
 
 The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook

@@ -1,4 +1,14 @@
-# Registrar un Incidente de Conducta Estudiantil
+---
+title: Registrar un incidente de conducta estudiantil en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo registrar un incidente de conducta de un estudiante, incluyendo categoría y clasificación de gravedad, en el sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - riesgos de estudiantes
+  - gestión educativa
+---
+
+# Registrar un Incidente de Conducta Estudiantil en OpenEMIS
 
 > 📖 **Servidor de solo lectura.** Los Playbooks que crean o actualizan registros requieren **[openemis-mcp-pro](https://github.com/tixuz/openemis-mcp-pro)**.
 

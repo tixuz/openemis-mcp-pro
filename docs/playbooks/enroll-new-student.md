@@ -1,4 +1,15 @@
-# Enrol a New Student at an Institution
+---
+title: Enrol a New Student at an OpenEMIS Institution
+description: This OpenEMIS playbook explains how to enrol a new student at a school management institution using the direct bypass mode in openemis-mcp-pro write tools.
+keywords:
+  - OpenEMIS
+  - school management system
+  - student enrolment
+  - education management
+  - admission
+---
+
+# Enrol a New Student at an OpenEMIS Institution
 
 **Domain:** Student · **Audience:** admin, registrar
 
@@ -56,3 +67,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "enrol a new student" or "register a new student at a school" when an admin or registrar needs to create a new student enrolment record in the OpenEMIS school management system.*

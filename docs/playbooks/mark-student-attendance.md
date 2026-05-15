@@ -1,4 +1,15 @@
-# Mark Student Attendance for a Class (Period Roll Call)
+---
+title: Mark Student Attendance for a Class in OpenEMIS
+description: This OpenEMIS playbook explains how to mark student attendance for a class using the openemis-mcp-pro write tools, supporting DAY, SUBJECT, and DAY_AND_SUBJECT modes.
+keywords:
+  - OpenEMIS
+  - student attendance
+  - school management system
+  - education management
+  - mark attendance
+---
+
+# Mark Student Attendance for a Class in OpenEMIS (Period Roll Call)
 
 **Domain:** Attendance · **Audience:** teacher, admin
 
@@ -69,3 +80,5 @@ The agent will:
 - ABSENCE-BY-OMISSION: once a day/period has been marked, students without a row in `student-attendance-marked-records` for that day/period are treated as PRESENT. You only need rows for students who are late, absent, or excused.
 - NO-SCHEDULED-CLASS for holidays, force-majeure, or cancelled classes: POST one row with `no_scheduled_class = 99` and no per-student rows. Sentinel 0 means class WAS scheduled and happened.
 - If the teacher says "everyone present", the day remains NOT_MARKED (no rows). To mark the day as taken, post at least one row or confirm with the teacher whether any student was absent.
+
+*When to use: ask "mark today's roll call" or "record absent students" when a teacher needs to submit student attendance for a class period in OpenEMIS.*

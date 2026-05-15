@@ -1,4 +1,15 @@
-# See a Student's Timetable (Parent / Student View)
+---
+title: View a Student's Timetable in OpenEMIS
+description: This OpenEMIS playbook explains how to retrieve a student's class timetable for the current academic period, showing subjects, teachers, rooms, and time slots.
+keywords:
+  - OpenEMIS
+  - school management system
+  - student timetable
+  - education management
+  - schedule
+---
+
+# View a Student's Timetable in OpenEMIS (Parent / Student View)
 
 **Domain:** Schedule · **Audience:** parent, student
 
@@ -45,3 +56,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "what classes does this student have today" or "show the timetable for a student" when a parent or student wants their personal schedule from the OpenEMIS school management system.*

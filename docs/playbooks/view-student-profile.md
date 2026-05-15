@@ -1,4 +1,15 @@
-# View Student Profile, Guardian Contacts, and Absence History
+---
+title: View Student Profile, Guardian Contacts, and Absence History in OpenEMIS
+description: This OpenEMIS playbook explains how to retrieve a student's enrolment record, guardian contacts, and absence history from the school management system in one workflow.
+keywords:
+  - OpenEMIS
+  - school management system
+  - student attendance
+  - education management
+  - student profile
+---
+
+# View Student Profile, Guardian Contacts, and Absence History in OpenEMIS
 
 **Domain:** Student · **Audience:** teacher, admin
 
@@ -46,3 +57,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "show me a student's profile" or "who are the guardians for this student" when a teacher or admin needs a complete view of a student's enrolment, contacts, and attendance history from the OpenEMIS school management system.*

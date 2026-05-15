@@ -1,4 +1,14 @@
-# Registrar Asistencia del Personal (Presente) O Solicitar Licencia (Ausente)
+---
+title: Registrar asistencia del personal en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo registrar la asistencia del personal como presente o solicitar una licencia en el sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+  - asistencia del personal
+---
+
+# Registrar Asistencia del Personal en OpenEMIS (Presente) O Solicitar Licencia (Ausente)
 
 > 📖 **Servidor de solo lectura.** Los Playbooks que crean o actualizan registros requieren **[openemis-mcp-pro](https://github.com/tixuz/openemis-mcp-pro)**.
 

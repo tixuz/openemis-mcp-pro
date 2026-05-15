@@ -1,4 +1,13 @@
-# Ver Horario para una Clase o Docente
+---
+title: Ver el horario de clases en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar el horario semanal de una clase o docente del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver el Horario de Clases en OpenEMIS (Clase o Docente)
 
 **Dominio:** Horario · **Audiencia:** docente, administrador, estudiante
 

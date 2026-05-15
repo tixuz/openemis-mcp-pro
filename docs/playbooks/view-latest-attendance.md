@@ -1,4 +1,15 @@
-# Read Attendance Stats for a Class — Today / Week / Chronic Absentees
+---
+title: View Latest Student Attendance Stats for a Class in OpenEMIS
+description: This OpenEMIS playbook explains how to read today's, weekly, and chronic student attendance statistics for a class from the school management system.
+keywords:
+  - OpenEMIS
+  - student attendance
+  - school management system
+  - education management
+  - chronic absentees
+---
+
+# View Latest Student Attendance Stats for a Class in OpenEMIS — Today / Week / Chronic Absentees
 
 **Domain:** Attendance · **Audience:** teacher, admin, parent
 
@@ -58,3 +69,5 @@ The agent will:
 - The "chronic absentee" calculation must use marked days only — using the full calendar count (e.g., 30 days in April) will under-report presence for any day a teacher forgot to take roll.
 - `no_scheduled_class` sentinels: 99 = no class that day (holiday, force-majeure, teacher sick, field trip); 0 = class was scheduled and happened. Readers must filter on this field.
 - For a parent or guardian view of their own child: filter `student-attendance-marked-records` by `student_id` AND `institution_class_id`. They can see their own child's absence events but not the full class roster unless permissions allow it.
+
+*When to use: ask "who was absent today" or "show me this week's attendance for class 7A" when a teacher, admin, or parent wants recent student attendance data from the OpenEMIS school management system.*

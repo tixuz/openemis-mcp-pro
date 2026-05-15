@@ -1,4 +1,13 @@
-# Ver la vista general de la boleta de calificaciones a nivel de clase para un grado
+---
+title: Ver el resumen del boletín de calificaciones de la clase en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar la configuración del boletín de calificaciones, materias y resultados de evaluación de todos los estudiantes de una clase del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver la Vista General del Boletín de Calificaciones de la Clase en OpenEMIS
 
 **Dominio:** Reportes · **Audiencia:** docente, administrador
 

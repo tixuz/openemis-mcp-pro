@@ -1,4 +1,13 @@
-# Ingresar calificaciones de examen por asignatura para un período de evaluación
+---
+title: Ingresar calificaciones de examen en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo ingresar las calificaciones de examen por asignatura para un grupo de estudiantes en el sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ingresar calificaciones de examen por asignatura en OpenEMIS para un período de evaluación
 
 **Dominio:** Evaluación · **Audiente:** docente
 

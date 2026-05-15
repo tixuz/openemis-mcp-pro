@@ -1,4 +1,13 @@
-# Agregar un nuevo programa de alimentación a una institución
+---
+title: Agregar un nuevo programa de alimentación a una institución en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo crear un nuevo programa de alimentación en una institución usando las herramientas de escritura del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Agregar un Nuevo Programa de Alimentación a una Institución en OpenEMIS
 
 **Dominio:** Alimentación  
 **Audiencia:** administrador, contador, nutricionista  

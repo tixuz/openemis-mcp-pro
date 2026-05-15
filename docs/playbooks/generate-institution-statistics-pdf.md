@@ -1,4 +1,15 @@
-# Generate Institution Statistics PDF Report
+---
+title: Generate Institution Statistics PDF Report in OpenEMIS
+description: This OpenEMIS playbook explains how to compile and download an institution statistics PDF covering enrolment, staff, and attendance data from the school management system.
+keywords:
+  - OpenEMIS
+  - school management system
+  - education management
+  - institution statistics
+  - student attendance
+---
+
+# Generate Institution Statistics PDF Report in OpenEMIS
 
 **Domain:** Report · **Audience:** admin
 
@@ -48,3 +59,5 @@ The agent will:
 ## Notes
 
 NOTE: `custom-reports` is not available via the v5 REST API. Statistics PDF generation uses the report engine inside the application. This playbook covers data lookup only — trigger the PDF from the application UI.
+
+*When to use: ask "generate a statistics report for this school" or "compile an institution summary PDF" when an admin needs to prepare a school management statistics document in OpenEMIS.*

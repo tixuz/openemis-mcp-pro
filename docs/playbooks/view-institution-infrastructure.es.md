@@ -1,4 +1,13 @@
-# Ver Infraestructura de la Institución (Terrenos, Edificios, Servicios Públicos, WASH)
+---
+title: Ver la infraestructura de la institución en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar datos de terrenos, edificios, servicios públicos y WASH de una institución del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver la Infraestructura de la Institución en OpenEMIS (Terrenos, Edificios, Servicios Públicos, WASH)
 
 **Dominio:** Institución  
 **Audiencia:** admin, instalaciones  

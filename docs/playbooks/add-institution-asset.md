@@ -1,4 +1,15 @@
-# Add Equipment or Assets to an Institution
+---
+title: Add Equipment or Assets to an OpenEMIS Institution
+description: This OpenEMIS playbook explains how to register new equipment or assets at a school management institution using the openemis-mcp-pro write tools.
+keywords:
+  - OpenEMIS
+  - school management system
+  - institution
+  - education management
+  - assets
+---
+
+# Add Equipment or Assets to an OpenEMIS Institution
 
 **Domain:** Infrastructure  
 **Audience:** admin, accountant, facilities  
@@ -90,3 +101,5 @@ For N units, repeat with unique `code` (e.g. `AST-2025-001`, `AST-2025-002`) and
 1. `openemis_get { resource: "asset-makes", params: { name: "Dell" } }` → id: 12
 2. `openemis_create { resource: "institution-assets", body: { code: "LIB-2025-001", description: "Dell Laptop", serial_number: "SN-001", purchase_order: "PO/2025/071", cost: 1100.00, asset_make_id: 12 } }`
 3. `openemis_create { resource: "institution-assets", body: { code: "LIB-2025-002", description: "Dell Laptop", serial_number: "SN-002", purchase_order: "PO/2025/071", cost: 1100.00, asset_make_id: 12 } }`
+
+*When to use: ask "register new equipment at this school" or "add assets to the institution inventory" when an admin, accountant, or facilities manager needs to record equipment purchases in the OpenEMIS school management system.*

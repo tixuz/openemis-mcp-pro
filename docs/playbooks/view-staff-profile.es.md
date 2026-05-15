@@ -1,4 +1,13 @@
-# Ver el perfil completo de un miembro del personal
+---
+title: Ver el perfil completo de un miembro del personal en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar el perfil completo de un miembro del personal, incluyendo historial de empleo, calificaciones y posiciones del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver el Perfil Completo de un Miembro del Personal en OpenEMIS
 
 **Dominio:** Personal  
 **Audiencia:** administrador, recursos humanos  

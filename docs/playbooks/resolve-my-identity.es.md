@@ -1,4 +1,13 @@
-# Resolver Mi Identidad (¿Quién Soy en OpenEMIS?)
+---
+title: Resolver mi identidad en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo resolver la identidad del usuario autenticado actual en el sistema de gestión escolar, vinculando el login con un registro de personal.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Resolver Mi Identidad en OpenEMIS (¿Quién Soy en OpenEMIS?)
 
 **Dominio:** Autenticación
 **Audiencia:** docente, administrador, personal

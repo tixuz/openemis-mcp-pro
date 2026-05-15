@@ -1,4 +1,15 @@
-# Resolve My Identity (Who Am I In OpenEMIS?)
+---
+title: Resolve My Identity — Who Am I In OpenEMIS?
+description: This OpenEMIS playbook explains how to resolve the current authenticated user's identity in the school management system, linking their login to a staff or user record.
+keywords:
+  - OpenEMIS
+  - school management system
+  - education management
+  - authentication
+  - per-user auth
+---
+
+# Resolve My Identity — Who Am I In OpenEMIS?
 
 **Domain:** Auth
 **Audience:** teacher, admin, staff
@@ -119,3 +130,5 @@ Use this summary as the implicit context for any follow-up question that says "m
 - **JWT expiry.** If any step returns HTTP 401, the stored JWT has expired — the MCP will surface a "please call openemis_login again" error. This can happen after long idle periods; ask the user to re-authenticate.
 
 - **Privacy.** The summary you compose becomes implicit context. Keep it terse (name + position + institution + class count) — don't dump email, gender, or hire date into the conversation unless the user explicitly asks.
+
+*When to use: ask "who am I in this OpenEMIS instance" or "show my classes and institution" at the start of a session when a teacher, admin, or staff member needs to establish their identity context in the school management system.*

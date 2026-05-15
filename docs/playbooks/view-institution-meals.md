@@ -1,4 +1,15 @@
-# View Institution Meal Programmes and Student Participation
+---
+title: View Institution Meal Programmes and Student Participation in OpenEMIS
+description: This OpenEMIS playbook explains how to list meal programmes and check student participation rates at a school management institution.
+keywords:
+  - OpenEMIS
+  - school management system
+  - institution
+  - education management
+  - meal programmes
+---
+
+# View Institution Meal Programmes and Student Participation in OpenEMIS
 
 **Domain:** Institution  
 **Audience:** admin, nutritionist, parent  
@@ -64,6 +75,8 @@ The API resource `institution-meal-students` maps to the `student_meal_marked_re
 - **`meal-implementers` has no FieldOption fields** (`visible`, `order`, `default` do not exist on this resource).
 - **FK alias ambiguity** in `institution-meal-programmes`: programme type, target, and implementer associations may use short alias keys (`type`, `targeting`, `implementer`) rather than `_type_id` suffixes in API responses.
 - Both `institution_id` and `academic_period_id` are required for `institution-meal-programmes` and `institution-meal-students`.
+
+*When to use: ask "what meal programmes does this school run" or "how many students participated in meals today" when an admin, nutritionist, or parent needs meal programme data from the OpenEMIS school management system.*
 
 ---
 

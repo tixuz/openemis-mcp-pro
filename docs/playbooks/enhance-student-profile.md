@@ -1,4 +1,15 @@
-# Enhance Student Profile with Contacts, Nationality, and Special Needs
+---
+title: Enhance Student Profile with Contacts, Nationality, and Special Needs in OpenEMIS
+description: This OpenEMIS playbook explains how to add or update contact information, nationality, and special needs data on a student's record in the school management system.
+keywords:
+  - OpenEMIS
+  - school management system
+  - education management
+  - student profile
+  - special needs
+---
+
+# Enhance Student Profile with Contacts, Nationality, and Special Needs in OpenEMIS
 
 **Domain:** Student  
 **Audience:** teacher, admin, counsellor  
@@ -73,3 +84,5 @@ Filter by `security_user_id` and optionally `academic_period_id`.
 3. `openemis_get { resource: "user-nationalities", params: { security_user_id: 102 } }` → Malaysian (preferred)
 4. `openemis_get { resource: "user-special-needs-assessments", params: { security_user_id: 102 } }` → [] (none)
 5. `openemis_get { resource: "user-special-needs-plans", params: { security_user_id: 102 } }` → [] (none)
+
+*When to use: ask "add emergency contact for a student" or "record a student's special needs" when a teacher, admin, or counsellor needs to add or update supporting data on a student's record in the OpenEMIS school management system.*

@@ -1,4 +1,13 @@
-# Registrar una reparación o restauración de infraestructura
+---
+title: Registrar una reparación de infraestructura en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo registrar una reparación o restauración de infraestructura en una institución usando las herramientas de escritura del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Registrar una Reparación o Restauración de Infraestructura en OpenEMIS
 
 **Dominio:** Infraestructura  
 **Audiencia:** administrador, contador, mantenimiento  

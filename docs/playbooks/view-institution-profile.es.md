@@ -1,4 +1,13 @@
-# Ver perfil completo de la institución
+---
+title: Ver el perfil completo de la institución en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar el perfil completo de una institución, incluyendo tipo, ubicación, contactos y acreditación del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver el Perfil Completo de la Institución en OpenEMIS
 
 **Dominio:** Institución  
 **Audiencia:** administrador, padre, público  

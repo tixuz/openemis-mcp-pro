@@ -1,4 +1,14 @@
-# View a Staff Member's Full Profile
+---
+title: View a Staff Member's Full Profile in OpenEMIS
+description: This OpenEMIS playbook explains how to retrieve a complete staff member profile from the school management system, including employment history, qualifications, and position details.
+keywords:
+  - OpenEMIS
+  - school management system
+  - staff
+  - education management
+---
+
+# View a Staff Member's Full Profile in OpenEMIS
 
 **Domain:** Staff  
 **Audience:** admin, hr  
@@ -69,3 +79,5 @@ Filter by `security_user_id` — this is the staff member's global user ID (same
 2. `openemis_get { resource: "institution-staff-leave", params: { staff_id: 88, orderby: "date_from", order: "desc" } }` → 3 leave records
 3. `openemis_get { resource: "historical-staff-positions", params: { institution_id: 6 } }` → 2 past positions
 4. `openemis_get { resource: "user-contacts", params: { security_user_id: 88 } }` → mobile +60-12-345-6789
+
+*When to use: ask "show me a teacher's profile" or "what are this staff member's qualifications and positions" when an admin or HR needs a complete staff record from the OpenEMIS school management system.*

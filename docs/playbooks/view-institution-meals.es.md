@@ -1,4 +1,13 @@
-# Ver Programas de Alimentación Institucionales y Participación Estudiantil
+---
+title: Ver los programas de alimentación institucionales en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar información sobre programas de alimentación y participación de estudiantes en una institución del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver Programas de Alimentación Institucionales en OpenEMIS y Participación Estudiantil
 
 **Dominio:** Institución  
 **Audiencia:** administrador, nutricionista, padre/madre  

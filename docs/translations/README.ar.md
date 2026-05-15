@@ -1,8 +1,20 @@
+---
+title: openemis-mcp-pro — خادم MCP للقراءة والكتابة لنظام إدارة المدارس OpenEMIS
+description: openemis-mcp-pro هو خادم MCP للقراءة والكتابة الذي يربط مساعدي الذكاء الاصطناعي بنظام إدارة المدارس OpenEMIS — 675 مورداً، 3355 نقطة نهاية، 40 دليل إجراءات.
+keywords:
+  - OpenEMIS
+  - نظام إدارة المدارس
+  - إدارة التعليم
+  - حضور الطلاب
+  - مخاطر الطلاب
+  - خادم MCP
+---
+
 <p align="center">
-  <img src="assets/logo.png" alt="openemis-mcp logo" width="320">
+  <img src="assets/logo.png" alt="شعار openemis-mcp-pro — جسر ذكاء اصطناعي للقراءة والكتابة لنظام إدارة المدارس OpenEMIS" width="320">
 </p>
 
-# openemis-mcp
+# openemis-mcp-pro — جسر ذكاء اصطناعي للقراءة والكتابة لنظام إدارة المدارس OpenEMIS
 
 **جسر لغوي طبيعي بين الوكلاء المدركين لـ MCP (Claude، Codex، Cursor، إلخ) وأي نسخة من OpenEMIS.**
 
@@ -260,6 +272,8 @@ curl http://your-server:3000/health
 - [أدلة الإجراءات](docs/playbooks/) — 40 دليل إجراءات مختار لسير العمل (26 قراءة · 14 كتابة/مصادقة)
 - [دليل المعلم لـ ChatGPT](docs/CHATGPT-TEACHER-GUIDE.md) — كيفية السماح للمعلمين بتسجيل الحضور عبر ChatGPT Custom GPT
 - [روتين تأليف دليل الإجراءات](docs/PLAYBOOK-ROUTINE.md) — عملية من 4 خطوات لإضافة أدلة إجراءات جديدة
+- [المسرد](docs/GLOSSARY.ar.md) — تعريفات المصطلحات الرئيسية في OpenEMIS وإدارة التعليم
+- [الأسئلة الشائعة](docs/FAQ.ar.md) — أسئلة شائعة حول OpenEMIS وهذا خادم MCP
 
 ### أدلة الإجراءات
 

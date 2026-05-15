@@ -1,4 +1,15 @@
-# Submit Subject Exam Marks for an Assessment Period
+---
+title: Submit Exam Marks for an Assessment Period in OpenEMIS
+description: This OpenEMIS playbook explains how to bulk-enter per-student exam marks for an assessment period using the openemis-mcp-pro school management write tools.
+keywords:
+  - OpenEMIS
+  - school management system
+  - exam marks
+  - education management
+  - assessment
+---
+
+# Submit Subject Exam Marks for an Assessment Period in OpenEMIS
 
 **Domain:** Assessment · **Audience:** teacher
 
@@ -45,3 +56,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "enter exam marks" or "submit assessment results for a class" when a teacher needs to record per-student marks for an exam period in the OpenEMIS school management system.*

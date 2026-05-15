@@ -1,4 +1,15 @@
-# OpenEMIS MCP — Referencia de Recursos
+---
+title: OpenEMIS MCP Pro — Referencia de Recursos para la gestión educativa
+description: Referencia completa de los 675 recursos de OpenEMIS con disponibilidad de métodos HTTP y estado de escritura para el servidor MCP de lectura y escritura (Core 5.10.0).
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+  - asistencia de estudiantes
+  - riesgos de estudiantes
+---
+
+# OpenEMIS MCP Pro — Referencia de Recursos para la gestión educativa
 
 > **675 recursos** · **3355 endpoints** · v1.1.0 · OpenEMIS Core 5.10.0
 >

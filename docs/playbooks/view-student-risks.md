@@ -1,4 +1,15 @@
-# View a Student's Risk Profile and Welfare Cases
+---
+title: View a Student's Risk Profile and Welfare Cases in OpenEMIS
+description: This OpenEMIS playbook explains how to retrieve student risk scores, early-warning flags, welfare cases, and alert rules from the school management system.
+keywords:
+  - OpenEMIS
+  - student risks
+  - school management system
+  - education management
+  - early-warning
+---
+
+# View a Student's Risk Profile and Welfare Cases in OpenEMIS
 
 **Domain:** Student  
 **Audience:** admin, counsellor, teacher  
@@ -73,3 +84,5 @@ Filter by `institution_id`. `institution-cases` is **workflow-controlled** — `
 2. `openemis_get { resource: "risks", params: { academic_period_id: 1 } }` → "Attendance Risk", "Academic Risk"
 3. `openemis_get { resource: "student-risks-criterias", params: { institution_student_risk_id: 445 } }` → absence criterion: 85, marks criterion: 60
 4. `openemis_get { resource: "institution-cases", params: { institution_id: 6 } }` → 1 open case, Priority: High, Type: Welfare
+
+*When to use: ask "what are this student's risk scores" or "does this student have any welfare cases" when a counsellor, admin, or teacher needs early-warning and student risk data from the OpenEMIS school management system.*

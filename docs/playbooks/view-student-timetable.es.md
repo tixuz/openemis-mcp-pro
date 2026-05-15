@@ -1,4 +1,13 @@
-# Ver el Horario de un Estudiante (Vista de Padre/Madre o Estudiante)
+---
+title: Ver el horario del estudiante en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar el horario personal de clases de un estudiante del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver el Horario de un Estudiante en OpenEMIS (Vista de Padre/Madre o Estudiante)
 
 **Dominio:** Horario · **Audiencia:** padre/madre, estudiante
 

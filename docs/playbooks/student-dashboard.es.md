@@ -1,4 +1,14 @@
-# Panel de Padres/Estudiantes — Asistencia, Comportamiento y Calificaciones Recientes
+---
+title: Panel del estudiante en OpenEMIS — asistencia, comportamiento, calificaciones
+description: Este playbook de OpenEMIS explica cómo obtener un resumen de la asistencia de estudiantes, incidentes de comportamiento y resultados de evaluación del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - asistencia de estudiantes
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Panel de Padres/Estudiantes en OpenEMIS — Asistencia de Estudiantes, Comportamiento y Calificaciones Recientes
 
 **Dominio:** Estudiante · **Audiente:** padre, estudiante
 

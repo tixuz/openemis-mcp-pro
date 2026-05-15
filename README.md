@@ -1,10 +1,23 @@
+---
+title: openemis-mcp-pro — Read + Write MCP Server for OpenEMIS School Management
+description: openemis-mcp-pro is the read and write MCP server that bridges AI assistants to the OpenEMIS school management information system — 675 resources, 3355 endpoints, 40 playbooks.
+keywords:
+  - OpenEMIS
+  - school management system
+  - education management
+  - student attendance
+  - student risks
+  - MCP server
+  - write tools
+---
+
 <p align="center">
-  <img src="assets/logo.png" alt="openemis-mcp logo" width="320">
+  <img src="assets/logo.png" alt="openemis-mcp-pro logo — read and write AI bridge for OpenEMIS school management" width="320">
 </p>
 
-# openemis-mcp
+# openemis-mcp-pro — Read + Write AI Bridge for OpenEMIS School Management
 
-**A natural-language bridge between MCP-aware agents (Claude, Codex, Cursor, etc.) and any OpenEMIS school.**
+**A natural-language bridge between MCP-aware agents (Claude, Codex, Cursor, etc.) and any OpenEMIS school — with full read + write access.**
 
 [**OpenEMIS**](https://www.openemis.org) is a free, open-source **school management information system** developed by UNESCO and KORDIT. It runs the day-to-day administration of every kind of educational institution — kindergartens, primary schools, secondary schools, secondary vocational institutions, technical colleges, and universities — managing students, staff, attendance, assessment, infrastructure, meals, scholarships, examinations, training, and ministry-level reporting. This MCP-pro server adds full read + write access plus per-user authentication on top of any OpenEMIS school.
 
@@ -23,6 +36,12 @@ The agent plans the calls, this MCP delivers the data, and you get the answer:
 You never write a line of code. You never see JSON. You just ask.
 
 > **Status:** v1.0.0 — **full CRUD** for non-workflow resources. Read queries work against every OpenEMIS v5 resource. Write tools (create/update/delete) are live for all resources that do not flow through the CakePHP Workflow plugin. Workflow-controlled resources (attendance, staff leave) are blocked at the tool level and redirect to the appropriate playbook.
+
+---
+
+## What this is
+
+openemis-mcp-pro is the read + write MCP server that connects AI assistants to the OpenEMIS school management system. It exposes 675 resources (students, attendance, risks, staff, exams, infrastructure) across 40 curated playbooks — 26 read and 14 write/auth. The pro distribution adds direct write tools (`openemis_create`, `openemis_update`, `openemis_delete`), HTTP server mode for ChatGPT Custom GPT, and per-user authentication on top of the free read-only distribution.
 
 ---
 
@@ -278,6 +297,8 @@ Design principles, from the first line of code:
 - [Playbooks](docs/playbooks/) — 40 curated workflow guides (26 read · 14 write/auth)
 - [ChatGPT Teacher Guide](docs/CHATGPT-TEACHER-GUIDE.md) — how to let teachers mark attendance via ChatGPT Custom GPT
 - [Playbook Authoring Routine](docs/PLAYBOOK-ROUTINE.md) — 4-step process for adding new playbooks
+- [Glossary](docs/GLOSSARY.md) — definitions of key OpenEMIS and education management terms
+- [FAQ](docs/FAQ.md) — frequently asked questions about OpenEMIS and this MCP server
 
 ### Playbooks
 

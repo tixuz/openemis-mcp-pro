@@ -1,4 +1,14 @@
-# Ver Resumen de Riesgos Institucionales y Reglas de Alerta
+---
+title: Ver el resumen de riesgos institucionales en OpenEMIS
+description: Este playbook de OpenEMIS explica cómo recuperar el resumen de riesgos de estudiantes a nivel de institución y la configuración de reglas de alerta del sistema de gestión escolar.
+keywords:
+  - OpenEMIS
+  - riesgos de estudiantes
+  - sistema de gestión escolar
+  - gestión educativa
+---
+
+# Ver el Resumen de Riesgos Institucionales en OpenEMIS y Reglas de Alerta
 
 **Dominio:** Institución  
 **Audiencia:** administrador, ministerio  

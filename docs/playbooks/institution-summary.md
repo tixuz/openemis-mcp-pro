@@ -1,4 +1,15 @@
-# Institution Basic Info — Counts of Students, Staff, Vacant Positions
+---
+title: Institution Summary — Students, Staff, and Vacant Positions in OpenEMIS
+description: This OpenEMIS playbook explains how to get a quick summary of an institution's student count, staff count, and vacant positions from the school management system.
+keywords:
+  - OpenEMIS
+  - school management system
+  - institution
+  - education management
+  - staff
+---
+
+# Institution Summary in OpenEMIS — Counts of Students, Staff, and Vacant Positions
 
 **Domain:** Institution · **Audience:** admin, parent
 
@@ -46,3 +57,5 @@ The agent will:
 1. Call `openemis_discover` or `openemis_list_playbooks` to find this playbook
 2. Follow the steps above
 3. Return the answer in plain English
+
+*When to use: ask "tell me about this school" or "how many students and staff are at this institution" when an admin or parent wants a quick school management summary from OpenEMIS.*

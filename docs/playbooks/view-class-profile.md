@@ -1,4 +1,15 @@
-# View Full Class Profile
+---
+title: View Full Class Profile in OpenEMIS
+description: This OpenEMIS playbook explains how to retrieve a complete class profile from the school management system, including enrolled students, teacher roster, and subject assignments.
+keywords:
+  - OpenEMIS
+  - school management system
+  - education management
+  - student attendance
+  - class profile
+---
+
+# View Full Class Profile in OpenEMIS
 
 **Domain:** Student  
 **Audience:** teacher, admin  
@@ -119,3 +130,5 @@ openemis_get { resource: "security-users",
    - `openemis_get { resource: "institution-subject-staff", params: { institution_subject_id: 101 } }` × 7 → subject teachers `[7, 23, 41, 58, …]`
    - Union + dedupe → `{7, 12, 19, 23, 41, 58, …}`
    - `openemis_get { resource: "security-users", params: { ids: "7,12,19,23,41,58" } }` → names in one call
+
+*When to use: ask "show me the full profile for class 8A" or "who are the teachers and students in this class" when a teacher or admin needs a complete class view from the OpenEMIS school management system.*

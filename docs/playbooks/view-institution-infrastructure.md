@@ -1,4 +1,15 @@
-# View Institution Infrastructure (Land, Buildings, Utilities, WASH)
+---
+title: View Institution Infrastructure in OpenEMIS — Land, Buildings, Utilities, WASH
+description: This OpenEMIS playbook explains how to retrieve land, building, utilities, and WASH infrastructure data for an institution from the school management system.
+keywords:
+  - OpenEMIS
+  - school management system
+  - institution
+  - education management
+  - infrastructure
+---
+
+# View Institution Infrastructure in OpenEMIS (Land, Buildings, Utilities, WASH)
 
 **Domain:** Institution  
 **Audience:** admin, facilities  
@@ -70,6 +81,8 @@ Filter by `institution_id` AND `academic_period_id`. Count fields: `infrastructu
 - **`infrastructure_ownership_id`** is the correct FK name on both lands and buildings (not `ownership_id`).
 - **Utilities and WASH require `academic_period_id`** — unlike core infrastructure.
 - **Sanitation totals are read-only** — they are calculated automatically by the backend.
+
+*When to use: ask "what buildings and utilities does this school have" or "show the WASH data for this institution" when an admin or facilities manager needs infrastructure details from the OpenEMIS school management system.*
 
 ---
 
