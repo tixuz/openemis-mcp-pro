@@ -26,7 +26,7 @@ You never write a line of code. You never see JSON. You just ask.
 
 ## Why this exists
 
-The OpenEMIS Core REST API is large — the v5 surface alone exposes around **1,350 endpoints across ~670 resources**. No AI agent can hold that in context, and raw Swagger-style introspection floods a conversation with noise that has nothing to do with the user's actual question.
+The OpenEMIS Core REST API is large — the v5 surface alone exposes **3,355 endpoints across 675 resources** (Core 5.10.0). No AI agent can hold that in context, and raw Swagger-style introspection floods a conversation with noise that has nothing to do with the user's actual question.
 
 This MCP solves that in two ways:
 
@@ -44,7 +44,7 @@ The net effect: agents answer natural-language questions in 2–4 tool calls, no
 | `openemis_health` | v0.1 | Pings the configured instance and reports reachability. Performs a real login round-trip — if this passes, CRUD will work. |
 | `openemis_list_domains` | v0.1 | Lists the curated OpenEMIS domains — Attendance, Assessment, Staff, Student, Institution, Schedule, Examination, Report — each with a one-line summary. The agent uses this to figure out *where* a question lives. |
 | `openemis_discover` | v0.1 | Input: a topic string. Output: up to 30 endpoints relevant to that topic, drawn from the domain knowledge pack and the per-instance manifest. Keeps conversations small regardless of how large the underlying API is. |
-| `openemis_list_playbooks` | v0.2 | Lists all 27 curated workflow playbooks with id, title, domain, and audience. The agent uses this to find the right step-by-step guide for a user-level task. |
+| `openemis_list_playbooks` | v0.2 | Lists all 38 curated workflow playbooks with id, title, domain, and audience. The agent uses this to find the right step-by-step guide for a user-level task. |
 | `openemis_get_playbook` | v0.2 | Input: a playbook id. Output: the full playbook — resources, ordered steps, guidance notes, and example queries. |
 | `openemis_get` | v0.1 | Unified read tool. `{ resource, id?, params? }` — if `id` is present, fetches the singleton; otherwise lists with any combination of `_fields`, `_conditions`, `orderby`, `order`, `page`, `limit`, plus any ad-hoc filter key. |
 | `openemis_create` | v0.3.0 | Create a new record. `{ resource, body }` — non-workflow resources only. Workflow-controlled resources (e.g. institution-staff-leave) are blocked and will redirect to the appropriate playbook. |
@@ -57,19 +57,19 @@ A representative natural-language question like *"how many teachers at Avory Pri
 
 ## Core compatibility
 
-Tested against **OpenEMIS Core 5.9** (master, May 2026). Earlier 5.7 / 5.8 deployments are also supported — the API surface is unchanged.
+Tested against **OpenEMIS Core 5.10.0** (master, May 2026). Earlier 5.7 / 5.8 / 5.9 deployments are also supported — the API surface is backwards-compatible.
 
 ### Optional capability flag — POCOR-9660 multi-id GET
 
-`openemis_get` accepts `params.ids = "1,2,3"` for batch lookups. By default (Core ≤ 5.9 master) the handler fans out N parallel single-record GETs, since `CrudApiController` does not yet understand a multi-id filter.
+`openemis_get` accepts `params.ids = "1,2,3"` for batch lookups. By default the handler fans out N parallel single-record GETs (legacy mode).
 
-When the target deployment carries POCOR-9660 (`?id=1,2,3` and `_conditions=id:IN(...)` support in `CrudApiController`), set:
+Core 5.10.0 carries POCOR-9660 (`?id=1,2,3` and `_conditions=id:IN(...)` support in `CrudApiController`). To use the single-round-trip path, set:
 
 ```bash
 OPENEMIS_CORE_IN_OPERATOR=1
 ```
 
-The handler then collapses the batch into a single round-trip. Default off — flip on once the upstream branch is deployed.
+Default off (for compatibility with older Core builds) — flip on once your instance is on Core 5.9+.
 
 ## Verified against demo.openemis.org
 
@@ -250,7 +250,7 @@ curl http://your-server:3000/health
 │  • openemis_health     │
 │  • openemis_list_dom…  │  ← reads Domain-*.md from vault
 │  • openemis_discover   │  ← topic → ≤30 scoped endpoints
-│  • openemis_list_play… │  ← list all 27 workflow playbooks
+│  • openemis_list_play… │  ← list all 38 workflow playbooks
 │  • openemis_get_playbk │  ← load a playbook by id
 │  • openemis_get / _create / _update / _delete   │
 └───────────┬────────────┘
@@ -272,8 +272,8 @@ Design principles, from the first line of code:
 
 ## Documentation
 
-- [Resource Reference](docs/resources.md) — all 645 resources with HTTP method availability and write status
-- [Playbooks](docs/playbooks/) — 27 curated workflow guides (24 read · 3 write)
+- [Resource Reference](docs/resources.md) — all 675 resources with HTTP method availability and write status (Core 5.10.0)
+- [Playbooks](docs/playbooks/) — 38 curated workflow guides (24 read · 14 write/auth)
 - [ChatGPT Teacher Guide](docs/CHATGPT-TEACHER-GUIDE.md) — how to let teachers mark attendance via ChatGPT Custom GPT
 - [Playbook Authoring Routine](docs/PLAYBOOK-ROUTINE.md) — 4-step process for adding new playbooks
 
@@ -308,6 +308,19 @@ Design principles, from the first line of code:
 | 25 | [Add Equipment or Assets ✏️](docs/playbooks/add-institution-asset.md) | Infrastructure | admin, accountant, facilities | [RU](docs/playbooks/add-institution-asset.ru.md) · [ES](docs/playbooks/add-institution-asset.es.md) · [HI](docs/playbooks/add-institution-asset.hi.md) · [AR](docs/playbooks/add-institution-asset.ar.md) |
 | 26 | [Record an Infrastructure Repair ✏️](docs/playbooks/record-infrastructure-repair.md) | Infrastructure | admin, accountant, facilities | [RU](docs/playbooks/record-infrastructure-repair.ru.md) · [ES](docs/playbooks/record-infrastructure-repair.es.md) · [HI](docs/playbooks/record-infrastructure-repair.hi.md) · [AR](docs/playbooks/record-infrastructure-repair.ar.md) |
 | 27 | [Add a New Meal Programme ✏️](docs/playbooks/add-meal-programme.md) | Meals | admin, accountant, nutritionist | [RU](docs/playbooks/add-meal-programme.ru.md) · [ES](docs/playbooks/add-meal-programme.es.md) · [HI](docs/playbooks/add-meal-programme.hi.md) · [AR](docs/playbooks/add-meal-programme.ar.md) |
+| 28 | [Resolve My Identity (per-user auth) 🔐](docs/playbooks/resolve-my-identity.md) | Auth | teacher, admin, staff | [RU](docs/playbooks/resolve-my-identity.ru.md) · [ES](docs/playbooks/resolve-my-identity.es.md) · [HI](docs/playbooks/resolve-my-identity.hi.md) · [AR](docs/playbooks/resolve-my-identity.ar.md) |
+| 29 | `diagnose-alert-delivery` (POCOR-9509) | Alerts | admin, ministry | _docs follow_ |
+| 30 | `view-school-accreditation` (POCOR-9610) | Institution | admin, ministry, principal | _docs follow_ |
+| 31 | `view-school-registration` (POCOR-9610) | Institution | admin, ministry, principal | _docs follow_ |
+| 32 | `view-institution-budget` (Core 5.10.0) | Institution | admin, finance | _docs follow_ |
+| 33 | `query-student-absence-history` (Core 5.10.0) | Attendance | teacher, admin, parent, counsellor | _docs follow_ |
+| 34 | `query-user-activity-audit-log` (POCOR-9697) | Security | admin, security, ministry | _docs follow_ |
+| 35 | `view-class-roster` (Core 5.10.0) | Institution | teacher, admin, homeroom | _docs follow_ |
+| 36 | `set-school-accreditation` ✏️ (POCOR-9610) | Institution | admin, ministry | _docs follow_ |
+| 37 | `set-school-registration` ✏️ (POCOR-9610) | Institution | admin, ministry | _docs follow_ |
+| 38 | `mark-student-meal-participation` ✏️ | Meals | teacher, admin, nutritionist | _docs follow_ |
+
+> **Newer playbooks (29–38)** ship as full English content in `data/playbooks.json` and are loaded via `openemis_get_playbook`. Per-playbook markdown docs and RU/ES/HI/AR translations land in a follow-up release.
 ---
 
 ## Roadmap
@@ -359,8 +372,8 @@ Workflow routes are gated above Individual Pro because bulk AI writes at institu
 |---|---|---|---|---|
 | **Scope** | Any user | One person | One school | Ministry / national |
 | **Licence** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
-| Read tools (all 645 resources) | ✅ | ✅ | ✅ | ✅ |
-| 27 curated playbooks + translations | ✅ | ✅ | ✅ | ✅ |
+| Read tools (all 675 resources, Core 5.10.0) | ✅ | ✅ | ✅ | ✅ |
+| 38 curated playbooks (24 read · 14 write/auth · 28 with translations) | ✅ | ✅ | ✅ | ✅ |
 | stdio mode (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
 | **HTTP server mode** (Oracle / VPS install) | — | ✅ | ✅ | ✅ |
 | **OpenAPI adapter** (ChatGPT Custom GPT, any REST client) | — | ✅ | ✅ | ✅ |

@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.tixuz/openemis-pro",
-  "description": "MCP server for OpenEMIS v5 — read + write tools and ChatGPT OpenAPI adapter",
+  "description": "MCP server for OpenEMIS v5 (Core 5.10.0) — 675 resources, 38 playbooks (24 read + 14 write/auth), read + write tools, per-user auth, ChatGPT OpenAPI adapter",
   "repository": {
     "url": "https://github.com/tixuz/openemis-mcp-pro",
     "source": "github"
   },
-  "version": "1.0.1",
+  "version": "1.1.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "openemis-mcp-pro",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "transport": {
         "type": "stdio"
       },
