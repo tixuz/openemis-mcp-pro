@@ -7843,7 +7843,7 @@
     "domain_endpoint_total": 30,
     "family_endpoint_total": 3080,
     "orphan_endpoint_total": 275,
-    "playbook_count": 38
+    "playbook_count": 40
   },
   "playbooks": [
     {
@@ -9694,7 +9694,197 @@
         "There is no v5 endpoint that bulk-marks 'everyone present today.' Loop POSTs, or build the array client-side and submit one-by-one.",
         "Mistakes are corrected via openemis_delete on the row, not by overwriting. The composite of (student_id implied by class roster, date, meal_benefit_id) is not enforced as unique, so an overwrite would create a duplicate."
       ]
+    },
+    {
+      "id": "view-admission-and-enrolment-queue-state",
+      "title": "View a future student's admission / enrolment queue state",
+      "audience": [
+        "admin",
+        "registrar",
+        "parent",
+        "principal"
+      ],
+      "domain": "Workflow",
+      "description": "Answer 'where is this child in the admission process?' and 'have they been enrolled yet?'. OpenEMIS routes new students through TWO sequential workflows: first the admission application (institution-student-admission), then enrolment (institution-student-enrolment). Each record carries a status_id that points at a workflow_step (e.g., 'Pending Verification', 'Approved', 'Closed'), an assignee_id (the staff member currently responsible), and a full audit trail in workflow-transitions / workflow-comments. This playbook reads — never writes — those records to surface the queue state in plain language.",
+      "why_workflows": "OpenEMIS treats admission and enrolment as multi-step approval processes because schools across countries have very different sign-off chains. A village school may need only the principal's tick; a national education ministry may require district verification, headmaster review, and registrar approval. The workflow plugin lets each tenant configure the steps, the role-based assignees, and the rules (e.g., 'auto-reject if days_unmarked > 5') without code changes. State machine enforcement is what stops an applicant from being marked Enrolled before the Admission row has been Approved.",
+      "resources": [
+        "institution-student-admission",
+        "institution-student-enrolment",
+        "workflows",
+        "workflow-steps",
+        "workflow-statuses",
+        "workflow-statuses-steps",
+        "workflow-transitions",
+        "workflow-comments",
+        "workflow-models",
+        "security-users",
+        "education-grades",
+        "institutions",
+        "academic-periods"
+      ],
+      "schema_invariants": [
+        "institution-student-admission columns: id, start_date, end_date, student_id, status_id, assignee_id, institution_id, academic_period_id, education_grade_id, institution_class_id, test_score, interview_score, comment.",
+        "institution-student-enrolment columns: id, start_date, end_date, student_id, status_id, assignee_id, institution_id, academic_period_id, education_grade_id, institution_class_id, comment.",
+        "status_id is a FK into workflow_statuses (the legacy compatibility layer). The actual workflow position lives in workflow_steps via the workflow_statuses_steps join table. workflow_steps.category maps 1=TO_DO, 2=IN_PROGRESS, 3=DONE — this tells you whether the record is 'queued', 'being worked on', or 'finished'.",
+        "assignee_id is a FK to security_users — the person currently responsible. If null, the record is unassigned and waiting for triage.",
+        "Every transition (status_id change, assignee change, comment) is logged in workflow-transitions with prev_workflow_step_name + workflow_step_name + workflow_action_name (typically APPROVE or REJECT). Joined to the originating row by (workflow_model_id, model_reference).",
+        "workflow-comments stores free-text comments left during transitions, joined to the model row the same way.",
+        "Admission MUST close before enrolment opens. A student can only have one Admission record per (institution_id, academic_period_id, education_grade_id) tuple in IN_PROGRESS state at a time."
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "title": "Resolve the student",
+          "action": "openemis_get",
+          "resource": "security-users",
+          "purpose": "Find the security_users.id given a name or openemis_no. Required to scope the admission/enrolment lookup.",
+          "guidance": "Filter by openemis_no:<no> if you have it, else first_name + last_name. Capture the resolved id as student_id (NOTE: institution-students.student_id is the FK to security_users.id, not a separate 'student' table id)."
+        },
+        {
+          "step": 2,
+          "title": "Find the latest admission record",
+          "action": "openemis_get",
+          "resource": "institution-student-admission",
+          "purpose": "Pull the admission application(s) for this student.",
+          "guidance": "Filter student_id:<id>. If multiple rows (re-applications), order by created DESC and take the most recent. Note the status_id, assignee_id, education_grade_id, and institution_id values for the next steps."
+        },
+        {
+          "step": 3,
+          "title": "Resolve the admission's workflow step name",
+          "action": "openemis_get",
+          "resource": "workflow-models",
+          "purpose": "Find which workflow_model represents InstitutionStudentAdmission so we can fetch the right workflow definition.",
+          "guidance": "Filter by model:'Institution.InstitutionStudentAdmissions' (or grep for 'StudentAdmission' in the name field). Note the returned id — call it admission_workflow_model_id."
+        },
+        {
+          "step": 4,
+          "title": "Map status_id → workflow_step → human label",
+          "action": "openemis_get",
+          "resource": "workflow-statuses-steps",
+          "purpose": "Join the admission's status_id to its underlying workflow_step.",
+          "guidance": "Filter workflow_status_id:<admission.status_id>. The row gives you the workflow_step_id. Then GET workflow-steps/{workflow_step_id} to read name (e.g., 'Pending Verification') and category (1/2/3 → TO_DO / IN_PROGRESS / DONE)."
+        },
+        {
+          "step": 5,
+          "title": "Resolve the current assignee",
+          "action": "openemis_get",
+          "resource": "security-users",
+          "purpose": "If assignee_id is not null, fetch the staff member's name so the answer reads naturally.",
+          "guidance": "Single-record GET on security-users/{assignee_id} with _fields:['first_name','last_name','openemis_no']. Skip if assignee_id is null (admission row is unassigned)."
+        },
+        {
+          "step": 6,
+          "title": "Read the transition history",
+          "action": "openemis_get",
+          "resource": "workflow-transitions",
+          "purpose": "Build a timeline of how the admission moved through steps.",
+          "guidance": "Filter workflow_model_id:<admission_workflow_model_id> AND model_reference:<admission.id>. Order by created DESC. Each row records prev_workflow_step_name → workflow_step_name with the action (APPROVE/REJECT) and the actor (created_user_id). This is the audit trail to surface to the user."
+        },
+        {
+          "step": 7,
+          "title": "If admission is DONE (category=3), check enrolment",
+          "action": "openemis_get",
+          "resource": "institution-student-enrolment",
+          "purpose": "Once admission is approved (Closed), enrolment becomes the next workflow. Fetch the enrolment row.",
+          "guidance": "Filter student_id:<id>, institution_id:<id>, academic_period_id:<id>. Repeat steps 3-6 against the enrolment workflow_model (typically model:'Institution.StudentUser' or similar — find via workflow-models). If enrolment is also category=3, the student is fully enrolled."
+        },
+        {
+          "step": 8,
+          "title": "Render in plain language",
+          "action": "format",
+          "purpose": "Produce a paragraph the user can understand.",
+          "guidance": "Example output: 'Anna Hassan applied to Avory Primary on 2026-04-12. Her admission is currently at step \"Pending Verification\" (TO_DO), assigned to Mr Ravi Kumar. The application has moved through 2 transitions: Submitted → Under Review (Apr 13, by Ms Aaisha) → Pending Verification (Apr 15, by Ms Aaisha). She has NOT been enrolled yet — enrolment opens only after admission is approved.'"
+        }
+      ],
+      "notes": [
+        "Workflow-controlled writes (approving admission, rejecting, reassigning) cannot be driven via this MCP — they require human approval and use the Workflow plugin's processWorkflow component. The free MCP is read-only by design; the pro MCP defers workflow writes to the OpenEMIS application per the workflow_writes_deferred_to_app global policy. Do not attempt to POST to /api/v5/institution-student-admission to 'approve' a record.",
+        "If status_id matches a workflow_step with category=3 (DONE) but workflow_step.name is 'Closed - Rejected' (not 'Closed - Approved'), the applicant was rejected — they will NOT proceed to enrolment. Surface that clearly.",
+        "The legacy status_id values like 'submitted' / 'under_review' you may see in older test data are kept for backward compatibility via workflow_statuses. Modern installations use numeric workflow_step_ids — both shapes appear in the wild.",
+        "Atlas reference (vault, if you have it): /Users/khindol/Documents/Vaults/openemis/Products/Core/plugins/workflow.md and /Atlas/concepts/Core-API-v5-Workflow-Index.md."
+      ]
+    },
+    {
+      "id": "explain-workflow-system",
+      "title": "Explain the OpenEMIS workflow system (admissions, enrolment, leave, transfer)",
+      "audience": [
+        "admin",
+        "principal",
+        "developer",
+        "consultant"
+      ],
+      "domain": "Workflow",
+      "description": "Educational playbook — answer 'why does this approval take 4 steps?', 'what is a workflow step vs. a workflow status?', 'who can approve this?'. OpenEMIS uses the Workflow plugin to model every multi-step approval (student admission, student enrolment, staff leave, staff/student transfer, training applications). This playbook explains the concepts so a user can read the database and figure out why a record is stuck.",
+      "why_workflows": "Schools differ wildly in how they approve things. A small private kindergarten may approve a student's admission with one principal's tick; a country's national education ministry may need: registrar verification → school principal review → district inspection → MOE final stamp. Hard-coding that chain in PHP would require a code release every time a country changes its process. The Workflow plugin makes the chain DATA, not CODE — admins configure steps, role-based assignees, transitions, and rules through the UI, and the same engine powers every domain that needs approvals.",
+      "resources": [
+        "workflows",
+        "workflow-models",
+        "workflow-steps",
+        "workflow-actions",
+        "workflow-statuses",
+        "workflow-statuses-steps",
+        "workflow-steps-roles",
+        "workflow-transitions",
+        "workflow-comments",
+        "workflow-rules",
+        "security-roles"
+      ],
+      "concepts": [
+        {
+          "name": "workflow_models",
+          "meaning": "The registry of domain models that the workflow engine can govern (e.g., 'Institution.InstitutionStudentAdmissions', 'Institution.StaffLeave'). Adding a new domain to workflow means writing a row here and attaching WorkflowBehavior to that model."
+        },
+        {
+          "name": "workflows",
+          "meaning": "A named approval template bound to a workflow_model. One workflow_model can have many workflows (e.g., 'Standard Admission' vs. 'Boarding-school Admission'). Each tenant configures their own."
+        },
+        {
+          "name": "workflow_steps",
+          "meaning": "Discrete stages within a workflow. Each step has a category — 1=TO_DO (queued), 2=IN_PROGRESS (being worked on), 3=DONE (closed). Saving a workflow auto-creates the three system steps Open / Pending / Closed; admins add more (e.g., 'Pending Verification', 'Pending Principal Approval')."
+        },
+        {
+          "name": "workflow_actions",
+          "meaning": "Transitions between steps. Each action has a source step, a target step, and a verb (action=0 APPROVE, 1=REJECT). The state machine BLOCKS any status change that isn't a defined workflow_action — that's how the plugin enforces 'you cannot skip the principal'."
+        },
+        {
+          "name": "workflow_steps_roles",
+          "meaning": "Which security_roles are authorized to act on a given step. Restricts WHO can approve/reject at each stage. Example: 'Pending Principal Approval' is restricted to roles where role.name='Principal'."
+        },
+        {
+          "name": "workflow_statuses + workflow_statuses_steps",
+          "meaning": "Legacy compatibility layer. Older domain models store status_id pointing at workflow_statuses; the join table maps that to the modern workflow_step_id. Both still work — newer installs increasingly skip the legacy layer."
+        },
+        {
+          "name": "workflow_transitions",
+          "meaning": "Audit trail. Every time a record moves between steps (or its assignee changes, or an admin comments), one row is appended here. Read this to answer 'who approved, when, and why?'."
+        },
+        {
+          "name": "workflow_comments",
+          "meaning": "Free-text comments left during transitions — typically the reason for rejection, or notes from the reviewer. Joined to the source record by (workflow_model_id, model_reference)."
+        },
+        {
+          "name": "assignee_id (on the source row, NOT on workflow-*)",
+          "meaning": "The current handler. When a record advances to a step like 'Pending Principal Approval', the system pushes the row into the principal's queue by setting assignee_id to the principal's security_users.id. UI dashboards filter by assignee_id = current_user to show 'tasks waiting on me'."
+        },
+        {
+          "name": "workflow_rules",
+          "meaning": "JSON-encoded conditional triggers. Example: 'auto-reject staff leave if days_unmarked > 5'. The rule fires on specific events and can transition the workflow without a human action. Powerful for automation; rare in vanilla tenants."
+        }
+      ],
+      "steps": [
+        "openemis_get('workflow-models', params:{_fields:['id','name','model'], limit:50}) — see every domain governed by workflow",
+        "For any specific domain (e.g., admissions): openemis_get('workflows', params:{workflow_model_id:<id>, _fields:['id','code','name']}) — see which workflow templates are configured",
+        "openemis_get('workflow-steps', params:{workflow_id:<id>, _fields:['id','name','category']}) — see the stages in that template, ordered by category",
+        "openemis_get('workflow-actions', params:{workflow_step_id:<step_id>, _fields:['id','name','next_workflow_step_id','action']}) — see which transitions are allowed FROM a given step",
+        "openemis_get('workflow-steps-roles', params:{workflow_step_id:<step_id>}) joined with security-roles to see WHO can act on a given step",
+        "openemis_get('workflow-transitions', params:{workflow_model_id:<id>, model_reference:<row_id>, orderby:'created', order:'desc'}) — audit trail for a specific record"
+      ],
+      "notes": [
+        "WHY THE PLUGIN EXISTS: configurability. The same PHP code powers admission approval in a 30-student village school in Mongolia and a 5,000-student urban academy in Brazil — they just configure different steps, roles, and rules.",
+        "THE THREE SYSTEM STEPS (Open, Pending, Closed) are auto-created with every new workflow and CANNOT be deleted (is_system_defined=1). They guarantee that every workflow has a sensible entry and exit point.",
+        "The plugin EXPLICITLY DOES NOT allow agents (this MCP included) to drive transitions. Workflow-controlled writes require the human-in-the-loop approval chain — see [[mark-student-attendance]] for an example of a workflow-controlled write that we deliberately defer to the OpenEMIS UI.",
+        "Atlas vault reference (if available): /Users/khindol/Documents/Vaults/openemis/Products/Core/plugins/workflow.md describes the full state machine model in detail."
+      ]
     }
   ],
-  "playbook_count": 38
+  "playbook_count": 40
 }

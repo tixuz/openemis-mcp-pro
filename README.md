@@ -4,7 +4,9 @@
 
 # openemis-mcp
 
-**A natural-language bridge between MCP-aware agents (Claude, Codex, Cursor, etc.) and any OpenEMIS instance.**
+**A natural-language bridge between MCP-aware agents (Claude, Codex, Cursor, etc.) and any OpenEMIS school.**
+
+[**OpenEMIS**](https://www.openemis.org) is a free, open-source **school management information system** developed by UNESCO and KORDIT. It runs the day-to-day administration of every kind of educational institution — kindergartens, primary schools, secondary schools, secondary vocational institutions, technical colleges, and universities — managing students, staff, attendance, assessment, infrastructure, meals, scholarships, examinations, training, and ministry-level reporting. This MCP-pro server adds full read + write access plus per-user authentication on top of any OpenEMIS school.
 
 **Translations:** [Русский](docs/translations/README.ru.md) · [Español](docs/translations/README.es.md) · [हिन्दी](docs/translations/README.hi.md) · [العربية](docs/translations/README.ar.md)
 
@@ -44,7 +46,7 @@ The net effect: agents answer natural-language questions in 2–4 tool calls, no
 | `openemis_health` | v0.1 | Pings the configured instance and reports reachability. Performs a real login round-trip — if this passes, CRUD will work. |
 | `openemis_list_domains` | v0.1 | Lists the curated OpenEMIS domains — Attendance, Assessment, Staff, Student, Institution, Schedule, Examination, Report — each with a one-line summary. The agent uses this to figure out *where* a question lives. |
 | `openemis_discover` | v0.1 | Input: a topic string. Output: up to 30 endpoints relevant to that topic, drawn from the domain knowledge pack and the per-instance manifest. Keeps conversations small regardless of how large the underlying API is. |
-| `openemis_list_playbooks` | v0.2 | Lists all 38 curated workflow playbooks with id, title, domain, and audience. The agent uses this to find the right step-by-step guide for a user-level task. |
+| `openemis_list_playbooks` | v0.2 | Lists all 40 curated workflow playbooks with id, title, domain, and audience. The agent uses this to find the right step-by-step guide for a user-level task. |
 | `openemis_get_playbook` | v0.2 | Input: a playbook id. Output: the full playbook — resources, ordered steps, guidance notes, and example queries. |
 | `openemis_get` | v0.1 | Unified read tool. `{ resource, id?, params? }` — if `id` is present, fetches the singleton; otherwise lists with any combination of `_fields`, `_conditions`, `orderby`, `order`, `page`, `limit`, plus any ad-hoc filter key. |
 | `openemis_create` | v0.3.0 | Create a new record. `{ resource, body }` — non-workflow resources only. Workflow-controlled resources (e.g. institution-staff-leave) are blocked and will redirect to the appropriate playbook. |
@@ -250,7 +252,7 @@ curl http://your-server:3000/health
 │  • openemis_health     │
 │  • openemis_list_dom…  │  ← reads Domain-*.md from vault
 │  • openemis_discover   │  ← topic → ≤30 scoped endpoints
-│  • openemis_list_play… │  ← list all 38 workflow playbooks
+│  • openemis_list_play… │  ← list all 40 workflow playbooks
 │  • openemis_get_playbk │  ← load a playbook by id
 │  • openemis_get / _create / _update / _delete   │
 └───────────┬────────────┘
@@ -273,7 +275,7 @@ Design principles, from the first line of code:
 ## Documentation
 
 - [Resource Reference](docs/resources.md) — all 675 resources with HTTP method availability and write status (Core 5.10.0)
-- [Playbooks](docs/playbooks/) — 38 curated workflow guides (24 read · 14 write/auth)
+- [Playbooks](docs/playbooks/) — 40 curated workflow guides (26 read · 14 write/auth)
 - [ChatGPT Teacher Guide](docs/CHATGPT-TEACHER-GUIDE.md) — how to let teachers mark attendance via ChatGPT Custom GPT
 - [Playbook Authoring Routine](docs/PLAYBOOK-ROUTINE.md) — 4-step process for adding new playbooks
 
@@ -319,8 +321,10 @@ Design principles, from the first line of code:
 | 36 | `set-school-accreditation` ✏️ (POCOR-9610) | Institution | admin, ministry | _docs follow_ |
 | 37 | `set-school-registration` ✏️ (POCOR-9610) | Institution | admin, ministry | _docs follow_ |
 | 38 | `mark-student-meal-participation` ✏️ | Meals | teacher, admin, nutritionist | _docs follow_ |
+| 39 | `view-admission-and-enrolment-queue-state` 🔄 | Workflow | admin, registrar, parent, principal | _docs follow_ |
+| 40 | `explain-workflow-system` 🔄 | Workflow | admin, principal, developer, consultant | _docs follow_ |
 
-> **Newer playbooks (29–38)** ship as full English content in `data/playbooks.json` and are loaded via `openemis_get_playbook`. Per-playbook markdown docs and RU/ES/HI/AR translations land in a follow-up release.
+> **Newer playbooks (29–40)** ship as full English content in `data/playbooks.json` and are loaded via `openemis_get_playbook`. Per-playbook markdown docs and RU/ES/HI/AR translations land in a follow-up release.
 ---
 
 ## Roadmap
@@ -373,7 +377,7 @@ Workflow routes are gated above Individual Pro because bulk AI writes at institu
 | **Scope** | Any user | One person | One school | Ministry / national |
 | **Licence** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
 | Read tools (all 675 resources, Core 5.10.0) | ✅ | ✅ | ✅ | ✅ |
-| 38 curated playbooks (24 read · 14 write/auth · 28 with translations) | ✅ | ✅ | ✅ | ✅ |
+| 40 curated playbooks (26 read · 14 write/auth · 28 with translations) | ✅ | ✅ | ✅ | ✅ |
 | stdio mode (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
 | **HTTP server mode** (Oracle / VPS install) | — | ✅ | ✅ | ✅ |
 | **OpenAPI adapter** (ChatGPT Custom GPT, any REST client) | — | ✅ | ✅ | ✅ |
