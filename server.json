@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.tixuz/openemis-pro",
-  "description": "Read + write MCP server for OpenEMIS — free open-source school management system. 675 resources.",
+  "description": "Read + write MCP server for OpenEMIS — free open-source school management system. 678 resources.",
   "repository": {
     "url": "https://github.com/tixuz/openemis-mcp-pro",
     "source": "github"
   },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "openemis-mcp-pro",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "transport": {
         "type": "stdio"
       },
@@ -50,7 +50,7 @@
         },
         {
           "name": "OPENEMIS_CORE_IN_OPERATOR",
-          "description": "Set to 1 to enable native IN-operator batch GETs once your OpenEMIS Core has POCOR-9660 deployed.",
+          "description": "Native IN-operator batch GETs (POCOR-9660) are ON by default for Core 5.10+. Set to 0/off to force the legacy parallel fan-out against a pre-5.10 Core.",
           "isRequired": false,
           "format": "string"
         }

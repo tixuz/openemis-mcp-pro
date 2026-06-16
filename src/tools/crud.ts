@@ -26,22 +26,25 @@ const CRUD_UNTRUSTED_OUTPUT_NOTE =
 export const OPENEMIS_GET_TOOL = {
   name: "openemis_get",
   description:
-    "Fetch data from an OpenEMIS v5 resource. If `id` is provided, fetches that single record. " +
-    "Pass `ids` (comma-separated integers, e.g. '13678,14671,13665') in params to batch-fetch " +
-    "multiple records by primary key in ONE call — the handler fans out parallel " +
-    "path-based lookups (GET /resource/{id}) internally, max 100. " +
-    "NEVER loop with individual calls when you have a list of IDs — use ids= instead. " +
-    "LIMITATION: ids= only works for resources with a single integer primary key. " +
-    "It does NOT work for: (a) composite-PK resources — junction tables, attendance records, " +
-    "survey cells, assessment results (87 models in OpenEMIS v5 have composite PKs); " +
-    "(b) summary/view resources (data-dictionary, summary-* resources have no PK at all). " +
-    "Use _conditions filtering for those. " +
+    "Fetch data from an OpenEMIS v5 resource (Core 5.13.0). If `id` is provided, fetches that single record. " +
+    "BATCH-FETCH MANY RECORDS IN ONE CALL — never loop with individual calls when you have a list of IDs. " +
+    "Two ways: " +
+    "(1) `ids` (comma-separated integers, e.g. '13678,14671,13665') in params batch-fetches by primary key — " +
+    "one round-trip via the native IN operator (Core 5.10+, POCOR-9660), max 100. " +
+    "(2) `_conditions=<field>:IN(1,2,3)` filters ANY field by a value list — this is the most powerful form: " +
+    "it works on composite-PK resources (junction tables, attendance, survey cells, assessment results) and on " +
+    "summary/view resources too, where `ids` cannot. Example — all students in a class roster: " +
+    "first GET institution-class-students with '_conditions=institution_class_id:42', then GET security-users with " +
+    "'_conditions=id:IN(101,102,103)'. " +
+    "LIMITATION of `ids`: single integer PK only — for everything else use `_conditions=field:IN(...)`. " +
     "Otherwise lists records, optionally filtered via `params`. " +
     "`resource` is kebab-case like 'absence-types' or 'institution-students'. " +
-    "IMPORTANT: Never use direct field params (e.g. name='Avory') for filtering unless the exact " +
-    "param key is known from code or docs — use `_conditions` instead. " +
+    "IMPORTANT: Never invent bare field params (e.g. name='Avory') for filtering — use `_conditions` instead. " +
+    "Since Core 5.10 (POCOR-9697) a filter on a field that does not exist on the resource returns HTTP 400 " +
+    "(it is no longer silently ignored), so use exact field names from the resource schema. " +
     "`_conditions` is a semicolon-separated string: exact match '_conditions=name:Avory', " +
     "wildcard '_conditions=name:*avory*' (uses SQL LIKE), comparison '_conditions=age:>=10', " +
+    "value list '_conditions=grade_id:IN(1,2,3)', " +
     "multiple '_conditions=name:*avory*;status:1'. " +
     "Direct params are for pagination only (page, limit, orderby, order, fields). " +
     "Use _scope when the model has a named scope. _contain is rarely supported." +
@@ -73,8 +76,11 @@ export const openemisGetInputSchema = z.object({
       "Exact match: '_conditions=name:Avory Primary School'. " +
       "LIKE/wildcard search: '_conditions=name:*avory*' (asterisk * becomes SQL %, e.g. WHERE name LIKE '%avory%'). " +
       "Comparison: '_conditions=age:>=10' or '_conditions=age:<=18'. " +
+      "Value list (Core 5.10+, POCOR-9660): '_conditions=id:IN(101,102,103)' → WHERE id IN (101,102,103); " +
+      "works on any field, including non-PK and composite-PK resources. " +
       "Multiple conditions: '_conditions=name:*avory*;status:1'. " +
-      "Other keys: page, limit, orderby, order, fields. _scope applies a named model scope when the model supports it (e.g. '_scope=active'). _contain is rarely supported."
+      "Filtering a field that does not exist on the resource returns HTTP 400 (Core 5.10+, POCOR-9697) — use exact field names. " +
+      "Other keys: page, limit, orderby, order, fields, ids. _scope applies a named model scope when the model supports it (e.g. '_scope=active'). _contain is rarely supported."
     ),
 });
 
@@ -95,12 +101,16 @@ export function createOpenemisGetHandler(client: OpenemisClient) {
       const path = args.id ? `${basePath}/${args.id}` : basePath;
 
       // ids= batch lookup. Two server modes:
-      //   1. Pre-POCOR-9660 core (default): no native IN operator — fan out N parallel
-      //      path lookups (GET /resource/{id}).
-      //   2. Post-POCOR-9660 core (OPENEMIS_CORE_IN_OPERATOR=1): a single GET with
+      //   1. Native IN operator (DEFAULT, Core 5.10+ POCOR-9660): a single GET with
       //      ?id=1,2,3 returns the matching rows in one round-trip.
+      //   2. Legacy fan-out (OPENEMIS_CORE_IN_OPERATOR=0/off): for pre-5.10 cores
+      //      that lack the native IN operator, fan out N parallel path lookups
+      //      (GET /resource/{id}).
+      // Core 5.13.0 is the baseline as of v1.2.0, so the IN operator is on by default;
+      // set OPENEMIS_CORE_IN_OPERATOR=off only when pointing at Core 5.7–5.9.
       // All OpenEMIS v5 single-field PKs are integers (audit of 671 models confirmed zero UUIDs).
-      // NOTE: composite-PK resources (attendance, junction tables, etc.) are NOT supported here.
+      // NOTE: composite-PK resources (attendance, junction tables, etc.) are NOT supported
+      // here — use `_conditions=field:IN(...)` for those.
       const idsParam = args.params?.ids;
       if (!args.id && typeof idsParam === "string" && idsParam.trim()) {
         const idList = idsParam.split(",")
@@ -110,8 +120,9 @@ export function createOpenemisGetHandler(client: OpenemisClient) {
         const rest = { ...args.params };
         delete rest.ids;
 
-        // Capability flag — flip on once POCOR-9660 (CrudApi multi-id GET) is deployed.
-        const useInOperator = /^(1|true|yes|on)$/i.test(
+        // Capability flag — defaults ON (Core 5.10+). Explicitly set to 0/false/no/off
+        // to force the legacy parallel fan-out against a pre-POCOR-9660 core.
+        const useInOperator = !/^(0|false|no|off)$/i.test(
           process.env.OPENEMIS_CORE_IN_OPERATOR ?? "",
         );
         if (useInOperator) {

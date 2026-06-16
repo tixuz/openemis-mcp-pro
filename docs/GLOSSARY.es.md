@@ -22,7 +22,7 @@ OpenEMIS es un sistema de gestión escolar gratuito y de código abierto desarro
 
 ### OpenEMIS Core
 
-OpenEMIS Core es la capa de aplicación principal basada en CakePHP con una API REST versionada (`/api/v5/`). Core 5.10.0 es la línea base de esta distribución, con 675 recursos y 3355 endpoints. También son compatibles las versiones 5.7–5.9. Documentación: [api.openemis.org/core](https://api.openemis.org/core).
+OpenEMIS Core es la capa de aplicación principal basada en CakePHP con una API REST versionada (`/api/v5/`). Core 5.13.0 es la línea base de esta distribución, con 678 recursos y 3361 endpoints. También son compatibles las versiones 5.7–5.9. Documentación: [api.openemis.org/core](https://api.openemis.org/core).
 
 ### MCP (Model Context Protocol)
 
@@ -86,7 +86,7 @@ Un playbook en openemis-mcp-pro es una guía paso a paso curada que indica al ag
 
 ### Recurso (en términos de MCP)
 
-En openemis-mcp-pro, un recurso es un identificador en kebab-case que corresponde a una familia de endpoints de la API de OpenEMIS: por ejemplo `institution-students` o `student-attendance-marked-records`. Se pasa como parámetro `resource` a `openemis_get`, `openemis_create`, `openemis_update` o `openemis_delete`. La lista completa de 675 recursos está en [resources.es.md](resources.es.md).
+En openemis-mcp-pro, un recurso es un identificador en kebab-case que corresponde a una familia de endpoints de la API de OpenEMIS: por ejemplo `institution-students` o `student-attendance-marked-records`. Se pasa como parámetro `resource` a `openemis_get`, `openemis_create`, `openemis_update` o `openemis_delete`. La lista completa de 678 recursos está en [resources.es.md](resources.es.md).
 
 ---
 

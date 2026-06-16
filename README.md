@@ -1,6 +1,6 @@
 ---
 title: openemis-mcp-pro — Read + Write MCP Server for OpenEMIS School Management
-description: openemis-mcp-pro is the read and write MCP server that bridges AI assistants to the OpenEMIS school management information system — 675 resources, 3355 endpoints, 40 playbooks.
+description: openemis-mcp-pro is the read and write MCP server that bridges AI assistants to the OpenEMIS school management information system — 678 resources, 3361 endpoints, 40 playbooks.
 keywords:
   - OpenEMIS
   - school management system
@@ -41,13 +41,13 @@ You never write a line of code. You never see JSON. You just ask.
 
 ## What this is
 
-openemis-mcp-pro is the read + write MCP server that connects AI assistants to the OpenEMIS school management system. It exposes 675 resources (students, attendance, risks, staff, exams, infrastructure) across 40 curated playbooks — 26 read and 14 write/auth. The pro distribution adds direct write tools (`openemis_create`, `openemis_update`, `openemis_delete`), HTTP server mode for ChatGPT Custom GPT, and per-user authentication on top of the free read-only distribution.
+openemis-mcp-pro is the read + write MCP server that connects AI assistants to the OpenEMIS school management system. It exposes 678 resources (students, attendance, risks, staff, exams, infrastructure) across 40 curated playbooks — 26 read and 14 write/auth. The pro distribution adds direct write tools (`openemis_create`, `openemis_update`, `openemis_delete`), HTTP server mode for ChatGPT Custom GPT, and per-user authentication on top of the free read-only distribution.
 
 ---
 
 ## Why this exists
 
-The OpenEMIS Core REST API is large — the v5 surface alone exposes **3,355 endpoints across 675 resources** (Core 5.10.0). No AI agent can hold that in context, and raw Swagger-style introspection floods a conversation with noise that has nothing to do with the user's actual question.
+The OpenEMIS Core REST API is large — the v5 surface alone exposes **3,361 endpoints across 678 resources** (Core 5.13.0). No AI agent can hold that in context, and raw Swagger-style introspection floods a conversation with noise that has nothing to do with the user's actual question.
 
 This MCP solves that in two ways:
 
@@ -78,19 +78,17 @@ A representative natural-language question like *"how many teachers at Avory Pri
 
 ## Core compatibility
 
-Tested against **OpenEMIS Core 5.10.0** (master, May 2026). Earlier 5.7 / 5.8 / 5.9 deployments are also supported — the API surface is backwards-compatible.
+Tested against **OpenEMIS Core 5.13.0** (master, June 2026). Earlier 5.7 – 5.12 deployments are also supported — the API surface is backwards-compatible.
 
-### Optional capability flag — POCOR-9660 multi-id GET
+### Capability flag — POCOR-9660 multi-id GET
 
-`openemis_get` accepts `params.ids = "1,2,3"` for batch lookups. By default the handler fans out N parallel single-record GETs (legacy mode).
-
-Core 5.10.0 carries POCOR-9660 (`?id=1,2,3` and `_conditions=id:IN(...)` support in `CrudApiController`). To use the single-round-trip path, set:
+`openemis_get` accepts `params.ids = "1,2,3"` for batch lookups. Core 5.10+ carries POCOR-9660 (`?id=1,2,3` and `_conditions=<field>:IN(...)` support in `CrudApiController`), so the handler collapses the batch into a single round-trip **by default**. Pointing at an older Core (5.7 – 5.9) without the native operator? Force the legacy parallel fan-out:
 
 ```bash
-OPENEMIS_CORE_IN_OPERATOR=1
+OPENEMIS_CORE_IN_OPERATOR=off
 ```
 
-Default off (for compatibility with older Core builds) — flip on once your instance is on Core 5.9+.
+For composite-PK or view resources — where `ids` does not apply — use `_conditions=<field>:IN(1,2,3)` instead; it filters any field by a value list and works regardless of this flag. Filtering on a field that does not exist on a resource now returns HTTP 400 (Core 5.10+, POCOR-9697), so use exact field names.
 
 ## Verified against demo.openemis.org
 
@@ -293,7 +291,7 @@ Design principles, from the first line of code:
 
 ## Documentation
 
-- [Resource Reference](docs/resources.md) — all 675 resources with HTTP method availability and write status (Core 5.10.0)
+- [Resource Reference](docs/resources.md) — all 678 resources with HTTP method availability and write status (Core 5.13.0)
 - [Playbooks](docs/playbooks/) — 40 curated workflow guides (26 read · 14 write/auth)
 - [ChatGPT Teacher Guide](docs/CHATGPT-TEACHER-GUIDE.md) — how to let teachers mark attendance via ChatGPT Custom GPT
 - [Playbook Authoring Routine](docs/PLAYBOOK-ROUTINE.md) — 4-step process for adding new playbooks
@@ -397,7 +395,7 @@ Workflow routes are gated above Individual Pro because bulk AI writes at institu
 |---|---|---|---|---|
 | **Scope** | Any user | One person | One school | Ministry / national |
 | **Licence** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
-| Read tools (all 675 resources, Core 5.10.0) | ✅ | ✅ | ✅ | ✅ |
+| Read tools (all 678 resources, Core 5.13.0) | ✅ | ✅ | ✅ | ✅ |
 | 40 curated playbooks (26 read · 14 write/auth · 28 with translations) | ✅ | ✅ | ✅ | ✅ |
 | stdio mode (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
 | **HTTP server mode** (Oracle / VPS install) | — | ✅ | ✅ | ✅ |

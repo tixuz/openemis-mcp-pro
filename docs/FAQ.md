@@ -28,13 +28,13 @@ openemis-mcp-pro is the read + write MCP server (Model Context Protocol) that br
 
 ## What does this MCP let me ask about?
 
-You can ask about any of the 675 OpenEMIS resources in Core 5.10.0, including: students (enrolment, profiles, contacts, special needs), staff (positions, qualifications, attendance, leave), attendance (daily roll calls, absence history, chronic absentees), assessment (exam marks, report cards), student risks and early-warning scores, institution profiles, infrastructure (buildings, land, WASH, assets), meals, timetables and schedules, academic periods, and ministry-level reporting. You can also write: mark attendance, enrol students, submit exam marks, record behaviour incidents, add assets, and set accreditation — see the [Playbooks](playbooks/) index.
+You can ask about any of the 678 OpenEMIS resources in Core 5.13.0, including: students (enrolment, profiles, contacts, special needs), staff (positions, qualifications, attendance, leave), attendance (daily roll calls, absence history, chronic absentees), assessment (exam marks, report cards), student risks and early-warning scores, institution profiles, infrastructure (buildings, land, WASH, assets), meals, timetables and schedules, academic periods, and ministry-level reporting. You can also write: mark attendance, enrol students, submit exam marks, record behaviour incidents, add assets, and set accreditation — see the [Playbooks](playbooks/) index.
 
 ---
 
 ## How does it help with school management?
 
-The OpenEMIS Core REST API exposes 3355 endpoints across 675 resources — far too large for an AI agent to hold in context. openemis-mcp-pro solves this with domain-scoped discovery: `openemis_discover(topic)` narrows to the ~20–30 endpoints relevant to the user's actual question. Combined with 40 curated playbooks that encode expert knowledge of field names, composite primary keys, workflow rules, and common gotchas, the server lets agents answer natural-language school management questions in 2–4 tool calls, not 30.
+The OpenEMIS Core REST API exposes 3361 endpoints across 678 resources — far too large for an AI agent to hold in context. openemis-mcp-pro solves this with domain-scoped discovery: `openemis_discover(topic)` narrows to the ~20–30 endpoints relevant to the user's actual question. Combined with 40 curated playbooks that encode expert knowledge of field names, composite primary keys, workflow rules, and common gotchas, the server lets agents answer natural-language school management questions in 2–4 tool calls, not 30.
 
 ---
 
@@ -64,7 +64,7 @@ OpenEMIS supports kindergartens, primary schools, secondary schools, secondary v
 
 ## Is this free?
 
-Yes — OpenEMIS itself is free and open-source (MIT licence). The free openemis-mcp server ([github.com/tixuz/openemis-mcp](https://github.com/tixuz/openemis-mcp)) is also MIT-licensed and covers all 675 read resources. openemis-mcp-pro (this distribution) adds write tools (`openemis_create`, `openemis_update`, `openemis_delete`), HTTP server mode for ChatGPT Custom GPT, and per-user authentication; it is licensed under BSL 1.1 for Individual Pro, Institution Pro, and Country Pro tiers. Contact khindol.madraimov@gmail.com for pricing.
+Yes — OpenEMIS itself is free and open-source (MIT licence). The free openemis-mcp server ([github.com/tixuz/openemis-mcp](https://github.com/tixuz/openemis-mcp)) is also MIT-licensed and covers all 678 read resources. openemis-mcp-pro (this distribution) adds write tools (`openemis_create`, `openemis_update`, `openemis_delete`), HTTP server mode for ChatGPT Custom GPT, and per-user authentication; it is licensed under BSL 1.1 for Individual Pro, Institution Pro, and Country Pro tiers. Contact khindol.madraimov@gmail.com for pricing.
 
 ---
 

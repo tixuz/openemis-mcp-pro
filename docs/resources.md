@@ -1,6 +1,6 @@
 ---
 title: OpenEMIS MCP Pro — Resource Reference for School Management
-description: Complete reference of all 675 OpenEMIS resources with HTTP method availability and write status for the pro read+write MCP server (Core 5.10.0).
+description: Complete reference of all 678 OpenEMIS resources with HTTP method availability and write status for the pro read+write MCP server (Core 5.13.0).
 keywords:
   - OpenEMIS
   - school management system
@@ -12,7 +12,7 @@ keywords:
 
 # OpenEMIS MCP Pro — Resource Reference for School Management
 
-> **675 resources** · **3355 endpoints** · v1.1.0 · OpenEMIS Core 5.10.0
+> **678 resources** · **3361 endpoints** · v1.2.0 · OpenEMIS Core 5.13.0
 >
 > This is the PRO distribution — read + write. Workflow-controlled resources are blocked at the tool layer (🔒); use the appropriate playbook instead.
 >
@@ -710,6 +710,9 @@ keywords:
 | **── Workflows* ──** | | | | | | |
 | `workflows` | Workflows* | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |
 | `workflows-filters` | Workflows* | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |
+| **── Task* ──** | | | | | | |
+| `task-failures` | Task* | ✅ | — | — | — | — (read-only) |
+| `task-jobs` | Task* | ✅ | — | — | — | — (read-only) |
 | **── singletons ──** | | | | | | |
 | `absence-types` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |
 | `areas` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |
@@ -760,6 +763,7 @@ keywords:
 | `risks` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |
 | `shift-options` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |
 | `single-logout` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |
+| `tasks` | — | ✅ | — | — | — | — (read-only) |
 | `textbooks` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |
 | `themes` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |
 | `transfer-logs` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 live |

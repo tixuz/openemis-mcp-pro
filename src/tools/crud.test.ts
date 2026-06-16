@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { createOpenemisGetHandler } from "./crud.js";
 import type { OpenemisClient } from "../types.js";
 
@@ -37,9 +37,19 @@ function idFromPath(path: unknown): number {
   return Number(String(path).split("/").pop());
 }
 
-// ── ids= fan-out ──────────────────────────────────────────────────────────────
+// ── ids= legacy fan-out (OPENEMIS_CORE_IN_OPERATOR=off, pre-5.10 cores) ────────
+//
+// As of v1.2.0 the native IN operator is the DEFAULT (Core 5.13.0 baseline).
+// These tests pin the legacy parallel fan-out path by forcing the flag off.
 
-describe("openemis_get ids= fan-out", () => {
+describe("openemis_get ids= fan-out (legacy, flag off)", () => {
+  beforeEach(() => {
+    process.env.OPENEMIS_CORE_IN_OPERATOR = "off";
+  });
+  afterEach(() => {
+    delete process.env.OPENEMIS_CORE_IN_OPERATOR;
+  });
+
   it("all succeed: returns data array with requested/returned counts, no failed_ids", async () => {
     const client = makeClient((path: unknown) => {
       const id = idFromPath(path);
@@ -209,6 +219,68 @@ describe("openemis_get ids= fan-out", () => {
   });
 });
 
+// ── ids= native IN operator (DEFAULT, Core 5.10+ POCOR-9660) ──────────────────
+//
+// With the flag unset, ids= must collapse to ONE list GET carrying ?id=1,2,3
+// rather than fanning out N path lookups.
+
+describe("openemis_get ids= IN operator (default)", () => {
+  beforeEach(() => {
+    delete process.env.OPENEMIS_CORE_IN_OPERATOR;
+  });
+
+  it("issues a single list GET with ?id=<csv> instead of per-id fan-out", async () => {
+    const client = makeClient(() =>
+      Promise.resolve({ data: [{ id: 10 }, { id: 20 }, { id: 30 }] })
+    );
+    const handler = createOpenemisGetHandler(client);
+
+    const result = parseResult(
+      await handler({ resource: "security-users", params: { ids: "10,20,30" } })
+    );
+
+    const get = client.get as ReturnType<typeof vi.fn>;
+    expect(get).toHaveBeenCalledTimes(1);
+    expect(get.mock.calls[0][0]).toBe("/api/v5/security-users");
+    expect(get.mock.calls[0][1]).toMatchObject({ id: "10,20,30" });
+    expect(get.mock.calls[0][1]).not.toHaveProperty("ids");
+    expect(result.data).toHaveLength(3);
+  });
+
+  it("forwards other params alongside the id list and caps at 100", async () => {
+    const client = makeClient(() => Promise.resolve({ data: [] }));
+    const handler = createOpenemisGetHandler(client);
+
+    const manyIds = Array.from({ length: 150 }, (_, i) => i + 1).join(",");
+    await handler({
+      resource: "security-users",
+      params: { ids: manyIds, limit: 200 },
+    });
+
+    const get = client.get as ReturnType<typeof vi.fn>;
+    expect(get).toHaveBeenCalledTimes(1);
+    const passedIds = String(get.mock.calls[0][1].id).split(",");
+    expect(passedIds).toHaveLength(100);
+    expect(get.mock.calls[0][1]).toMatchObject({ limit: 200 });
+  });
+
+  it("explicit OPENEMIS_CORE_IN_OPERATOR=off restores per-id fan-out", async () => {
+    process.env.OPENEMIS_CORE_IN_OPERATOR = "off";
+    const calledPaths: string[] = [];
+    const client = makeClient((path: unknown) => {
+      calledPaths.push(String(path));
+      return Promise.resolve({ data: { id: idFromPath(path) } });
+    });
+    const handler = createOpenemisGetHandler(client);
+
+    await handler({ resource: "security-users", params: { ids: "11,22" } });
+    delete process.env.OPENEMIS_CORE_IN_OPERATOR;
+
+    expect(calledPaths).toContain("/api/v5/security-users/11");
+    expect(calledPaths).toContain("/api/v5/security-users/22");
+  });
+});
+
 // ── anti-prompt-injection surface ────────────────────────────────────────────
 //
 // Every CRUD response from openemis_get must:
@@ -284,6 +356,8 @@ describe("openemis_get untrusted-data envelope", () => {
 
   it("scrubs JWTs even inside the fan-out ids= code path", async () => {
     // Fan-out has a separate return path; make sure it's wrapped too.
+    // Pin legacy fan-out (per-id GET) so the per-id mock below is exercised.
+    process.env.OPENEMIS_CORE_IN_OPERATOR = "off";
     const client = makeClient((path: unknown) => {
       const id = idFromPath(path);
       return Promise.resolve({
@@ -304,5 +378,6 @@ describe("openemis_get untrusted-data envelope", () => {
       expect(row.audit_log).not.toContain("eyJaaaaa");
       expect(row.audit_log).toContain("[redacted]");
     }
+    delete process.env.OPENEMIS_CORE_IN_OPERATOR;
   });
 });

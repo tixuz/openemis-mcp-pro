@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "total_endpoints": 3355,
-  "total_resources": 675,
+  "total_endpoints": 3361,
+  "total_resources": 678,
   "domains": [
     {
       "name": "Alerts",
@@ -7230,6 +7230,28 @@
         }
       ],
       "endpoint_count": 10
+    },
+    {
+      "prefix": "Task*",
+      "resources": [
+        {
+          "name": "TaskFailures",
+          "endpoints": 2,
+          "kinds": {
+            "LIST": 1,
+            "GET": 1
+          }
+        },
+        {
+          "name": "TaskJobs",
+          "endpoints": 2,
+          "kinds": {
+            "LIST": 1,
+            "GET": 1
+          }
+        }
+      ],
+      "endpoint_count": 4
     }
   ],
   "orphans": [
@@ -7773,6 +7795,14 @@
       }
     },
     {
+      "name": "Tasks",
+      "endpoints": 2,
+      "kinds": {
+        "LIST": 1,
+        "GET": 1
+      }
+    },
+    {
       "name": "Textbooks",
       "endpoints": 5,
       "kinds": {
@@ -7841,8 +7871,8 @@
   ],
   "summary": {
     "domain_endpoint_total": 30,
-    "family_endpoint_total": 3080,
-    "orphan_endpoint_total": 275,
+    "family_endpoint_total": 3084,
+    "orphan_endpoint_total": 277,
     "playbook_count": 40
   },
   "playbooks": [

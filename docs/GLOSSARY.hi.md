@@ -22,7 +22,7 @@ OpenEMIS यूनेस्को और KORDIT द्वारा विकस�
 
 ### OpenEMIS Core
 
-OpenEMIS Core CakePHP-आधारित मुख्य अनुप्रयोग परत है जो संस्करणीय REST API (`/api/v5/`) प्रदान करती है। Core 5.10.0 इस वितरण की आधार रेखा है, जिसमें 675 संसाधन और 3355 एंडपॉइंट हैं। 5.7–5.9 संस्करण भी समर्थित हैं। दस्तावेज़: [api.openemis.org/core](https://api.openemis.org/core)।
+OpenEMIS Core CakePHP-आधारित मुख्य अनुप्रयोग परत है जो संस्करणीय REST API (`/api/v5/`) प्रदान करती है। Core 5.13.0 इस वितरण की आधार रेखा है, जिसमें 678 संसाधन और 3361 एंडपॉइंट हैं। 5.7–5.9 संस्करण भी समर्थित हैं। दस्तावेज़: [api.openemis.org/core](https://api.openemis.org/core)।
 
 ### MCP (Model Context Protocol)
 
@@ -86,7 +86,7 @@ openemis-mcp-pro में एक प्लेबुक एक क्यूर�
 
 ### संसाधन (MCP के संदर्भ में)
 
-openemis-mcp-pro में एक संसाधन एक kebab-case पहचानकर्ता है जो एक OpenEMIS API एंडपॉइंट परिवार के अनुरूप है — जैसे `institution-students` या `student-attendance-marked-records`। इसे `openemis_get`, `openemis_create`, `openemis_update` या `openemis_delete` में `resource` पैरामीटर के रूप में पास किया जाता है। 675 संसाधनों की पूरी सूची [resources.hi.md](resources.hi.md) में है।
+openemis-mcp-pro में एक संसाधन एक kebab-case पहचानकर्ता है जो एक OpenEMIS API एंडपॉइंट परिवार के अनुरूप है — जैसे `institution-students` या `student-attendance-marked-records`। इसे `openemis_get`, `openemis_create`, `openemis_update` या `openemis_delete` में `resource` पैरामीटर के रूप में पास किया जाता है। 678 संसाधनों की पूरी सूची [resources.hi.md](resources.hi.md) में है।
 
 ---
 

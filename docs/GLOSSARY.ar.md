@@ -22,7 +22,7 @@ OpenEMIS هو نظام معلومات إدارة مدرسية مجاني ومف�
 
 ### OpenEMIS Core
 
-OpenEMIS Core هو طبقة التطبيق الرئيسية المبنية على CakePHP مع واجهة برمجة تطبيقات REST ذات إصدارات (`/api/v5/`). يُعدّ Core 5.10.0 الخط الأساسي لهذا التوزيع، ويشمل 675 موردًا و3355 نقطة نهاية. وتُدعم الإصدارات الأقدم 5.7–5.9 أيضًا. التوثيق: [api.openemis.org/core](https://api.openemis.org/core).
+OpenEMIS Core هو طبقة التطبيق الرئيسية المبنية على CakePHP مع واجهة برمجة تطبيقات REST ذات إصدارات (`/api/v5/`). يُعدّ Core 5.13.0 الخط الأساسي لهذا التوزيع، ويشمل 678 موردًا و3361 نقطة نهاية. وتُدعم الإصدارات الأقدم 5.7–5.9 أيضًا. التوثيق: [api.openemis.org/core](https://api.openemis.org/core).
 
 ### MCP (Model Context Protocol)
 
@@ -86,7 +86,7 @@ MCP هو بروتوكول مفتوح يتيح لمساعدي الذكاء الا
 
 ### المورد (بمفهوم MCP)
 
-في openemis-mcp-pro، المورد هو معرِّف بتنسيق kebab-case يتوافق مع عائلة نقاط نهاية API في OpenEMIS — مثلًا `institution-students` أو `student-attendance-marked-records`. يُمرَّر كمعامل `resource` في الأدوات `openemis_get` و`openemis_create` و`openemis_update` و`openemis_delete`. القائمة الكاملة للـ 675 موردًا في [resources.ar.md](resources.ar.md).
+في openemis-mcp-pro، المورد هو معرِّف بتنسيق kebab-case يتوافق مع عائلة نقاط نهاية API في OpenEMIS — مثلًا `institution-students` أو `student-attendance-marked-records`. يُمرَّر كمعامل `resource` في الأدوات `openemis_get` و`openemis_create` و`openemis_update` و`openemis_delete`. القائمة الكاملة للـ 678 موردًا في [resources.ar.md](resources.ar.md).
 
 ---
 

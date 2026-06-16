@@ -22,7 +22,7 @@ OpenEMIS — бесплатная открытая школьная информ
 
 ### OpenEMIS Core
 
-OpenEMIS Core — основной прикладной уровень на базе CakePHP с версионным REST API (`/api/v5/`). Core 5.10.0 — базовая версия данного дистрибутива, включающая 675 ресурсов и 3355 эндпоинтов. Поддерживаются более ранние версии 5.7–5.9. Документация: [api.openemis.org/core](https://api.openemis.org/core).
+OpenEMIS Core — основной прикладной уровень на базе CakePHP с версионным REST API (`/api/v5/`). Core 5.13.0 — базовая версия данного дистрибутива, включающая 678 ресурсов и 3361 эндпоинтов. Поддерживаются более ранние версии 5.7–5.9. Документация: [api.openemis.org/core](https://api.openemis.org/core).
 
 ### MCP (Model Context Protocol)
 
@@ -86,7 +86,7 @@ OpenEMIS использует плагин CakePHP Workflow для управл�
 
 ### Ресурс (в терминах MCP)
 
-В openemis-mcp-pro ресурс — идентификатор в формате kebab-case, соответствующий одному семейству эндпоинтов OpenEMIS API: например `institution-students`, `student-attendance-marked-records` или `institution-assets`. Передаётся как параметр `resource` в инструменты `openemis_get`, `openemis_create`, `openemis_update` или `openemis_delete`. Полный список 675 ресурсов — в [Справочнике ресурсов](resources.ru.md).
+В openemis-mcp-pro ресурс — идентификатор в формате kebab-case, соответствующий одному семейству эндпоинтов OpenEMIS API: например `institution-students`, `student-attendance-marked-records` или `institution-assets`. Передаётся как параметр `resource` в инструменты `openemis_get`, `openemis_create`, `openemis_update` или `openemis_delete`. Полный список 678 ресурсов — в [Справочнике ресурсов](resources.ru.md).
 
 ---
 

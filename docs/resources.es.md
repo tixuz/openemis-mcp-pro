@@ -1,6 +1,6 @@
 ---
 title: OpenEMIS MCP Pro — Referencia de Recursos para la gestión educativa
-description: Referencia completa de los 675 recursos de OpenEMIS con disponibilidad de métodos HTTP y estado de escritura para el servidor MCP de lectura y escritura (Core 5.10.0).
+description: Referencia completa de los 678 recursos de OpenEMIS con disponibilidad de métodos HTTP y estado de escritura para el servidor MCP de lectura y escritura (Core 5.13.0).
 keywords:
   - OpenEMIS
   - sistema de gestión escolar
@@ -11,7 +11,7 @@ keywords:
 
 # OpenEMIS MCP Pro — Referencia de Recursos para la gestión educativa
 
-> **675 recursos** · **3355 endpoints** · v1.1.0 · OpenEMIS Core 5.10.0
+> **678 recursos** · **3361 endpoints** · v1.2.0 · OpenEMIS Core 5.13.0
 >
 > la distribución PRO — lectura + escritura. Los recursos controlados por workflow están bloqueados en la capa de herramienta (🔒); usa el playbook correspondiente en lugar de escritura directa.
 >
@@ -709,6 +709,9 @@ keywords:
 | **── Workflows* ──** | | | | | | |
 | `workflows` | Workflows* | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |
 | `workflows-filters` | Workflows* | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |
+| **── Task* ──** | | | | | | |
+| `task-failures` | Task* | ✅ | — | — | — | — (solo lectura) |
+| `task-jobs` | Task* | ✅ | — | — | — | — (solo lectura) |
 | **── singletons ──** | | | | | | |
 | `absence-types` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |
 | `areas` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |
@@ -759,6 +762,7 @@ keywords:
 | `risks` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |
 | `shift-options` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |
 | `single-logout` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |
+| `tasks` | — | ✅ | — | — | — | — (solo lectura) |
 | `textbooks` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |
 | `themes` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |
 | `transfer-logs` | — | ✅ | ✅ | ✅ | ✅ | ✅ v1.0.0 en vivo |

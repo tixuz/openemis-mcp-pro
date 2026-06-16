@@ -1,6 +1,6 @@
 ---
 title: openemis-mcp-pro — Servidor MCP de lectura y escritura para el sistema de gestión escolar OpenEMIS
-description: openemis-mcp-pro es el servidor MCP de lectura y escritura que conecta asistentes de IA al sistema de gestión escolar OpenEMIS — 675 recursos, 3355 endpoints, 40 playbooks.
+description: openemis-mcp-pro es el servidor MCP de lectura y escritura que conecta asistentes de IA al sistema de gestión escolar OpenEMIS — 678 recursos, 3361 endpoints, 40 playbooks.
 keywords:
   - OpenEMIS
   - sistema de gestión escolar
@@ -38,7 +38,7 @@ Usted nunca escribe una línea de código. Usted nunca ve JSON. Usted solo pregu
 
 ## Por qué existe esto
 
-La API REST de OpenEMIS Core es grande — solo la superficie de v5 expone **3 355 endpoints en 675 recursos** (Core 5.10.0). Ningún agente de IA puede mantener eso en contexto, y la introspección cruda al estilo Swagger inunda una conversación con ruido que no tiene nada que ver con la pregunta real del usuario.
+La API REST de OpenEMIS Core es grande — solo la superficie de v5 expone **3 361 endpoints en 678 recursos** (Core 5.13.0). Ningún agente de IA puede mantener eso en contexto, y la introspección cruda al estilo Swagger inunda una conversación con ruido que no tiene nada que ver con la pregunta real del usuario.
 
 Este MCP resuelve eso de dos maneras:
 
@@ -268,7 +268,7 @@ Principios de diseño, desde la primera línea de código:
 
 ## Documentación
 
--   [Referencia de Recursos](docs/resources.md) — los 675 recursos con disponibilidad de método HTTP y estado de escritura (Core 5.10.0)
+-   [Referencia de Recursos](docs/resources.md) — los 678 recursos con disponibilidad de método HTTP y estado de escritura (Core 5.13.0)
 -   [Playbooks](docs/playbooks/) — 40 guías de flujo de trabajo curadas (26 lectura · 14 escritura/auth)
 -   [Guía para Docentes de ChatGPT](docs/CHATGPT-TEACHER-GUIDE.md) — cómo permitir que los docentes marquen asistencia a través de GPT personalizado de ChatGPT
 -   [Rutina de Autoría de Playbooks](docs/PLAYBOOK-ROUTINE.md) — proceso de 4 pasos para agregar nuevos playbooks
@@ -317,7 +317,7 @@ Principios de diseño, desde la primera línea de código:
 |---|---|---|---|---|
 | **Alcance** | Cualquier usuario | Una persona | Una escuela | Ministerio / nacional |
 | **Licencia** | MIT | BSL 1.1 | BSL 1.1 | BSL 1.1 |
-| Herramientas de lectura (los 675 recursos, Core 5.10.0) | ✅ | ✅ | ✅ | ✅ |
+| Herramientas de lectura (los 678 recursos, Core 5.13.0) | ✅ | ✅ | ✅ | ✅ |
 | 40 playbooks curados (26 lectura · 14 escritura/auth · 28 con traducciones) | ✅ | ✅ | ✅ | ✅ |
 | Modo stdio (Claude Code, Cursor, Cline) | ✅ | ✅ | ✅ | ✅ |
 | **Modo servidor HTTP** (Oracle / VPS) | — | ✅ | ✅ | ✅ |

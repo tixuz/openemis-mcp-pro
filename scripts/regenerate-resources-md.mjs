@@ -51,7 +51,7 @@ if (!existsSync(groupedPath)) {
 }
 
 const g = JSON.parse(readFileSync(groupedPath, "utf-8"));
-const version = "v1.1.0";
+const version = "v1.2.0";
 
 // Workflow-controlled resources (writes blocked; reads safe).
 const WORKFLOW_BLOCKED = new Set([
@@ -71,7 +71,7 @@ const I18N = {
     title: "OpenEMIS MCP — Resource Reference",
     bannerResources: (n) => `**${n} resources**`,
     bannerEndpoints: (n) => `**${n} endpoints**`,
-    coreLine: "OpenEMIS Core 5.10.0",
+    coreLine: "OpenEMIS Core 5.13.0",
     distroFree: "the FREE distribution — read-only. Writes (POST/PUT/DELETE) live in [openemis-mcp-pro](https://github.com/tixuz/openemis-mcp-pro).",
     distroPro: "the PRO distribution — read + write. Workflow-controlled resources are blocked at the tool layer (🔒); use the appropriate playbook instead.",
     contextLine1: "The MCP does **not** load this table into AI context. It uses a compact",
@@ -98,7 +98,7 @@ const I18N = {
     title: "OpenEMIS MCP — Справочник ресурсов",
     bannerResources: (n) => `**${n} ресурсов**`,
     bannerEndpoints: (n) => `**${n} эндпоинтов**`,
-    coreLine: "OpenEMIS Core 5.10.0",
+    coreLine: "OpenEMIS Core 5.13.0",
     distroFree: "БЕСПЛАТНЫЙ дистрибутив — только чтение. Запись (POST/PUT/DELETE) живёт в [openemis-mcp-pro](https://github.com/tixuz/openemis-mcp-pro).",
     distroPro: "PRO-дистрибутив — чтение + запись. Ресурсы, управляемые workflow, заблокированы на уровне инструмента (🔒); используйте соответствующий playbook вместо прямой записи.",
     contextLine1: "MCP **не** загружает эту таблицу в контекст ИИ. Он использует компактный",
@@ -125,7 +125,7 @@ const I18N = {
     title: "OpenEMIS MCP — Referencia de Recursos",
     bannerResources: (n) => `**${n} recursos**`,
     bannerEndpoints: (n) => `**${n} endpoints**`,
-    coreLine: "OpenEMIS Core 5.10.0",
+    coreLine: "OpenEMIS Core 5.13.0",
     distroFree: "la distribución GRATUITA — solo lectura. Las escrituras (POST/PUT/DELETE) viven en [openemis-mcp-pro](https://github.com/tixuz/openemis-mcp-pro).",
     distroPro: "la distribución PRO — lectura + escritura. Los recursos controlados por workflow están bloqueados en la capa de herramienta (🔒); usa el playbook correspondiente en lugar de escritura directa.",
     contextLine1: "El MCP **no** carga esta tabla en el contexto de la IA. Utiliza un",
@@ -152,7 +152,7 @@ const I18N = {
     title: "OpenEMIS MCP — संसाधन संदर्भ",
     bannerResources: (n) => `**${n} संसाधन**`,
     bannerEndpoints: (n) => `**${n} एंडपॉइंट**`,
-    coreLine: "OpenEMIS Core 5.10.0",
+    coreLine: "OpenEMIS Core 5.13.0",
     distroFree: "मुफ़्त वितरण — केवल पठन। लेखन (POST/PUT/DELETE) [openemis-mcp-pro](https://github.com/tixuz/openemis-mcp-pro) में रहता है।",
     distroPro: "PRO वितरण — पठन + लेखन। वर्कफ़्लो-नियंत्रित संसाधन टूल परत पर अवरुद्ध हैं (🔒); सीधे लेखन के बजाय उपयुक्त playbook का उपयोग करें।",
     contextLine1: "MCP यह तालिका AI संदर्भ में **नहीं** लोड करता है। यह डोमेन बकेट + playbooks के साथ एक कॉम्पैक्ट",
@@ -179,7 +179,7 @@ const I18N = {
     title: "OpenEMIS MCP — مرجع الموارد",
     bannerResources: (n) => `**${n} موردًا**`,
     bannerEndpoints: (n) => `**${n} نقطة نهاية**`,
-    coreLine: "OpenEMIS Core 5.10.0",
+    coreLine: "OpenEMIS Core 5.13.0",
     distroFree: "التوزيع المجاني — للقراءة فقط. عمليات الكتابة (POST/PUT/DELETE) متاحة في [openemis-mcp-pro](https://github.com/tixuz/openemis-mcp-pro).",
     distroPro: "التوزيع الاحترافي — قراءة + كتابة. الموارد التي يتحكم بها workflow محظورة على طبقة الأداة (🔒)؛ استخدم playbook المناسب بدلاً من الكتابة المباشرة.",
     contextLine1: "لا يقوم MCP بتحميل هذا الجدول إلى سياق الذكاء الاصطناعي. بل يستخدم ملفًا مضغوطًا",
